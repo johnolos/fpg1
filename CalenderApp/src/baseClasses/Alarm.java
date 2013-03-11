@@ -18,6 +18,7 @@ public class Alarm {
 	public void alarmUpdate(DateTime time){
 		this.alarm=time;
 		// Denne metoden er digg
+		this.alarm = null;
 	}
 	
 }
