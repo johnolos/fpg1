@@ -1,4 +1,4 @@
-package baseClases;
+package baseClasses;
 
 public class Group {
 	private String name;
@@ -7,7 +7,7 @@ public class Group {
 	// Version 2
 	// awe9j0q3
 	
-	public void addMember(Peson memeber) {
+	public void addMember(Person member) {
 		
 	}
 

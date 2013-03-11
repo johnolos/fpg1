@@ -1,4 +1,4 @@
-package baseClases;
+package baseClasses;
 
 import org.joda.time.DateTime;
 

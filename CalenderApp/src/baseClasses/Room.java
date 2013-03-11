@@ -1,4 +1,4 @@
-package baseClases;
+package baseClasses;
 
 public class Room {
 	
