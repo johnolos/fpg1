@@ -13,7 +13,10 @@ public class Alarm {
 	
 	Alarm(DateTime time) {
 		this.alarm = time;
-		
+	}
+	
+	public void alarmUpdate(DateTime time){
+		this.alarm=time;
 	}
 	
 }
