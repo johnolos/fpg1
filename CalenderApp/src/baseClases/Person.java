@@ -1,6 +1,9 @@
 package baseClases;
 
 public class Person {
+	
+	// Private 
+	
 	private String username;
 	private String email;
 	
