@@ -25,4 +25,8 @@ public class Alarm {
 		System.out.println("Hell");
 	}
 	
+	public boolean isIdiot(){
+		return true;
+	}
+	
 }
