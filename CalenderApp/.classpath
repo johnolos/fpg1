@@ -2,10 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="images"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/joda-time-2.2"/>
-	<classpathentry kind="lib" path="D:/Mine dokumenter/Eclipse/javalibs/joda-time-2.2/joda-time-2.2.jar"/>
-	<classpathentry kind="lib" path="D:/Mine dokumenter/Eclipse/javalibs/joda-time-2.2/joda-time-2.2-javadoc.jar"/>
-	<classpathentry kind="lib" path="D:/Mine dokumenter/Eclipse/javalibs/joda-time-2.2/joda-time-2.2-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/andreastephansen/Downloads/joda-time-2.2/joda-time-2.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="/Users/andreastephansen/Downloads/joda-time-2.2/joda-time-2.2-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/andreastephansen/Downloads/joda-time-2.2/joda-time-2.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
