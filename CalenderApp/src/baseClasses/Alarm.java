@@ -21,4 +21,8 @@ public class Alarm {
 		this.alarm = null;
 	}
 	
+	public void fireAlarmProperty() {
+		System.out.println("Hell");
+	}
+	
 }
