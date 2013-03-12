@@ -1,8 +1,10 @@
 package baseClasses;
  
+import java.io.Serializable;
+
 import org.joda.time.DateTime;
  
-public class Appointment {
+public class Appointment implements Serializable {
        
         // version 2.234
        

@@ -1,9 +1,12 @@
 package baseClasses;
 
+import java.io.Serializable;
+
 import org.joda.time.DateTime;
 
-public class Alarm {
-	DateTime alarm;
+public class Alarm implements Serializable {
+	
+	private DateTime alarm;
 	
 	
 	Alarm(DateTime time) {
@@ -16,12 +19,10 @@ public class Alarm {
 		this.alarm = null;
 	}
 	
-	public void fireAlarmProperty() {
-		System.out.println("Hell");
+	public DateTime getAlarm(){
+		return alarm;
 	}
 	
-	public boolean isIdiot(){
-		return true;
-	}
+
 	
 }
