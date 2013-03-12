@@ -6,7 +6,7 @@ public class Room {
 	private int capacity;
 	private String name;
 	
-	Room(int capacity, String name){
+	public Room(int capacity, String name){
 		this.capacity=capacity;
 		this.name=name;
 	}
