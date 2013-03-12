@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -35,6 +36,8 @@ import no.ntnu.fp.net.cl.KtnDatagram.Flag;
  * @see no.ntnu.fp.net.cl.ClSocket
  */
 public class ConnectionImpl extends AbstractConnection {
+	
+	private final static int MAX_ATTEMPTS = 5;
 
     /** Keeps track of the used ports for each server port. */
     private static Map<Integer, Boolean> usedPorts = Collections.synchronizedMap(new HashMap<Integer, Boolean>());
@@ -83,10 +86,64 @@ public class ConnectionImpl extends AbstractConnection {
      * @see Connection#accept()
      */
     public Connection accept() throws IOException, SocketTimeoutException {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+    	
+    	
+    	if(this.state != state.CLOSED) {
+    		throw new IOException("State has to be closed. Cannot accept connection");
+    	}
+    	
+    	this.state = state.LISTEN;
+    	
+    	KtnDatagram syn = null;
+    	while(syn == null) {
+    		try {
+    			syn = receivePacket(true);
+    		} catch (Exception e) {}
+    	}
+    	
+    	ConnectionImpl connection = new ConnectionImpl(createPortNumber());
+    	// connection.remoteAddress = syn.getSrc_Addr();
+    	// connection.remotePort = syn.getSrc_Port();
+    	
+    	this.state = state.SYN_RCVD;
+    	
+    	KtnDatagram ack = null;
+    	
+    	try {
+    		int attemptsLeft = MAX_ATTEMPTS;
+    		while(ack == null && attemptsLeft >= 1) {
+    			// Send SYN_ACK and receive ACK
+    			connection.sendAck(syn, true);
+    			attemptsLeft--;
+    			
+    			
+    			ack = connection.receiveAck();
+    			
+    		}
+    	} catch (IOException e) {
+    		e.getStackTrace();
+    	}
+    	
+    	
+    	this.state = state.CLOSED;
+    	if(isValid(ack)) {
+    		connection.state = state.ESTABLISHED;
+    		connection.lastValidPacketReceived = ack;
+    		return connection;
+    	} else {
+    		throw new IOException("Unable to connect. No ACK or SYN_ACK received.");
+    	}
+        
     }
 
-    /**
+    private int createPortNumber() {
+    	int base = 49152, max = 65535;
+    	Random rn = new Random();
+    	return rn.nextInt(max - base) + base;
+	}
+
+	/**
      * Send a message from the application.
      * 
      * @param msg
