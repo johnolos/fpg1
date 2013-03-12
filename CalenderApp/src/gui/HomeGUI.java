@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.ListSelectionModel;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -21,6 +22,12 @@ import java.awt.Font;
 import javax.swing.JTextArea;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.SystemColor;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class HomeGUI extends JPanel {
 
@@ -56,8 +63,9 @@ public class HomeGUI extends JPanel {
 	private JLabel weekLabel = new JLabel("Uke" + ukeNr);
 
 	private JTextField weekTextField;
-	private JTextArea notificationTextField;
 
+	private JList<Object> list;
+	
 	private ImageIcon starFighterIcon;
 	private ImageIcon forrigeUke;
 	private ImageIcon nesteUke;
@@ -128,8 +136,6 @@ public class HomeGUI extends JPanel {
 
 		weekTextField = new JTextField();
 		weekTextField.setColumns(10);
-		notificationTextField = new JTextArea();
-		notificationTextField.setText("halloooo");
 
 		// ----------------------------------------------------------------//
 		// MethodCalls
@@ -226,12 +232,12 @@ public class HomeGUI extends JPanel {
 	
 	public void setColors(){
 		
-		this.setBackground(Color.DARK_GRAY);
-		headlinePanel.setBackground(Color.DARK_GRAY);
-		buttonPanel.setBackground(Color.DARK_GRAY);
-		calendarPanel.setBackground(Color.DARK_GRAY);
-		weekPanel.setBackground(Color.DARK_GRAY);
-		notificationPanel.setBackground(Color.DARK_GRAY);
+		this.setBackground(SystemColor.control);
+		headlinePanel.setBackground(SystemColor.control);
+		buttonPanel.setBackground(SystemColor.control);
+		calendarPanel.setBackground(SystemColor.control);
+		weekPanel.setBackground(SystemColor.control);
+		notificationPanel.setBackground(SystemColor.control);
 	}
 
 	public void initTable() {
@@ -359,66 +365,62 @@ public class HomeGUI extends JPanel {
 										.addContainerGap(107, Short.MAX_VALUE)));
 
 		weekPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JScrollPane scrollPane = new JScrollPane();
 
 		GroupLayout gl_notificationPanel = new GroupLayout(notificationPanel);
-		gl_notificationPanel
-				.setHorizontalGroup(gl_notificationPanel
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_notificationPanel
-										.createSequentialGroup()
-										.addGroup(
-												gl_notificationPanel
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																gl_notificationPanel
-																		.createSequentialGroup()
-																		.addGap(10)
-																		.addComponent(
-																				notificationLabel))
-														.addGroup(
-																gl_notificationPanel
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				notificationTextField,
-																				GroupLayout.PREFERRED_SIZE,
-																				100,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																gl_notificationPanel
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				starfighterLabel,
-																				GroupLayout.DEFAULT_SIZE,
-																				100,
-																				Short.MAX_VALUE)))
-										.addContainerGap())
-						.addGroup(
-								Alignment.TRAILING,
-								gl_notificationPanel.createSequentialGroup()
-										.addGap(29).addComponent(logoutButton)
-										.addContainerGap(22, Short.MAX_VALUE)));
-		gl_notificationPanel.setVerticalGroup(gl_notificationPanel
-				.createParallelGroup(Alignment.LEADING).addGroup(
-						gl_notificationPanel
-								.createSequentialGroup()
-								.addGap(9)
-								.addComponent(notificationLabel)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(notificationTextField,
-										GroupLayout.PREFERRED_SIZE, 245,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(11)
-								.addComponent(starfighterLabel,
-										GroupLayout.PREFERRED_SIZE, 124,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED,
-										GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addComponent(logoutButton).addContainerGap()));
+		gl_notificationPanel.setHorizontalGroup(
+			gl_notificationPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_notificationPanel.createSequentialGroup()
+					.addGroup(gl_notificationPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_notificationPanel.createSequentialGroup()
+							.addGap(10)
+							.addComponent(notificationLabel))
+						.addGroup(gl_notificationPanel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(starfighterLabel, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+						.addGroup(gl_notificationPanel.createSequentialGroup()
+							.addGap(29)
+							.addComponent(logoutButton))
+						.addGroup(gl_notificationPanel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		gl_notificationPanel.setVerticalGroup(
+			gl_notificationPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_notificationPanel.createSequentialGroup()
+					.addGap(9)
+					.addComponent(notificationLabel)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(starfighterLabel, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(logoutButton)
+					.addContainerGap())
+		);
+		
+		list = new JList();
+		list.setModel(new AbstractListModel<Object>() {
+			String[] values = new String[] {"asdasd", "asd", "asd", "asd", "as", "d", "asd"};
+			
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		list.addListSelectionListener(new ListSelectionListener(){
+			public void valueChanged(ListSelectionEvent e){
+//				ListSelectionModel selectionModel = (ListSelectionModel)e.getSource();
+				
+				System.out.println(list.getSelectedValue());
+			}
+		});
+		
+		scrollPane.setViewportView(list);
 		notificationPanel.setLayout(gl_notificationPanel);
 
 		GroupLayout gl_panel = new GroupLayout(headlinePanel);

@@ -7,6 +7,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -47,6 +49,11 @@ public class EditParticipantsPanel extends JPanel {
 		JButton saveButton = new JButton("Lagre");
 		
 		JButton cancelButton = new JButton("Avbryt");
+		cancelButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				frame.dispose();
+			}
+		});
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

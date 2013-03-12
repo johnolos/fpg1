@@ -12,6 +12,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import net.miginfocom.swing.MigLayout;
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -175,11 +176,12 @@ public class LoginPanel extends JPanel {
 	}
 
 	public void setColors() {
-		this.setBackground(Color.DARK_GRAY);
-		topPanel.setBackground(Color.DARK_GRAY);
-		middlePanel.setBackground(Color.DARK_GRAY);
+		this.setBackground(SystemColor.control);
 		nameLabel.setForeground(Color.BLACK);
 		passwordLabel.setForeground(Color.BLACK);
+		topPanel.setBackground(SystemColor.control);
+		middlePanel.setBackground(SystemColor.control);
+
 
 	}
 
