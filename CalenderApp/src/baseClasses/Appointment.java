@@ -20,14 +20,14 @@ public class Appointment implements Serializable {
         private Person admin;
                
  
-        Appointment(DateTime start, DateTime end, String location, String title, Room room, String description, Person admin) {
-                this.start=start;
-                this.end=end;
-                this.location=location;
-                this.room=room;
-                this.description=description;
-                this.admin=admin;
-                this.title=title;
+        public Appointment(DateTime start, DateTime end, String location, String title, Room room, String description, Person admin) {
+                this.start = start;
+                this.end = end;
+                this.location = location;
+                this.room = room;
+                this.description = description;
+                this.admin = admin;
+                this.title = title;
         }
  
  

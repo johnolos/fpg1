@@ -11,7 +11,7 @@ public class Group implements Serializable {
         // awe9j0q3
         ///kulti
        
-        Group(String name){
+        public Group(String name){
                 this.name=name;
         }
        
