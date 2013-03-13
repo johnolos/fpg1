@@ -144,7 +144,7 @@ public class Database {
 				DateTime endTime = date.toDateTime(end);
 				
 				//Get Room object from idRoom
-				Room room;
+				Room room = new Room(0,null);
 				//There may be no room
 				if(idRoom != 0){
 					String[] r = getRoom(idRoom);
@@ -272,6 +272,90 @@ public class Database {
 			System.out.println("ERROR in query");
 		}
 	}
+	
+	public void createAppointment(String title,String start, String end,String date,String description,String location, String admin,int roomId){
+		try {
+			String query = "INSERT INTO appointment (title,sTime,eTime,date,description,location,admin,room_idRoom)" +
+					" VALUES ('"+title+"', '"+start+"', '"+end+"','"+date+"','"+description+"'" +
+							",'"+location+"','"+admin+"','"+roomId+"')";
+			
+			con.createStatement().executeUpdate(query);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("ERROR in query for creating appointment in database");
+		}
+		
+	}
+	
+	public void changeAppointment(String idAppointment,String title,String start, String end,String date,String description,String location, String admin,int roomId){
+		try {
+			String query =  "UPDATE appointment " +
+							"SET title ='"+title+"', sTime='"+start+"',eTime='"+end+"', " +
+							"date='"+date+"',description='"+description+"',location='"+location+"'," +
+							"admin='"+admin+"',room_idRoom='"+roomId+"' " +
+							"WHERE idAppointment='"+idAppointment+"'";
+			
+			con.createStatement().executeUpdate(query);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR in query for changing appointment in database");
+		}
+	}
+	
+	public void createPersonAppointment(String appointmentID,String personID){
+		try{
+			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
+						   "VALUES ('"+appointmentID+"','"+personID+"')";
+			con.createStatement().executeUpdate(query);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("ERROR in query for updating person_appointment in database");
+		}
+	}
+	
+	public void addAlarm(String time,String appointmentID, String personID){
+		try{
+			String query = "INSERT INTO alarm (time,person_appointment_appointment_idAppointment,person_appointment_person_idPerson) " +
+						   "VALUES ('"+time+"','"+appointmentID+"','"+personID+"')";
+			con.createStatement().executeUpdate(query);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("ERROR in query for adding alarm in database");
+		}
+	}
+	
+	public void changeAlarm(String time,String appointmentID, String personID){
+		try{
+			String query = "UPDATE alarm " +
+						   "SET time = '"+time+"' " +
+						   "WHERE person_appointment_appointment_idAppointment = '"+appointmentID+"' AND " +
+						   	"person_appointment_person_idPerson = '"+personID+"'";
+			
+			con.createStatement().executeUpdate(query);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("ERROR in query for updating alarm in database");
+		}
+	}
+	
+	public void deleteAlarm(String idAlarm){
+		try{
+			String query = "DELETE FROM alarm " +
+						   "WHERE idAlarm = '"+idAlarm+"'";
+			
+			con.createStatement().executeUpdate(query);
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR in query for deleting alarm in database");
+		}
+	}
+	
 	
 	//For testing
 	public static void main(String [] args) throws Exception{
