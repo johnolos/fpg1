@@ -273,14 +273,17 @@ public class Database {
 		}
 	}
 	
-	public void createAppointment(String title,String start, String end,String date,String description,String location, String admin,int roomId){
+	public void createAppointment(Appointment app){
 		try {
 			String query = "INSERT INTO appointment (title,sTime,eTime,date,description,location,admin,room_idRoom)" +
-					" VALUES ('"+title+"', '"+start+"', '"+end+"','"+date+"','"+description+"'" +
-							",'"+location+"','"+admin+"','"+roomId+"')";
+					" VALUES ('"+app.getTitle()+"', '"+new Time(app.getStart().toLocalTime().getMillisOfDay())+"', " +
+							"'"+new Time(app.getEnd().toLocalTime().getMillisOfDay())+"'," +
+							"'"+new Date(app.getStart().toLocalDate().toDate().getTime())+"','"+app.getDescription()+"'" +
+							",'"+app.getLocation()+"','"+app.getAdmin()+"','"+getRoomId(app.getRoom())+"')";
 			
 			con.createStatement().executeUpdate(query);
 			
+			createPersonAppointment(app,app.getAdmin());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("ERROR in query for creating appointment in database");
@@ -288,13 +291,38 @@ public class Database {
 		
 	}
 	
-	public void changeAppointment(String idAppointment,String title,String start, String end,String date,String description,String location, String admin,int roomId){
+	private String getRoomId(Room room) {
+		try{
+			String query = "Select idRoom " +
+					"FROM room " +
+					"WHERE name = '"+room.getName()+"'";
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			while(res.next()){
+				return res.getString(1);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERRORR in getting roomID");
+		}
+		return null;
+	}
+
+	public void changeAppointment(Appointment app){
 		try {
 			String query =  "UPDATE appointment " +
-							"SET title ='"+title+"', sTime='"+start+"',eTime='"+end+"', " +
-							"date='"+date+"',description='"+description+"',location='"+location+"'," +
-							"admin='"+admin+"',room_idRoom='"+roomId+"' " +
-							"WHERE idAppointment='"+idAppointment+"'";
+							"SET title ='"+app.getTitle()+"', sTime='"+new Time(app.getStart().toLocalTime().getMillisOfDay())+"'," +
+							"eTime='"+new Time(app.getEnd().toLocalTime().getMillisOfDay())+"', " +
+							"date='"+new Date(app.getStart().toLocalDate().toDate().getTime())+"'," +
+							"description='"+app.getDescription()+"',location='"+app.getLocation()+"'," +
+							"admin='"+app.getAdmin()+"',room_idRoom='"+getRoomId(app.getRoom())+"' " +
+							"WHERE title='"+ app.getTitle() + "' " +
+							"AND sTime='"+ new Time(app.getStart().toLocalTime().getMillisOfDay()) +"' " +
+							"AND eTime='"+ new Time(app.getEnd().toLocalTime().getMillisOfDay()) +"' " +
+							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
+							"AND description='"+ app.getDescription() +"' " +
+							"AND admin = '"+app.getAdmin().getUsername()+"'";
 			
 			con.createStatement().executeUpdate(query);
 		}
@@ -304,10 +332,49 @@ public class Database {
 		}
 	}
 	
-	public void createPersonAppointment(String appointmentID,String personID){
+	private String getAppointmentId(Appointment app){
+		try{
+			String query = "SELECT idAppointment " +
+							"FROM appointment " +
+							"WHERE title='"+ app.getTitle() + "' " +
+							"AND sTime='"+ new Time(app.getStart().toLocalTime().getMillisOfDay()) +"' " +
+							"AND eTime='"+ new Time(app.getEnd().toLocalTime().getMillisOfDay()) +"' " +
+							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
+							"AND description='"+ app.getDescription() +"' " +
+							"AND admin = '"+app.getAdmin().getUsername()+"'";
+			ResultSet res = con.createStatement().executeQuery(query);
+			res.next();
+			return res.getString(1);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while getting appID");
+		}
+		return null;
+	}
+
+	private String getPersonId(Person person){
+
+		try{
+			String query = "SELECT idPerson " +
+							"FROM person " +
+							"WHERE username = '"+person.getUsername()+"'";
+			ResultSet res = con.createStatement().executeQuery(query);
+			res.next();
+			return res.getString(1);
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while getting idPerson");
+		}
+		return null;
+	}
+	
+	public void createPersonAppointment(Appointment app,Person person){
 		try{
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
-						   "VALUES ('"+appointmentID+"','"+personID+"')";
+						   "VALUES ('"+getAppointmentId(app)+"','"+getPersonId(person)+"')";
 			con.createStatement().executeUpdate(query);
 			
 		} catch (SQLException e) {
@@ -315,7 +382,20 @@ public class Database {
 			System.out.println("ERROR in query for updating person_appointment in database");
 		}
 	}
-	
+
+	public void deletePersonAppointment(Appointment app,Person person){
+		try{
+			String query = "DELETE FROM person_appointment " +
+							"WHERE appointment_idAppointment='"+getAppointmentId(app)+"' " +
+							"AND person_idPerson = '"+getPersonId(person)+"'";
+			
+			con.createStatement().executeUpdate(query);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("ERROR in query for updating person_appointment in database");
+		}
+	}
 	public void addAlarm(String time,String appointmentID, String personID){
 		try{
 			String query = "INSERT INTO alarm (time,person_appointment_appointment_idAppointment,person_appointment_person_idPerson) " +
