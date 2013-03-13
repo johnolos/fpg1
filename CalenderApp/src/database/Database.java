@@ -25,7 +25,7 @@ public class Database {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String CONNECTION = "jdbc:mysql://localhost:3306/mydb";
 	private final static String USER = "root";
-	private final static String PASSWORD = "bitnami";
+	private final static String PASSWORD = "Simbad!9";
 	
 	private java.sql.Connection con;
 	private java.sql.Statement statement;
@@ -436,7 +436,12 @@ public class Database {
 	//For testing
 	public static void main(String [] args) throws Exception{
 		Database db = new Database();
-		db.getPersonAppointments("test");
+		//db.registerUser("Hans", "test", "Hansf", "Olav", "hans@", "41638760");
+		/*if(db.login("Hans", "test")){
+			System.out.println("Jess");;
+		}*/
+		//System.out.println(db.getPerson("Hans").getEmail());
+		syso
 	}
 }
 	
