@@ -17,10 +17,10 @@ public class Appointment implements Serializable {
         private String title;
         private String description;
        
-        private Person admin;
+        private String admin;
                
  
-        public Appointment(DateTime start, DateTime end, String location, String title, Room room, String description, Person admin) {
+        public Appointment(DateTime start, DateTime end, String location, String title, Room room, String description, String admin) {
                 this.start = start;
                 this.end = end;
                 this.location = location;
