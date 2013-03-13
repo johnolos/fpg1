@@ -1,3 +1,4 @@
+package database;
 
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -79,19 +80,21 @@ public class Database {
 	public Person getPerson(String username){
 		try {
 			String query = "" +
-					"SELECT * " +
+					"SELECT username, email " +
 					"FROM person " +
 					"WHERE username='"+ username +"'";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
 			
-			if(res.next()) return true;
-			else return false;
+			while(res.next()){
+				return new Person(res.getString(1), res.getString(2));
+			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("ERROR in getPerson query");
 		}
+		return null;
 	}
 	
 	//Get all appointments from a person
