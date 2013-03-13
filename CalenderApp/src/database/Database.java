@@ -80,14 +80,14 @@ public class Database {
 	public Person getPerson(String username){
 		try {
 			String query = "" +
-					"SELECT username, email " +
+					"SELECT username, email, firstName, lastName " +
 					"FROM person " +
 					"WHERE username='"+ username +"'";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
 			
 			while(res.next()){
-				return new Person(res.getString(1), res.getString(2));
+				return new Person(res.getString(1), res.getString(2), res.getString(3), res.getString(4));
 			}
 			
 		} catch (SQLException e) {
@@ -131,7 +131,7 @@ public class Database {
 				int[] 	localDate = toInt(res.getString(5).split("-"));
 				String 	description = res.getString(6);
 				String 	location = res.getString(7);
-				int 	idPerson = Integer.parseInt(res.getString(8));
+				String 	admin = res.getString(8);
 				int 	idRoom = Integer.parseInt(res.getString(9));
 				
 				
@@ -150,10 +150,6 @@ public class Database {
 					String[] r = getRoom(idRoom);
 					room = new Room(Integer.parseInt(r[0]), r[1]);
 				}
-				
-				//Get Person object from idPerson
-				String[] p = getPerson(idPerson);
-				Person admin = new Person(p[0], p[1]);
 				
 				//Add appointment
 				appointments.add(new Appointment(startTime, endTime, location, title, room, description, admin));
