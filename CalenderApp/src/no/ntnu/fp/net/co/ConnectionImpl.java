@@ -201,7 +201,23 @@ public class ConnectionImpl extends AbstractConnection {
 	 * @see AbstractConnection#sendAck(KtnDatagram, boolean)
 	 */
 	public String receive() throws ConnectException, IOException {
-		throw new NotImplementedException();
+		if(this.state!=State.ESTABLISHED)
+			throw new IllegalStateException("Cannot receive if not established");
+		
+		KtnDatagram dataInn;
+		try{
+			dataInn=receivePacket(false);
+			}
+    catch (EOFException e){
+            throw e;
+    }
+		
+		if(!(isValid(dataInn)))
+			throw new IOException("Packet not valid");
+		
+		this.lastValidPacketReceived=dataInn;
+		sendAck(dataInn,false);
+		return (String) dataInn.getPayload();
 	}
 
 	/**
