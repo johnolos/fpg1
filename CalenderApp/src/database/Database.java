@@ -164,15 +164,11 @@ public class Database {
 	}
 	
 	//Delete given appointment from database
-	public void deleteAppointment(Appointment a){
+	public void deleteAppointment(Appointment app){
 		try {
 			String query = "" +
 					"DELETE FROM appointment " +
-					"WHERE title='"+ a.getTitle() + "' " +
-						"AND sTime='"+ new Time(a.getStart().toLocalTime().getMillisOfDay()) +"' " +
-						"AND eTime='"+ new Time(a.getEnd().toLocalTime().getMillisOfDay()) +"' " +
-						"AND date='"+ new Date(a.getStart().toLocalDate().toDate().getTime()) +"' " +
-						"AND description='"+ a.getDescription() +"'";
+					"WHERE idAppointment = '"+getAppointmentId(app)+"'";
 				
 			con.createStatement().executeUpdate(query);
 			
@@ -290,6 +286,9 @@ public class Database {
 	}
 	
 	private String getRoomId(Room room) {
+		if(room == null){
+			return "1";
+		}
 		try{
 			String query = "Select idRoom " +
 					"FROM room " +
@@ -320,7 +319,7 @@ public class Database {
 							"AND eTime='"+ new Time(app.getEnd().toLocalTime().getMillisOfDay()) +"' " +
 							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
 							"AND description='"+ app.getDescription() +"' " +
-							"AND admin = '"+app.getAdmin().getUsername()+"'";
+							"AND admin = '"+app.getAdmin()+"'";
 			
 			con.createStatement().executeUpdate(query);
 		}
@@ -339,7 +338,7 @@ public class Database {
 							"AND eTime='"+ new Time(app.getEnd().toLocalTime().getMillisOfDay()) +"' " +
 							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
 							"AND description='"+ app.getDescription() +"' " +
-							"AND admin = '"+app.getAdmin().getUsername()+"'";
+							"AND admin = '"+app.getAdmin()+"'";
 			ResultSet res = con.createStatement().executeQuery(query);
 			res.next();
 			return res.getString(1);
@@ -351,12 +350,24 @@ public class Database {
 		return null;
 	}
 
-	private String getPersonId(Person person){
+	public void agreedAppointment(Appointment app, Person person){
+		try{
+			String query = "UPDATE person_appointment  " +
+							"SET hasAgreed = 1";
+			con.createStatement().executeUpdate(query);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while changed agreed in database");
+		}
+	}
+
+	private String getPersonId(String person){
 
 		try{
 			String query = "SELECT idPerson " +
 							"FROM person " +
-							"WHERE username = '"+person.getUsername()+"'";
+							"WHERE username = '"+person+"'";
 			ResultSet res = con.createStatement().executeQuery(query);
 			res.next();
 			return res.getString(1);
@@ -369,7 +380,7 @@ public class Database {
 		return null;
 	}
 	
-	public void createPersonAppointment(Appointment app,Person person){
+	public void createPersonAppointment(Appointment app,String person){
 		try{
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
 						   "VALUES ('"+getAppointmentId(app)+"','"+getPersonId(person)+"')";
@@ -385,7 +396,7 @@ public class Database {
 		try{
 			String query = "DELETE FROM person_appointment " +
 							"WHERE appointment_idAppointment='"+getAppointmentId(app)+"' " +
-							"AND person_idPerson = '"+getPersonId(person)+"'";
+							"AND person_idPerson = '"+getPersonId(person.getUsername())+"'";
 			
 			con.createStatement().executeUpdate(query);
 			
@@ -437,13 +448,16 @@ public class Database {
 	
 	//For testing
 	public static void main(String [] args) throws Exception{
+
 		Database db = new Database();
 		//db.registerUser("Hans", "test", "Hansf", "Olav", "hans@", "41638760");
 		/*if(db.login("Hans", "test")){
 			System.out.println("Jess");;
 		}*/
 		//System.out.println(db.getPerson("Hans").getEmail());
-		syso
+		//db.createAppointment(new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "Test", null, "Ingen", "Hans"));
+		db.agreedAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));
+		//System.out.println(db.getPersonAppointments("Hans").get(0).getTitle());
 	}
 }
 	
