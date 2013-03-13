@@ -181,8 +181,13 @@ public class ConnectionImpl extends AbstractConnection {
 		}
 		KtnDatagram data = this.constructDataPacket(msg), ack = null;
 		int attemptsLeft = MAX_ATTEMPTS;
+		// Check if right ACK
 		while(attemptsLeft > 0 && ack == null) {
 			ack = this.sendDataPacketWithRetransmit(data);
+			// Perhaps check SEQNR from data with ACK from ACK + 1
+			if (data.getAck() != ack.getSeq_nr()) {
+				throw new IOException("Wrong ACK received");
+			}
 			attemptsLeft--; 
 		}
 	}
