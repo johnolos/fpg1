@@ -262,7 +262,18 @@ public class ConnectionImpl extends AbstractConnection {
 	 *            Packet to test.
 	 * @return true if packet is free of errors, false otherwise.
 	 */
+	
 	protected boolean isValid(KtnDatagram packet) {
-		throw new NotImplementedException();
+		// Check if packetSent.ACK == packetReceived.SEQ
+		if(this.lastDataPacketSent.getAck() != packet.getSeq_nr())
+			return false;
+		// Check if packetSent.SEQ + 1 == packetReceived.ACK
+		if(this.lastDataPacketSent.getSeq_nr() + 1 != packet.getAck())
+			return false;
+		// Check checksm
+		if(this.lastDataPacketSent.getChecksum() != packet.getChecksum())
+			return false;
+		return true;
 	}
+}
 }
