@@ -2,9 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="images"/>
-	<classpathentry kind="lib" path="/Users/andreastephansen/Downloads/joda-time-2.2/joda-time-2.2-javadoc.jar"/>
-	<classpathentry kind="lib" path="/Users/andreastephansen/Downloads/joda-time-2.2/joda-time-2.2-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/andreastephansen/Downloads/joda-time-2.2/joda-time-2.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/exxon_000/Documents/javalibs/joda-time-2.2/joda-time-2.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/exxon_000/Documents/javalibs/joda-time-2.2/joda-time-2.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/exxon_000/Documents/javalibs/joda-time-2.2/joda-time-2.2-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/exxon_000/Downloads/A1-Djc/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="C:/Users/exxon_000/Downloads/A1-Djc/lib/ktn_admin_and_a2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/exxon_000/Documents/javalibs/miglayout-4.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
