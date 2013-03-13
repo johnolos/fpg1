@@ -76,6 +76,24 @@ public class Database {
 		return false;
 	}
 	
+	public Person getPerson(String username){
+		try {
+			String query = "" +
+					"SELECT * " +
+					"FROM person " +
+					"WHERE username='"+ username +"'";
+				
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			if(res.next()) return true;
+			else return false;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("ERROR in getPerson query");
+		}
+	}
+	
 	//Get all appointments from a person
 	public void getPersonAppointments(String username){
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
