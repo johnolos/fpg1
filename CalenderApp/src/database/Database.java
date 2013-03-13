@@ -331,12 +331,13 @@ public class Database {
 	}
 	
 	private String getAppointmentId(Appointment app){
+		//System.out.println(app.getStart());
 		try{
 			String query = "SELECT idAppointment " +
 							"FROM appointment " +
 							"WHERE title='"+ app.getTitle() + "' " +
-							"AND sTime='"+ new Time(app.getStart().toLocalTime().minusHours(1).getMillisOfDay()) +"' " +
-							"AND eTime='"+ new Time(app.getEnd().toLocalTime().minusHours(1).getMillisOfDay()) +"' " +
+							"AND sTime='"+ new Time(app.getStart().toLocalTime().minusHours(0).getMillisOfDay()) +"' " +
+							"AND eTime='"+ new Time(app.getEnd().toLocalTime().minusHours(0).getMillisOfDay()) +"' " +
 							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
 							"AND description='"+ app.getDescription() +"' " +
 							"AND admin = '"+app.getAdmin()+"'";
@@ -451,6 +452,91 @@ public class Database {
 		}
 	}
 	
+	public Alarm getAlarm(Person person,Appointment app){
+		try{
+			String query = "SELECT time FROM alarm WHERE person_appointment_appointment_idAppointment = '"+getAppointmentId(app)+"' " +
+							"AND person_appointment_person_idPerson = '"+getPersonId(person.getUsername())+"'";
+			ResultSet res = con.createStatement().executeQuery(query);
+			res.next();
+			String [] temp = res.getString(1).split(" ");
+			int [] temp2 = toInt(temp[0].split("-"));
+			int [] temp3 = toInt(temp[1].split(":"));
+			
+			
+			return new Alarm(new DateTime(temp2[0],temp2[1],temp2[2],temp3[0],temp3[1],temp3[2]));
+								
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while getting alarm");
+		}
+		return null;
+	}
+	public ArrayList<Appointment> getDateAppointments(Person person,DateTime date2){
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+		
+		try {
+			String query = "" +
+					"SELECT a.* " +
+					"FROM appointment a, person_appointment pha, person p " +
+					"WHERE a.idAppointment = pha.appointment_idAppointment " +
+					"AND pha.person_idPerson=p.idPerson AND p.username='"+ person.getUsername() +" " +
+					"AND date = '"+new Date(date2.toLocalDate().toDate().getTime())+"'";
+				
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			//Add all appointments
+			while(res.next()){
+				/*
+				 * 1 = idAppointment
+				 * 2 = title
+				 * 3 = sTime (Start time)
+				 * 4 = eTime (End time)
+				 * 5 = date
+				 * 6 = description
+				 * 7 = location
+				 * 8 = admin
+				 * 9 = room_idRoom
+				 */
+				
+				//Get all values from ResultSet
+				String 	title = res.getString(2);
+				int[] 	localTimeStart = toInt(res.getString(3).split(":"));
+				int[] 	localTimeEnd = toInt(res.getString(4).split(":"));
+				int[] 	localDate = toInt(res.getString(5).split("-"));
+				String 	description = res.getString(6);
+				String 	location = res.getString(7);
+				String 	admin = res.getString(8);
+				int 	idRoom = Integer.parseInt(res.getString(9));
+				
+				
+				//Create time and date objects and combine them to DateTime
+				LocalTime start = new LocalTime(localTimeStart[0], localTimeStart[1]);
+				LocalTime end = new LocalTime(localTimeEnd[0], localTimeEnd[1]);
+				LocalDate date = new LocalDate(localDate[0], localDate[1], localDate[2]);
+				
+				DateTime startTime = date.toDateTime(start);
+				DateTime endTime = date.toDateTime(end);
+				
+				//Get Room object from idRoom
+				Room room = new Room(0,null);
+				//There may be no room
+				if(idRoom != 0){
+					String[] r = getRoom(idRoom);
+					room = new Room(Integer.parseInt(r[0]), r[1]);
+				}
+				
+				//Add appointment
+				appointments.add(new Appointment(startTime, endTime, location, title, room, description, admin));
+			}
+			return appointments;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("ERROR in getAppontment query");
+		}
+		return null;
+	}
 	
 	//For testing
 	public static void main(String [] args) throws Exception{
@@ -461,7 +547,7 @@ public class Database {
 			System.out.println("Jess");;
 		}*/
 		//System.out.println(db.getPerson("Hans").getEmail());
-		//db.createAppointment(new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "Test", null, "Ingen", "Hans"));
+		db.createAppointment(new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "Test", null, "Ingen", "Hans"));
 		//db.agreedAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));
 		//System.out.println(db.getPersonAppointments("Hans").get(0).getTitle());
 		//db.deleteAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));
