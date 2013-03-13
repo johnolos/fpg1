@@ -61,7 +61,7 @@ public class Appointment implements Serializable {
         }
  
  
-        public Person getAdmin() {
+        public String getAdmin() {
                 return admin;
         }
        
