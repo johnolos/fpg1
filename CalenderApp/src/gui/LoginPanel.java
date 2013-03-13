@@ -176,11 +176,11 @@ public class LoginPanel extends JPanel {
 	}
 
 	public void setColors() {
-		this.setBackground(SystemColor.control);
+		this.setBackground(UIManager.getColor("Panel.background"));
 		nameLabel.setForeground(Color.BLACK);
 		passwordLabel.setForeground(Color.BLACK);
-		topPanel.setBackground(SystemColor.control);
-		middlePanel.setBackground(SystemColor.control);
+		topPanel.setBackground(UIManager.getColor("Panel.background"));
+		middlePanel.setBackground(UIManager.getColor("Panel.background"));
 
 
 	}

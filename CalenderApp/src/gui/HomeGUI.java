@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -111,6 +112,7 @@ public class HomeGUI extends JPanel {
 
 		skipToWeekLabel = new JLabel("Hopp til uke:");
 		notificationLabel = new JLabel("Notifikasjoner");
+		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		headlineLabel = new JLabel("GRUPPE 1s KALENDERSYSTEM!!!");
 		headlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
 
@@ -176,6 +178,9 @@ public class HomeGUI extends JPanel {
 		
 		showColleaguesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				ShowColleaguesPanel showColleagues = new ShowColleaguesPanel();
+				
 			}
 		});
 		
@@ -232,12 +237,12 @@ public class HomeGUI extends JPanel {
 	
 	public void setColors(){
 		
-		this.setBackground(SystemColor.control);
-		headlinePanel.setBackground(SystemColor.control);
-		buttonPanel.setBackground(SystemColor.control);
-		calendarPanel.setBackground(SystemColor.control);
-		weekPanel.setBackground(SystemColor.control);
-		notificationPanel.setBackground(SystemColor.control);
+		this.setBackground(UIManager.getColor("Panel.background"));
+		headlinePanel.setBackground(UIManager.getColor("Panel.background"));
+		buttonPanel.setBackground(UIManager.getColor("Panel.background"));
+		calendarPanel.setBackground(UIManager.getColor("Panel.background"));
+		weekPanel.setBackground(UIManager.getColor("Panel.background"));
+		notificationPanel.setBackground(UIManager.getColor("Panel.background"));
 	}
 
 	public void initTable() {
@@ -414,7 +419,6 @@ public class HomeGUI extends JPanel {
 		});
 		list.addListSelectionListener(new ListSelectionListener(){
 			public void valueChanged(ListSelectionEvent e){
-//				ListSelectionModel selectionModel = (ListSelectionModel)e.getSource();
 				
 				System.out.println(list.getSelectedValue());
 			}

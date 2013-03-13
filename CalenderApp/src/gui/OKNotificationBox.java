@@ -10,6 +10,7 @@ import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import java.awt.Color;
 import java.awt.SystemColor;
+import javax.swing.UIManager;
 
 
 public class OKNotificationBox extends JPanel {
@@ -26,27 +27,28 @@ public class OKNotificationBox extends JPanel {
 		
 		JLabel lblSdfdf = new JLabel((String) null);
 		
-		JTextPane textPane = new JTextPane();
-		textPane.setBackground(SystemColor.control);
+		JTextArea textArea = new JTextArea();
+		textArea.setBackground(UIManager.getColor("Panel.background"));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(79)
 							.addComponent(lblSdfdf))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(143)
-							.addComponent(btnOk))
-						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(87)
 							.addComponent(lblTitleHere)))
-					.addContainerGap(124, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(23, Short.MAX_VALUE)
-					.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 292, GroupLayout.PREFERRED_SIZE)
-					.addGap(19))
+					.addContainerGap(108, Short.MAX_VALUE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(145, Short.MAX_VALUE)
+					.addComponent(btnOk)
+					.addGap(142))
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addGap(49)
+					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 237, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(48, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -55,11 +57,11 @@ public class OKNotificationBox extends JPanel {
 					.addComponent(lblTitleHere)
 					.addGap(28)
 					.addComponent(lblSdfdf)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
-					.addGap(17)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnOk)
-					.addGap(88))
+					.addGap(28))
 		);
 		setLayout(groupLayout);
 
