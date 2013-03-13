@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
+import baseClasses.Alarm;
 import baseClasses.Appointment;
 import baseClasses.Person;
 import baseClasses.Room;
@@ -164,11 +165,11 @@ public class Database {
 	}
 	
 	//Delete given appointment from database
-	public void deleteAppointment(Appointment app){
+	public void deleteAppointment(Appointment app,Person person){
 		try {
 			String query = "" +
 					"DELETE FROM appointment " +
-					"WHERE idAppointment = '"+getAppointmentId(app)+"'";
+					"WHERE idAppointment = '"+getAppointmentId(app)+"' AND admin = '"+person.getUsername()+"'";
 				
 			con.createStatement().executeUpdate(query);
 			
@@ -334,14 +335,16 @@ public class Database {
 			String query = "SELECT idAppointment " +
 							"FROM appointment " +
 							"WHERE title='"+ app.getTitle() + "' " +
-							"AND sTime='"+ new Time(app.getStart().toLocalTime().getMillisOfDay()) +"' " +
-							"AND eTime='"+ new Time(app.getEnd().toLocalTime().getMillisOfDay()) +"' " +
+							"AND sTime='"+ new Time(app.getStart().toLocalTime().minusHours(1).getMillisOfDay()) +"' " +
+							"AND eTime='"+ new Time(app.getEnd().toLocalTime().minusHours(1).getMillisOfDay()) +"' " +
 							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
 							"AND description='"+ app.getDescription() +"' " +
 							"AND admin = '"+app.getAdmin()+"'";
 			ResultSet res = con.createStatement().executeQuery(query);
+			
 			res.next();
 			return res.getString(1);
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -405,10 +408,12 @@ public class Database {
 			System.out.println("ERROR in query for updating person_appointment in database");
 		}
 	}
-	public void addAlarm(String time,String appointmentID, String personID){
+	public void addAlarm(DateTime time,Appointment app, Person person){
 		try{
 			String query = "INSERT INTO alarm (time,person_appointment_appointment_idAppointment,person_appointment_person_idPerson) " +
-						   "VALUES ('"+time+"','"+appointmentID+"','"+personID+"')";
+						   "VALUES ('"+new Date(time.toLocalDate().toDate().getTime())+"'" +
+						   	",'"+getAppointmentId(app)+"','"+getPersonId(person.getUsername())+"')";
+			
 			con.createStatement().executeUpdate(query);
 			
 		} catch (SQLException e) {
@@ -417,12 +422,12 @@ public class Database {
 		}
 	}
 	
-	public void changeAlarm(String time,String appointmentID, String personID){
+	public void changeAlarm(DateTime time,Appointment app, Person person){
 		try{
 			String query = "UPDATE alarm " +
-						   "SET time = '"+time+"' " +
-						   "WHERE person_appointment_appointment_idAppointment = '"+appointmentID+"' AND " +
-						   	"person_appointment_person_idPerson = '"+personID+"'";
+						   "SET time = '"+new Date(time.toLocalDate().toDate().getTime())+"' " +
+						   "WHERE person_appointment_appointment_idAppointment = '"+getAppointmentId(app)+"' AND " +
+						   	"person_appointment_person_idPerson = '"+getPersonId(person.getUsername())+"'";
 			
 			con.createStatement().executeUpdate(query);
 			
@@ -432,10 +437,11 @@ public class Database {
 		}
 	}
 	
-	public void deleteAlarm(String idAlarm){
+	public void deleteAlarm(Alarm alarm,Person person){
 		try{
 			String query = "DELETE FROM alarm " +
-						   "WHERE idAlarm = '"+idAlarm+"'";
+						   "WHERE time = '"+alarm.getAlarm()+"' " +
+						   "AND person_appointment_person_idPerson = '"+getPersonId(person.getUsername())+"'";
 			
 			con.createStatement().executeUpdate(query);
 			
@@ -456,8 +462,10 @@ public class Database {
 		}*/
 		//System.out.println(db.getPerson("Hans").getEmail());
 		//db.createAppointment(new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "Test", null, "Ingen", "Hans"));
-		db.agreedAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));
+		//db.agreedAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));
 		//System.out.println(db.getPersonAppointments("Hans").get(0).getTitle());
+		//db.deleteAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));
+		
 	}
 }
 	
