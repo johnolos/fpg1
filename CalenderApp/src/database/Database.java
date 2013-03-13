@@ -98,7 +98,7 @@ public class Database {
 	}
 	
 	//Get all appointments from a person
-	public void getPersonAppointments(String username){
+	public ArrayList<Appointment> getPersonAppointments(String username){
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		
 		try {
@@ -154,11 +154,13 @@ public class Database {
 				//Add appointment
 				appointments.add(new Appointment(startTime, endTime, location, title, room, description, admin));
 			}
+			return appointments;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("ERROR in getAppontment query");
 		}
+		return null;
 	}
 	
 	//Delete given appointment from database
