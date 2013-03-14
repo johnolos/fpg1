@@ -1,4 +1,4 @@
-package src.baseClasses;
+package baseClasses;
 
 public class Notification {
 
