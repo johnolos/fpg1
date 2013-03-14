@@ -1,4 +1,4 @@
-package gui;
+package src.gui;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;

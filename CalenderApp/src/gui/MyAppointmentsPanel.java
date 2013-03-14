@@ -1,4 +1,5 @@
-package gui;
+package src.gui;
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -25,6 +26,8 @@ import javax.swing.JTextArea;
 import javax.swing.JSpinner;
 
 import org.joda.time.DateTime;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
 
 
 public class MyAppointmentsPanel extends JPanel {
@@ -41,6 +44,7 @@ public class MyAppointmentsPanel extends JPanel {
 	private JFrame frame;
 	
 	JButton editParticipantsButton;
+	JButton removeAlarmButton;
 	JButton saveChangesButton;
 	JButton cancelChangesButton;
 	JButton declineMeetingButton;
@@ -74,7 +78,7 @@ public class MyAppointmentsPanel extends JPanel {
 
 		frame = new JFrame();
 		frame.setTitle("Mine avtaler");
-		frame.setSize(787, 710);
+		frame.setSize(787, 730);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setContentPane(this);
@@ -107,6 +111,7 @@ public class MyAppointmentsPanel extends JPanel {
 		locationField.setColumns(10);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		roomComboBox = new JComboBox();
 		roomComboBox.setEnabled(false);
@@ -136,6 +141,7 @@ public class MyAppointmentsPanel extends JPanel {
 		descriptionArea.setEnabled(false);
 		
 		scrollPane = new JScrollPane();
+		myAppointmentsList = new JList();
 		
 		alarmLabel = new JLabel("Alarm:");
 		
@@ -198,6 +204,13 @@ public class MyAppointmentsPanel extends JPanel {
 		
 		alarmMinuteSpinner = new JSpinner();
 		alarmMinuteSpinner.setEnabled(false);
+		
+		removeAlarmButton = new JButton("Fjern alarm");
+		removeAlarmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		removeAlarmButton.setEnabled(false);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -289,7 +302,9 @@ public class MyAppointmentsPanel extends JPanel {
 											.addGap(18)
 											.addComponent(alarmMinuteLabel)
 											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addGap(18)
+											.addComponent(removeAlarmButton))
 										.addGroup(groupLayout.createSequentialGroup()
 											.addComponent(alarmDayLabel)
 											.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -302,7 +317,7 @@ public class MyAppointmentsPanel extends JPanel {
 											.addComponent(alarmYearLabel)
 											.addGap(4)
 											.addComponent(alarmYearSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-									.addGap(31))))
+									.addGap(13))))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(130)
 							.addComponent(lblMineAvtaler)))
@@ -376,7 +391,8 @@ public class MyAppointmentsPanel extends JPanel {
 								.addComponent(alarmHourLabel)
 								.addComponent(alarmHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(alarmMinuteLabel)
-								.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(removeAlarmButton))))
 					.addGap(30)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(cancelMeetingButton)
@@ -386,7 +402,6 @@ public class MyAppointmentsPanel extends JPanel {
 					.addGap(407))
 		);
 		
-		myAppointmentsList = new JList();
 		myAppointmentsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				
@@ -401,6 +416,7 @@ public class MyAppointmentsPanel extends JPanel {
 		scrollPane.setViewportView(myAppointmentsList);
 		
 		participantsList = new JList();
+		participantsList.setBackground(UIManager.getColor("Panel.background"));
 		participantsList.setEnabled(false);
 		scrollPane_1.setViewportView(participantsList);
 		setLayout(groupLayout);
@@ -453,6 +469,9 @@ public class MyAppointmentsPanel extends JPanel {
 //			declineMeetingButton.setEnabled(false);
 //			cancelMeetingButton.setEnabled(true);
 //		}
+		
+//		if(AVTALEN HAS ALARM)
+			removeAlarmButton.setEnabled(b);
 	}
 	private void restrictSpinners(){
 		startHourSpinner.setModel(new SpinnerNumberModel(0, 0, 24, 1));

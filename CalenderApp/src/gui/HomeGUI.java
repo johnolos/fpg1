@@ -1,4 +1,4 @@
-package gui;
+package src.gui;
 
 
 import javax.swing.ImageIcon;
@@ -417,10 +417,14 @@ public class HomeGUI extends JPanel {
 				return values[index];
 			}
 		});
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(new ListSelectionListener(){
 			public void valueChanged(ListSelectionEvent e){
 				
-				System.out.println(list.getSelectedValue());
+				//Without this if statement both mouse click, then mouse move to another element and then mouse released will be recognized in valueChanged()
+				//With this if statement only the element(s) selected(highlighted) when mouse is released will recognized in valueChanged()
+				if(list.getValueIsAdjusting() == false)
+					System.out.println(list.getSelectedValue());
 			}
 		});
 		
