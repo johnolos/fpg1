@@ -166,7 +166,12 @@ public class LoginPanel extends JPanel {
 		
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(db.login(nameTextField.getText(), passwordField.getText())){
+				String pass = "";
+				for(int i=0; i<passwordField.getPassword().length; i++){
+					pass+=passwordField.getPassword()[i];
+				}
+				String[] keyword = {nameTextField.getText(), pass};
+				if(db.login(keyword)){
 					frame.dispose();
 					HomeGUI gotoHome = new HomeGUI();
 				}
