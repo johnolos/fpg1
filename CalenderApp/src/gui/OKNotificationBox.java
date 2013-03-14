@@ -11,59 +11,87 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.UIManager;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
-public class OKNotificationBox extends JPanel {
+public class OKNotificationBox extends JPanel implements ActionListener{
 
+	private JLabel titleLabel;
+	JButton okButton;
+	private JTextArea textArea;
+	private JButton btnX;
 	/**
 	 * Create the panel.
 	 */
 	public OKNotificationBox() {
+		okButton = new JButton("OK");
+		okButton.addActionListener(this);
 		
-		JButton btnOk = new JButton("OK");
+		titleLabel = new JLabel(">>Title<<");
+		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		JLabel lblTitleHere = new JLabel(">>TITLE HERE<<");
-		lblTitleHere.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		
-		JLabel lblSdfdf = new JLabel((String) null);
-		
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setBackground(UIManager.getColor("Panel.background"));
+		
+		btnX = new JButton("X");
+		btnX.addActionListener(this);
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(79)
-							.addComponent(lblSdfdf))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(87)
-							.addComponent(lblTitleHere)))
-					.addContainerGap(108, Short.MAX_VALUE))
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(145, Short.MAX_VALUE)
-					.addComponent(btnOk)
+					.addComponent(okButton)
 					.addGap(142))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(49)
 					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 237, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(48, Short.MAX_VALUE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(127)
+					.addComponent(titleLabel)
+					.addContainerGap(126, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(245, Short.MAX_VALUE)
+					.addComponent(btnX))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(24)
-					.addComponent(lblTitleHere)
-					.addGap(28)
-					.addComponent(lblSdfdf)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(24)
+							.addComponent(titleLabel))
+						.addComponent(btnX))
+					.addGap(34)
 					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnOk)
+					.addComponent(okButton)
 					.addGap(28))
 		);
 		setLayout(groupLayout);
 
 	}
+	
+	public void setTitle(String title){
+		this.titleLabel.setText(title);
+	}
+	
+	public void setDescription(String description){
+		this.textArea.setText(description);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(btnX)){
+			HomeGUI.list.clearSelection();
+			HomeGUI.layeredPane.moveToBack(this);
+		}
+		if(e.getSource().equals(okButton)){
+			HomeGUI.list.clearSelection();
+			HomeGUI.layeredPane.moveToBack(this);
+		}
+	}
+
 }

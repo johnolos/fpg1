@@ -29,6 +29,13 @@ import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JLayeredPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+
+import baseClasses.Notification;
+import baseClasses.NotificationEnum;
 
 public class HomeGUI extends JPanel {
 
@@ -38,7 +45,6 @@ public class HomeGUI extends JPanel {
 
 	String[] columnNames;
 	Object[][] data;
-	private JTable table;
 	private int ukeNr = 1;
 
 	private JFrame frame;
@@ -46,7 +52,6 @@ public class HomeGUI extends JPanel {
 	private JPanel headlinePanel;
 	private JPanel weekPanel;
 	private JPanel buttonPanel;
-	private JPanel calendarPanel;
 	private JPanel notificationPanel;
 
 	private JButton lastWeekButton;
@@ -65,11 +70,21 @@ public class HomeGUI extends JPanel {
 
 	private JTextField weekTextField;
 
-	private JList<Object> list;
+	static JList<Notification> list;
 	
 	private ImageIcon starFighterIcon;
 	private ImageIcon forrigeUke;
 	private ImageIcon nesteUke;
+	private JPanel panel_1;
+	private JButton btnDsadsa;
+	private JPanel calendarPanel;
+	
+	MeetingInvitationPanel meetingInvitationPanel;
+	OKNotificationBox okNotificationBox;
+	ParticipantDeclinedPanel participantDeclinedPanel;
+	private JTable table;
+
+	static JLayeredPane layeredPane;
 
 	public HomeGUI() {
 
@@ -79,7 +94,6 @@ public class HomeGUI extends JPanel {
 
 		headlinePanel = new JPanel();
 		buttonPanel = new JPanel();
-		calendarPanel = new JPanel();
 		weekPanel = new JPanel();
 		notificationPanel = new JPanel();
 
@@ -240,12 +254,12 @@ public class HomeGUI extends JPanel {
 		this.setBackground(UIManager.getColor("Panel.background"));
 		headlinePanel.setBackground(UIManager.getColor("Panel.background"));
 		buttonPanel.setBackground(UIManager.getColor("Panel.background"));
-		calendarPanel.setBackground(UIManager.getColor("Panel.background"));
 		weekPanel.setBackground(UIManager.getColor("Panel.background"));
 		notificationPanel.setBackground(UIManager.getColor("Panel.background"));
 	}
 
 	public void initTable() {
+//		table.setRowHeight(100);
 		columnNames = new String[] { "First Name", "Last Name", "Sport",
 				"# of Years", "Vegetarian" };
 
@@ -259,115 +273,95 @@ public class HomeGUI extends JPanel {
 						new Boolean(true) },
 				{ "Joe", "Brown", "Pool", new Integer(10), new Boolean(false) } };
 
-		table = new JTable(data, columnNames);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table.setRowHeight(100);
-		table.setVisible(true);
-		calendarPanel.add(table, "align left, wrap");
-
 	}
 
 	public void createLayout() {
+		
+		layeredPane = new JLayeredPane();
 
 		GroupLayout groupLayout = new GroupLayout(this);
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(
-																headlinePanel,
-																GroupLayout.DEFAULT_SIZE,
-																1256,
-																Short.MAX_VALUE)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								notificationPanel,
-																								GroupLayout.PREFERRED_SIZE,
-																								120,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								buttonPanel,
-																								GroupLayout.PREFERRED_SIZE,
-																								120,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								calendarPanel,
-																								GroupLayout.DEFAULT_SIZE,
-																								1130,
-																								Short.MAX_VALUE)
-																						.addComponent(
-																								weekPanel,
-																								GroupLayout.DEFAULT_SIZE,
-																								1130,
-																								Short.MAX_VALUE))))
-										.addContainerGap()));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(headlinePanel,
-												GroupLayout.PREFERRED_SIZE, 35,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING,
-																false)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				buttonPanel,
-																				GroupLayout.PREFERRED_SIZE,
-																				138,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)
-																		.addComponent(
-																				notificationPanel,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				Short.MAX_VALUE))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				weekPanel,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)
-																		.addComponent(
-																				calendarPanel,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				Short.MAX_VALUE)))
-										.addContainerGap(107, Short.MAX_VALUE)));
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(headlinePanel, GroupLayout.DEFAULT_SIZE, 1244, Short.MAX_VALUE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(notificationPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+								.addComponent(buttonPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(18)
+									.addComponent(weekPanel, GroupLayout.DEFAULT_SIZE, 1106, Short.MAX_VALUE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 1118, Short.MAX_VALUE)))))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(headlinePanel, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(buttonPanel, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(notificationPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(weekPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)))
+					.addGap(96))
+		);
+		
+		calendarPanel = new JPanel();
+		calendarPanel.setBounds(0, 0, 1106, 554);
+		layeredPane.add(calendarPanel);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"sfsdf", "dfsdf", "dwfsdf", "dsfsdf", "dsfsdf"},
+				{"df", "h", "h", "h", null},
+				{"hh", "h", "h", "fyh", "fyh"},
+				{"hfy", "hf", "yh", "uh", null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column"
+			}
+		));
+		GroupLayout gl_calendarPanel = new GroupLayout(calendarPanel);
+		gl_calendarPanel.setHorizontalGroup(
+			gl_calendarPanel.createParallelGroup(Alignment.TRAILING)
+				.addComponent(table, GroupLayout.DEFAULT_SIZE, 1106, Short.MAX_VALUE)
+		);
+		gl_calendarPanel.setVerticalGroup(
+			gl_calendarPanel.createParallelGroup(Alignment.TRAILING)
+				.addComponent(table, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+		);
+		calendarPanel.setLayout(gl_calendarPanel);
+		
+		meetingInvitationPanel = new MeetingInvitationPanel();
+		meetingInvitationPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		meetingInvitationPanel.setBounds(0, 111, 348, 379);
+		layeredPane.add(meetingInvitationPanel);
+		
+		participantDeclinedPanel = new ParticipantDeclinedPanel();
+		participantDeclinedPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		participantDeclinedPanel.setBounds(0, 111, 399, 262);
+		layeredPane.add(participantDeclinedPanel);
+		
+		okNotificationBox = new OKNotificationBox();
+		okNotificationBox.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		okNotificationBox.setBounds(0, 111, 334, 234);
+		layeredPane.add(okNotificationBox);
+		
+		panel_1 = new JPanel();
+		panel_1.setBounds(31, 99, 106, 64);
+		
 
 		weekPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
@@ -407,67 +401,75 @@ public class HomeGUI extends JPanel {
 		);
 		
 		list = new JList();
-		list.setModel(new AbstractListModel<Object>() {
-			String[] values = new String[] {"asdasd", "asd", "asd", "asd", "as", "d", "asd"};
+		list.setModel(new AbstractListModel<Notification>() {
+			Notification[] values = new Notification[] {new Notification(NotificationEnum.INVITATION), new Notification(NotificationEnum.DECLINED), new Notification(NotificationEnum.DECLINED), new Notification(NotificationEnum.OKBOX), new Notification(NotificationEnum.INVITATION)};
 			
 			public int getSize() {
 				return values.length;
 			}
-			public Object getElementAt(int index) {
+			public Notification getElementAt(int index) {
 				return values[index];
 			}
 		});
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(new ListSelectionListener(){
 			public void valueChanged(ListSelectionEvent e){
-				
+				Notification n;
 				//Without this if statement both mouse click, then mouse move to another element and then mouse released will be recognized in valueChanged()
 				//With this if statement only the element(s) selected(highlighted) when mouse is released will recognized in valueChanged()
-				if(list.getValueIsAdjusting() == false)
-					System.out.println(list.getSelectedValue());
+				if(list.getValueIsAdjusting() == false && list.getSelectedIndex() != -1){
+					n =  list.getSelectedValue();
+					if(n.getType().equals(NotificationEnum.INVITATION)){
+						meetingInvitationPanel.setTitle("Møteinnkalling fra " + n.getTitle());
+						meetingInvitationPanel.setTitleOfMeeting(n.getTitle());
+						meetingInvitationPanel.setDescription(n.getDescription());
+						meetingInvitationPanel.setStart(n.getStart());
+						meetingInvitationPanel.setEnd(n.getEnd());
+						meetingInvitationPanel.setLocation(n.getLocation());
+						layeredPane.moveToFront(meetingInvitationPanel);
+						layeredPane.moveToBack(okNotificationBox);
+						layeredPane.moveToBack(participantDeclinedPanel);
+					}
+					else if(n.getType().equals(NotificationEnum.OKBOX)){
+						okNotificationBox.setTitle(n.getTitle());
+						okNotificationBox.setDescription(n.getDescription());
+						layeredPane.moveToFront(okNotificationBox);
+						layeredPane.moveToBack(meetingInvitationPanel);
+						layeredPane.moveToBack(participantDeclinedPanel);
+					}
+					else if(n.getType().equals(NotificationEnum.DECLINED)){
+						participantDeclinedPanel.setTitle(n.getTitle());
+						participantDeclinedPanel.setDeclinedMeeting(n.getMeetingName());
+						participantDeclinedPanel.setTimeOfMeeting(n.getTimeOfMeeting());
+						participantDeclinedPanel.setParticipant(n.getDeclinedParticipant());
+						layeredPane.moveToFront(participantDeclinedPanel);
+						layeredPane.moveToBack(meetingInvitationPanel);
+						layeredPane.moveToBack(okNotificationBox);
+					}
+				}
+					
 			}
 		});
+		list.setCellRenderer(new NotificationListRenderer());
 		
 		scrollPane.setViewportView(list);
 		notificationPanel.setLayout(gl_notificationPanel);
 
-		GroupLayout gl_panel = new GroupLayout(headlinePanel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(
+		GroupLayout gl_panel1 = new GroupLayout(headlinePanel);
+		gl_panel1.setHorizontalGroup(gl_panel1.createParallelGroup(
 				Alignment.LEADING).addGroup(
-				gl_panel.createSequentialGroup()
+				gl_panel1.createSequentialGroup()
 						.addContainerGap()
 						.addComponent(headlineLabel, GroupLayout.DEFAULT_SIZE,
 								GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGap(384)));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(
+		gl_panel1.setVerticalGroup(gl_panel1.createParallelGroup(
 				Alignment.LEADING).addGroup(
-				gl_panel.createSequentialGroup()
+				gl_panel1.createSequentialGroup()
 						.addComponent(headlineLabel)
 						.addContainerGap(GroupLayout.DEFAULT_SIZE,
 								Short.MAX_VALUE)));
-		headlinePanel.setLayout(gl_panel);
-		GroupLayout gl_calendarPanel = new GroupLayout(calendarPanel);
-		gl_calendarPanel
-				.setHorizontalGroup(gl_calendarPanel.createParallelGroup(
-						Alignment.LEADING)
-						.addGroup(
-								gl_calendarPanel
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(table,
-												GroupLayout.DEFAULT_SIZE, 750,
-												Short.MAX_VALUE)
-										.addContainerGap()));
-		gl_calendarPanel.setVerticalGroup(gl_calendarPanel.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_calendarPanel
-						.createSequentialGroup()
-						.addGap(5)
-						.addComponent(table, GroupLayout.PREFERRED_SIZE,
-								GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(44, Short.MAX_VALUE)));
-		calendarPanel.setLayout(gl_calendarPanel);
+		headlinePanel.setLayout(gl_panel1);
 		buttonPanel.add(showColleaguesButton);
 		setLayout(groupLayout);
 
