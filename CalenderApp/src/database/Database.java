@@ -26,7 +26,7 @@ public class Database {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String CONNECTION = "jdbc:mysql://localhost:3306/mydb";
 	private final static String USER = "root";
-	private final static String PASSWORD = "123";
+	private final static String PASSWORD = "lol123";
 	
 	private java.sql.Connection con;
 	private java.sql.Statement statement;
@@ -546,8 +546,8 @@ public class Database {
 		/*if(db.login("Hans", "test")){
 			System.out.println("Jess");;
 		}*/
-		//System.out.println(db.getPerson("Hans").getEmail());
-		db.createAppointment(new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "Test", null, "Ingen", "Hans"));
+		System.out.println(db.getPerson("Hans").getEmail());
+		//db.createAppointment(new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "Test", null, "Ingen", "Hans"));
 		//db.agreedAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));
 		//System.out.println(db.getPersonAppointments("Hans").get(0).getTitle());
 		//db.deleteAppointment(db.getPersonAppointments("Hans").get(0),db.getPerson("Hans"));

@@ -1,4 +1,4 @@
-package src.gui;
+package gui;
 
 
 import javax.swing.ImageIcon;
@@ -61,7 +61,7 @@ public class HomeGUI extends JPanel {
 	private JLabel headlineLabel;
 	private JLabel starfighterLabel;
 	private JLabel skipToWeekLabel;
-	private JLabel weekLabel = new JLabel("Uke" + ukeNr);
+	private JLabel weekLabel;
 
 	private JTextField weekTextField;
 
@@ -115,6 +115,7 @@ public class HomeGUI extends JPanel {
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		headlineLabel = new JLabel("GRUPPE 1s KALENDERSYSTEM!!!");
 		headlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
+		weekLabel = new JLabel("Uke" + ukeNr);
 
 		// ----------------------------------------------------------------//
 		// Buttons
@@ -137,7 +138,8 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		weekTextField = new JTextField();
-		weekTextField.setColumns(10);
+		weekTextField.setColumns(2);			
+
 
 		// ----------------------------------------------------------------//
 		// MethodCalls
@@ -187,17 +189,22 @@ public class HomeGUI extends JPanel {
 		nextWeekButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ukeNr += 1;
-				ukeNr = ukeNr % 52;
+				if (ukeNr == 53)
+					ukeNr = 1;
 				weekLabel.setText("Uke " + ukeNr);
 			}
 		});
 		
 		lastWeekButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				ukeNr -= 1;
 				if (ukeNr < 0) {
 					ukeNr = ukeNr + 52;
 				}
+				
+				if (ukeNr == 0)
+					ukeNr = 52;
 				weekLabel.setText("Uke " + ukeNr);
 
 			}

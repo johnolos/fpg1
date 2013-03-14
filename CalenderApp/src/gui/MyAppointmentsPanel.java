@@ -1,4 +1,4 @@
-package src.gui;
+package gui;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;

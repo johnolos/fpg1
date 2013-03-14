@@ -18,8 +18,12 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
+import database.Database;
+
 public class RegisterGUI extends JPanel {
 
+	//Når username deselekteres, skal brukeren få vite om brukernavnet er ledig eller ei.
+	
 	// ----------------------------------------------------------------//
 	// Fields
 	// ----------------------------------------------------------------//
@@ -35,6 +39,7 @@ public class RegisterGUI extends JPanel {
 
 	private JTextField usernameTextField;
 	private JPasswordField passwordTextField;
+	private JPasswordField confirmPasswordTextField;
 	private JTextField firstNameTextField;
 	private JTextField lastNameTextField;
 	private JTextField telephoneTextField;
@@ -43,9 +48,20 @@ public class RegisterGUI extends JPanel {
 	private JFrame frame;
 	private JButton registerButton;
 	private JButton abortButton;
-	private JPasswordField confirmPasswordTextField;
+	
+	Database db;
 
 	public RegisterGUI() {
+		
+		
+		
+		try {
+			db = new Database();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Could not connect to database");
+		}
 
 		// ----------------------------------------------------------------//
 		// Frame
@@ -128,7 +144,15 @@ public class RegisterGUI extends JPanel {
 		
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frame.dispose();
+				if(!passwordTextField.getText().equals(confirmPasswordTextField.getText())){
+					passwordLabel.setBackground(Color.RED);
+					confirmPasswordLabel.setBackground(Color.RED);
+					frame.repaint();
+				}
+				else{
+					registerUser();
+					frame.dispose();
+				}
 			}
 		});
 		
@@ -136,13 +160,22 @@ public class RegisterGUI extends JPanel {
 			public void keyReleased(KeyEvent e) {
 				if ((e.getKeyCode() == KeyEvent.VK_ENTER)){
 					if (confirmPasswordTextField.getPassword().length > 0) {
-					frame.dispose();
-					LoginPanel gotoLogin = new LoginPanel();
+					registerButton.doClick();
+					//LoginPanel gotoLogin = new LoginPanel();
 					} else
 					System.out.println("You didn't type nothing, dawg");
 				}
 			}
 
+		});
+		
+		telephoneTextField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (confirmPasswordTextField.getText().length() > 0) {
+					registerButton.doClick();
+				} else
+					System.out.println("ERROR");
+			}
 		});
 		
 		
@@ -232,5 +265,9 @@ public class RegisterGUI extends JPanel {
 
 		setLayout(groupLayout);
 
+	}
+	
+	public void registerUser(){
+		db.registerUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText());
 	}
 }

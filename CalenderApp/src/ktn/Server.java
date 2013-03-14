@@ -12,6 +12,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import database.Database;
+
 public class Server {
 	private int port;
 	private String serverAddress;
@@ -63,9 +65,9 @@ public class Server {
 				InputStreamReader inFromClient = new InputStreamReader(clientInputStream);
 				
 				// Create ObjectOutputStream
-				ObjectOutputStream objectOut = new ObjectOutputStream(clientOutputStream);
+				//ObjectOutputStream objectOut = new ObjectOutputStream(clientOutputStream);
 				//Create InputObjectStream
-				ObjectInputStream objectIn = new ObjectInputStream(clientInputStream);
+				//ObjectInputStream objectIn = new ObjectInputStream(clientInputStream);
 				// Create Buffer InputStreamReader
 				BufferedReader stringFromClient = new BufferedReader(inFromClient);
 				// Create PrintWriter for OutputStream
@@ -92,9 +94,44 @@ public class Server {
 		}
 
 	}
+	
+	
+	void databaseQuery(RequestObjects obj) {
+		Database database = null;
+		try {
+			database = new Database();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while connecting to database - ktnSTYLE");
+		}
+		
+		String[] keyword;
+		RequestEnum reType;
+		keyword = obj.getSearch();
+		reType = obj.getReType();
+		
+		
+		switch(reType) {
+		case LOGIN:
+			Boolean bol = database.login(keyword[0], keyword[1]);
+			System.out.println(bol);
+			break;
+		case APPOINTMENT:
+			
+			break;
+		case PERSON:
+			break;
+		case ALARM:
+			break;
+		case ROOM:
+			break;
+		default:
+			break;
+		}
+	}
 
 	// Main-function to start server
 	public static void main(String[] args) {
-		new Server(7899, "127.0.0.1").startServer();
+		new Server(4295, "78.91.62.42").startServer();
 	}
 }
