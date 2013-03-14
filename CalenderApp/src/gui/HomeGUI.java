@@ -24,6 +24,8 @@ import javax.swing.JTextArea;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.SystemColor;
+import java.util.ArrayList;
+
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
@@ -85,6 +87,7 @@ public class HomeGUI extends JPanel {
 	private JTable table;
 
 	static JLayeredPane layeredPane;
+	static ArrayList<Object> listOfFrames;
 
 	public HomeGUI() {
 
