@@ -1,4 +1,4 @@
-package src.gui;
+package gui;
 
 
 import javax.swing.JPanel;
@@ -18,6 +18,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
+import database.Database;
+
 public class RegisterGUI extends JPanel {
 
 	// ----------------------------------------------------------------//
@@ -35,6 +37,7 @@ public class RegisterGUI extends JPanel {
 
 	private JTextField usernameTextField;
 	private JPasswordField passwordTextField;
+	private JPasswordField confirmPasswordTextField;
 	private JTextField firstNameTextField;
 	private JTextField lastNameTextField;
 	private JTextField telephoneTextField;
@@ -43,9 +46,19 @@ public class RegisterGUI extends JPanel {
 	private JFrame frame;
 	private JButton registerButton;
 	private JButton abortButton;
-	private JPasswordField confirmPasswordTextField;
+
+	
+	Database db;
 
 	public RegisterGUI() {
+		
+		try {
+			db = new Database();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Could not connect to database");
+		}
 
 		// ----------------------------------------------------------------//
 		// Frame
@@ -128,6 +141,7 @@ public class RegisterGUI extends JPanel {
 		
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				registerUser();
 				frame.dispose();
 			}
 		});
@@ -232,5 +246,9 @@ public class RegisterGUI extends JPanel {
 
 		setLayout(groupLayout);
 
+	}
+	
+	public void registerUser(){
+		db.registerUser(usernameTextField.getText(), passwordTextField.getPassword().toString(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText());
 	}
 }
