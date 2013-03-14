@@ -6,17 +6,20 @@ import baseClasses.Appointment;
 
 public class RequestObjects implements Serializable{
 	
-	requestType reType;
-	String search;
+	RequestEnum reType;
+	String[] keyword;
 	
-	public RequestObjects(requestType reType, String search) {
+	public RequestObjects(RequestEnum reType, String[] keyword) {
 		this.reType = reType;
-		this.search = search;
+		this.keyword = keyword;
 	}
 	
 	
-	public enum requestType{
-		APPOINTMENT,PERSON,ALARM,ROOM;
+	public RequestEnum getReType() {
+		return this.reType;
 	}
-
+	
+	public String[] getSearch() {
+		return this.keyword;
+	}
 }
