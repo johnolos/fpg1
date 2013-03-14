@@ -4,27 +4,38 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 
 
-public class MeetingInvitationPanel extends JPanel {
+public class MeetingInvitationPanel extends JPanel implements ActionListener {
+	private JLabel lblMteinnkallingFranavn;
+	
+	JTextArea descriptionArea;
+	
 	private JTextField titleField;
 	private JTextField startField;
 	private JTextField endField;
 	private JTextField locationField;
+	
+	private JButton acceptButton;
+	private JButton declineButton;
+	private JButton btnX;
 
 	/**
 	 * Create the panel.
 	 */
 	public MeetingInvitationPanel() {
 		
-		JLabel lblMteinnkallingFranavn = new JLabel("M\u00F8teinnkalling fra >>NAVN<<");
+		lblMteinnkallingFranavn = new JLabel("M\u00F8teinnkalling fra >>NAVN<<");
 		lblMteinnkallingFranavn.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		JLabel lblTittel = new JLabel("Tittel:");
+		JLabel titleLabel = new JLabel("Tittel:");
 		
 		JLabel lblNewLabel = new JLabel("Start:");
 		
@@ -46,20 +57,25 @@ public class MeetingInvitationPanel extends JPanel {
 		locationField = new JTextField();
 		locationField.setColumns(10);
 		
-		JTextArea descriptionArea = new JTextArea();
+		descriptionArea = new JTextArea();
 		
-		JButton acceptButton = new JButton("Godta");
+		acceptButton = new JButton("Godta");
+		acceptButton.addActionListener(this);
 		
-		JButton declineButton = new JButton("Avsl\u00E5");
+		declineButton = new JButton("Avsl\u00E5");
+		declineButton.addActionListener(this);
+		
+		btnX = new JButton("X");
+		btnX.addActionListener(this);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(35)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblBeskrivelse, Alignment.TRAILING)
 						.addComponent(lblNewLabel, Alignment.TRAILING)
-						.addComponent(lblTittel, Alignment.TRAILING)
+						.addComponent(titleLabel, Alignment.TRAILING)
 						.addComponent(lblNewLabel_1, Alignment.TRAILING)
 						.addComponent(lblSlutt, Alignment.TRAILING))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -69,8 +85,8 @@ public class MeetingInvitationPanel extends JPanel {
 						.addComponent(descriptionArea, GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
 						.addComponent(endField)
 						.addComponent(startField))
-					.addContainerGap(17, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(67, Short.MAX_VALUE))
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(73, Short.MAX_VALUE)
 					.addComponent(lblMteinnkallingFranavn)
 					.addGap(48))
@@ -80,15 +96,19 @@ public class MeetingInvitationPanel extends JPanel {
 					.addGap(39)
 					.addComponent(declineButton)
 					.addContainerGap(100, Short.MAX_VALUE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(259, Short.MAX_VALUE)
+					.addComponent(btnX))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(26)
+					.addComponent(btnX)
+					.addGap(3)
 					.addComponent(lblMteinnkallingFranavn)
 					.addGap(36)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblTittel)
+						.addComponent(titleLabel)
 						.addComponent(titleField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -114,6 +134,43 @@ public class MeetingInvitationPanel extends JPanel {
 		);
 		setLayout(groupLayout);
 
+	}	
+	
+	public void setTitle(String title){
+		lblMteinnkallingFranavn.setText(title);
+	}
+	
+	public void setTitleOfMeeting(String title){
+		titleField.setText(title);
+	}
+	
+	public void setStart(String start){
+		startField.setText(start);
+	}
+	
+	public void setEnd(String end){
+		endField.setText(end);
+	}
+	
+	public void setLocation(String location){
+		locationField.setText(location);
+	}
+	
+	public void setDescription(String desc){
+		descriptionArea.setText(desc);
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		if(e.getSource().equals(acceptButton)){
+			//Send over nett at du accepter
+		}
+		else if(e.getSource().equals(declineButton)){
+			//Send over nett at du decliner
+		}
+		HomeGUI.list.clearSelection();
+		HomeGUI.layeredPane.moveToBack(this);
+		
+	}
 }

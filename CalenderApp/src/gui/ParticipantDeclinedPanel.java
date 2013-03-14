@@ -4,44 +4,60 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 
 
-public class ParticipantDeclinedPanel extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
+	JLabel lblDeltagerAvsltt;
+	
+	private JTextField declinedMeetingField;
+	private JTextField timeOfMeetingField;
+	private JTextField participantField;
 
+	
+	JButton btnX;
+	JButton changeButton;
+	JButton removeParticipantButton;
+	JButton cancelButton;
 	/**
 	 * Create the panel.
 	 */
 	public ParticipantDeclinedPanel() {
 		
-		JLabel lblDeltagerAvsltt = new JLabel("Deltager avsl\u00E5tt");
+		lblDeltagerAvsltt = new JLabel("Deltager avsl\u00E5tt");
 		lblDeltagerAvsltt.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		JButton changeButton = new JButton("Endre m\u00F8tedetaljer");
+		changeButton = new JButton("Endre m\u00F8tedetaljer");
+		changeButton.addActionListener(this);
 		
-		JButton removeParticipantButton = new JButton("Fjern deltager");
+		removeParticipantButton = new JButton("Fjern deltager");
+		removeParticipantButton.addActionListener(this);
 		
-		JButton cancelButton = new JButton("Avlys m\u00F8te");
+		cancelButton = new JButton("Avlys m\u00F8te");
+		cancelButton.addActionListener(this);
 		
-		JLabel TitleLabel = new JLabel("Avsl\u00E5tt m\u00F8te:");
+		JLabel titleLabel = new JLabel("Avsl\u00E5tt m\u00F8te:");
 		
 		JLabel timeLabel = new JLabel("M\u00F8tetidspunkt:");
 		
 		JLabel participantLabel = new JLabel("Deltager:");
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		declinedMeetingField = new JTextField();
+		declinedMeetingField.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
+		timeOfMeetingField = new JTextField();
+		timeOfMeetingField.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
+		participantField = new JTextField();
+		participantField.setColumns(10);
+		
+		btnX = new JButton("X");
+		btnX.addActionListener(this);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -64,31 +80,35 @@ public class ParticipantDeclinedPanel extends JPanel {
 									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 										.addComponent(participantLabel)
 										.addComponent(timeLabel)
-										.addComponent(TitleLabel))
+										.addComponent(titleLabel))
 									.addGap(18)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(textField_2, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-										.addComponent(textField_1)
-										.addComponent(textField))))))
+										.addComponent(participantField, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+										.addComponent(timeOfMeetingField)
+										.addComponent(declinedMeetingField))))))
 					.addContainerGap(20, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(310, Short.MAX_VALUE)
+					.addComponent(btnX))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(30)
+					.addComponent(btnX)
+					.addGap(7)
 					.addComponent(lblDeltagerAvsltt)
 					.addGap(35)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(TitleLabel)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(titleLabel)
+						.addComponent(declinedMeetingField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(timeLabel)
-						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(timeOfMeetingField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(participantLabel)
-						.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(participantField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(changeButton)
@@ -98,6 +118,37 @@ public class ParticipantDeclinedPanel extends JPanel {
 		);
 		setLayout(groupLayout);
 
+	}
+	
+	public void setTitle(String title){
+		lblDeltagerAvsltt.setText(title);
+	}
+	
+	public void setDeclinedMeeting(String meeting){
+		declinedMeetingField.setText(meeting);
+	}
+	
+	public void setTimeOfMeeting(String time){
+		timeOfMeetingField.setText(time);
+	}
+	
+	public void setParticipant(String partic){
+		participantField.setText(partic);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(changeButton)){
+			//Åpne endre avtale med den avtalen det gjelder
+		}
+		else if(e.getSource().equals(removeParticipantButton)){
+			//Send over nett at du fjerner deltageren
+		}
+		else if(e.getSource().equals(cancelButton)){
+			//Send over nett at du avlyser møtet
+		}
+		HomeGUI.list.clearSelection();
+		HomeGUI.layeredPane.moveToBack(this);
 	}
 
 }

@@ -1,7 +1,13 @@
 package ktn;
 
-public class SendObject {
+import java.io.Serializable;
+
+public class SendObject implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4059218807183200253L;
 	private RequestEnum sendType;
 	private Object object;
 	
