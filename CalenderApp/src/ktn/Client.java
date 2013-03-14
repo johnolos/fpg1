@@ -88,6 +88,15 @@ public class Client {
 		}
 	}
 	
+	private void send(SendObject obj) {
+		try {
+			this.objectOutput.writeObject(obj);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	// Receive function to read object from ObjectInputStream
 	private SendObject receive() {
 		Object receivedObject = null;
@@ -187,8 +196,18 @@ public class Client {
 	}
 
 	// Admin is stored in Appointment. Server gets the username from this field.
-	public void setAppointment(Appointment app) {
-		SendObject sendObj = new SendObject(null, sendObj);
+	public boolean setAppointment(Appointment app) {
+		SendObject sendObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
+		this.send(sendObj);
+		SendObject receivedObj = this.receive();
+		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		Boolean bol = (Boolean)receivedObj.getObject();
+		return bol.booleanValue();	
 	}
 	
 	
