@@ -15,20 +15,19 @@ import java.net.Socket;
 import database.Database;
 
 public class Server {
-	private int port;
-	private String serverAddress;
+	private final static String SERVERIP = "78.91.62.42";
+	private final static int SERVERPORT = 4004;
 
-	public Server(int port, String serverAddress) {
-		this.port = port;
-		this.serverAddress = serverAddress;
+	public Server() {
+		startServer();
 	}
 
 	public void startServer() {
 		try {
 			// Creating a ServerSocket: Is not used further
-			ServerSocket serverSocket = new ServerSocket(this.port, 50, InetAddress.getByName(serverAddress));
+			ServerSocket serverSocket = new ServerSocket(this.SERVERPORT, 50, InetAddress.getByName(this.SERVERIP));
 			// Printing IP:Port for the server
-			System.out.println("Waiting for connections on " + this.serverAddress + " : " + this.port);
+			System.out.println("Waiting for connections on " + this.SERVERIP + " : " + this.SERVERPORT);
 			
 			// A never-ending while-loop that constantly listens to the Socket
 			Socket newConnectionSocket;
@@ -49,6 +48,8 @@ public class Server {
 	// Thread class for handling further connection with server when connection is established
 	class ClientConnection extends Thread {
 		private Socket connection;
+		private ObjectOutputStream objectOut;
+		private ObjectInputStream objectIn;
 		ClientConnection(Socket connection) {
 			this.connection = connection;
 		}
@@ -65,27 +66,23 @@ public class Server {
 				InputStreamReader inFromClient = new InputStreamReader(clientInputStream);
 				
 				// Create ObjectOutputStream
-				//ObjectOutputStream objectOut = new ObjectOutputStream(clientOutputStream);
+				objectOut = new ObjectOutputStream(clientOutputStream);
 				//Create InputObjectStream
-				//ObjectInputStream objectIn = new ObjectInputStream(clientInputStream);
-				// Create Buffer InputStreamReader
-				BufferedReader stringFromClient = new BufferedReader(inFromClient);
-				// Create PrintWriter for OutputStream
-				PrintWriter outToClient = new PrintWriter(clientOutputStream, true);
+				objectIn = new ObjectInputStream(clientInputStream);
+				
 				System.out.println("Waiting for message from client");
 				
 				// While-loop to ensure continuation of reading in-coming messages
-				String fromClient;
 				while (true) {
 					
+					try {
+						Object obj = this.objectIn.readObject();
+						
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 					
-					
-					// Reads message from buffer
-					fromClient = stringFromClient.readLine();
-					System.out.println("Message from client: " + fromClient);
-					// Prints "OK:" + "messageFromClient" using PrintWriter to OutputStream
-					outToClient.println("OK: " + fromClient);
-					// System.out.println(clientSocket.getLocalSocketAddress());
+
 				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -94,7 +91,9 @@ public class Server {
 		}
 
 	}
-	
+	private void isRequestObject(Object obj){
+		obj
+	}
 	
 	void databaseQuery(RequestObjects obj) {
 		Database database = null;
