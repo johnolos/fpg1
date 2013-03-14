@@ -1,11 +1,9 @@
 package database;
 
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 
 import baseClasses.Alarm;
@@ -44,18 +42,20 @@ public class Database {
 	}
 	
 	//Register a user in the database
-	public void registerUser(String username, String password, String firstName, String lastName, String email, String tlf){
+	public void registerUser(String[] keyword){
 		try {
 			String query = "" + 
 					"INSERT INTO person(username, password, firstName, lastName, email, telefon) " +
-					"VALUES ('"+ username +"',SHA1('"+ password +"'),'"+ firstName +"','"+ lastName +"','"+ email +"','"+ tlf +"')";
+					"VALUES ('"+ 		keyword[0] +
+							"',SHA1('"+ keyword[1] +
+							"'),'"+ 	keyword[2] +
+							"','"+ 		keyword[3] +
+							"','"+ 		keyword[4] +
+							"','"+ 		keyword[5] +"')";
 				
 			con.createStatement().executeUpdate(query);
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for updating database");
-		}
+		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
 	//Confirms that a person with username and password exists
@@ -235,165 +235,113 @@ public class Database {
 			
 			con.createStatement().executeUpdate(query);
 			
-			createPersonAppointment(app, app.getAdmin());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for creating appointment in database");
-		}
+			//Connect person to appointment
+			createPersonAppointment(app.getAdmin(), app);
+			agreedAppointment(app.getAdmin(), app);
+		} catch (SQLException e) { e.printStackTrace(); }
 		
 	}
 
 	public void changeAppointment(Appointment app){
 		try {
 			String query =  "UPDATE appointment " +
-							"SET title ='"+app.getTitle()+"', sTime='"+new Time(app.getStart().toLocalTime().getMillisOfDay())+"'," +
-							"eTime='"+new Time(app.getEnd().toLocalTime().getMillisOfDay())+"', " +
-							"date='"+new Date(app.getStart().toLocalDate().toDate().getTime())+"'," +
-							"description='"+app.getDescription()+"',location='"+app.getLocation()+"'," +
-							"admin='"+app.getAdmin()+"',room_idRoom='"+getRoomId(app.getRoom())+"' " +
-							"WHERE title='"+ app.getTitle() + "' " +
-							"AND sTime='"+ new Time(app.getStart().toLocalTime().getMillisOfDay()) +"' " +
-							"AND eTime='"+ new Time(app.getEnd().toLocalTime().getMillisOfDay()) +"' " +
-							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
-							"AND description='"+ app.getDescription() +"' " +
-							"AND admin = '"+app.getAdmin()+"'";
+							"SET title ='"+ app.getTitle() +
+							"', sTime ='"+ app.getStart().toLocalTime().toString() +
+							"', eTime ='"+ app.getEnd().toLocalTime().toString() +
+							"', date ='"+ app.getStart().toLocalDate().toString() +
+							"', description ='"+ app.getDescription() +
+							"', location ='"+ app.getLocation() +
+							"', admin ='"+ app.getAdmin() +
+							"', room_idRoom ='"+ getRoomId(app.getRoom()) + "' " +
+							"WHERE idAppointment='"+ getAppointmentId(app) +"'";
 			
 			con.createStatement().executeUpdate(query);
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for changing appointment in database");
-		}
-	}
-	
-	private String getAppointmentId(Appointment app){
-		//System.out.println(app.getStart());
-		try{
-			String query = "SELECT idAppointment " +
-							"FROM appointment " +
-							"WHERE title='"+ app.getTitle() + "' " +
-							"AND sTime='"+ new Time(app.getStart().toLocalTime().minusHours(0).getMillisOfDay()) +"' " +
-							"AND eTime='"+ new Time(app.getEnd().toLocalTime().minusHours(0).getMillisOfDay()) +"' " +
-							"AND date='"+ new Date(app.getStart().toLocalDate().toDate().getTime()) +"' " +
-							"AND description='"+ app.getDescription() +"' " +
-							"AND admin = '"+app.getAdmin()+"'";
-			ResultSet res = con.createStatement().executeQuery(query);
-			
-			res.next();
-			return res.getString(1);
-			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR while getting appID");
-		}
-		return null;
+		catch (Exception e) { e.printStackTrace(); }
 	}
 
-	public void agreedAppointment(Appointment app, Person person){
+	//Set hasAgreed to 1 for user on appointment
+	public void agreedAppointment(String user, Appointment app){
 		try{
-			String query = "UPDATE person_appointment  " +
-							"SET hasAgreed = 1";
+			String query = 	"UPDATE person_appointment "+
+							"SET hasAgreed = '1' "+
+							"WHERE person_appointment_person_idPerson ='"+ getPersonId(user) +"' "+
+							"AND person_appointment_appointment_idAppointment ='"+ getAppointmentId(app);
 			con.createStatement().executeUpdate(query);
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR while changed agreed in database");
-		}
+		catch (Exception e) { e.printStackTrace(); }
 	}
 
-	private String getPersonId(String person){
-
-		try{
-			String query = "SELECT idPerson " +
-							"FROM person " +
-							"WHERE username = '"+person+"'";
-			ResultSet res = con.createStatement().executeQuery(query);
-			res.next();
-			return res.getString(1);
-			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR while getting idPerson");
-		}
-		return null;
-	}
-	
-	public void createPersonAppointment(Appointment app,String person){
+	//Add a user to appointment 
+	public void createPersonAppointment(String user, Appointment app){
 		try{
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
-						   "VALUES ('"+getAppointmentId(app)+"','"+getPersonId(person)+"')";
+						   "VALUES ('"+ getAppointmentId(app) +"','"+ getPersonId(user) +"')";
 			con.createStatement().executeUpdate(query);
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for updating person_appointment in database");
-		}
+		} catch (SQLException e) { e.printStackTrace(); }
 	}
 
-	public void deletePersonAppointment(Appointment app,Person person){
+	//Delete a user from appointment
+	public void deletePersonAppointment(String user, Appointment app){
 		try{
-			String query = "DELETE FROM person_appointment " +
-							"WHERE appointment_idAppointment='"+getAppointmentId(app)+"' " +
-							"AND person_idPerson = '"+getPersonId(person.getUsername())+"'";
+			String query = 	"DELETE FROM person_appointment "+
+							"WHERE appointment_idAppointment='"+ getAppointmentId(app) +"' "+
+							"AND person_idPerson = '"+ getPersonId(user) +"'";
 			
 			con.createStatement().executeUpdate(query);
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for updating person_appointment in database");
-		}
-	}
-	public void addAlarm(DateTime time,Appointment app, Person person){
-		try{
-			String query = "INSERT INTO alarm (time,person_appointment_appointment_idAppointment,person_appointment_person_idPerson) " +
-						   "VALUES ('"+new Date(time.toLocalDate().toDate().getTime())+"'" +
-						   	",'"+getAppointmentId(app)+"','"+getPersonId(person.getUsername())+"')";
-			
-			con.createStatement().executeUpdate(query);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for adding alarm in database");
-		}
+		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	public void changeAlarm(DateTime time,Appointment app, Person person){
+	//Add alarm with user and appointment
+	public void addAlarm(String user, Appointment app, Alarm alarm){
 		try{
+			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
+			String query = 	"INSERT INTO alarm (time,person_appointment_appointment_idAppointment,person_appointment_person_idPerson) " +
+							"VALUES ('"+ time +
+						   			"','"+ getAppointmentId(app) +
+						   			"','"+ getPersonId(user) +"')";
+			
+			con.createStatement().executeUpdate(query);
+			
+		} catch (SQLException e) { e.printStackTrace(); }
+	}
+	
+	//Changes alarm with user and appointment
+	public void changeAlarm(String user, Appointment app, Alarm alarm){
+		try{
+			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
 			String query = "UPDATE alarm " +
-						   "SET time = '"+new Date(time.toLocalDate().toDate().getTime())+"' " +
-						   "WHERE person_appointment_appointment_idAppointment = '"+getAppointmentId(app)+"' AND " +
-						   	"person_appointment_person_idPerson = '"+getPersonId(person.getUsername())+"'";
+						   "SET time = '"+ time +"' " +
+						   "WHERE person_appointment_appointment_idAppointment = '"+getAppointmentId(app)+"' " +
+						   "AND person_appointment_person_idPerson = '"+getPersonId(user)+"'";
 			
 			con.createStatement().executeUpdate(query);
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for updating alarm in database");
-		}
+		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	public void deleteAlarm(Alarm alarm,Person person){
+	//Delete alarm from user with time
+	public void deleteAlarm(String user, Alarm alarm){
 		try{
+			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
 			String query = "DELETE FROM alarm " +
-						   "WHERE time = '"+alarm.getAlarm()+"' " +
-						   "AND person_appointment_person_idPerson = '"+getPersonId(person.getUsername())+"'";
+						   "WHERE time = '"+ time + "' " +
+						   "AND person_appointment_person_idPerson = '"+ getPersonId(user) +"'";
 			
 			con.createStatement().executeUpdate(query);
 			
-		}catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR in query for deleting alarm in database");
-		}
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	public Alarm getAlarmOnAppointment(Person person,Appointment app){
+	//Get alarm on an appointment
+	public Alarm getAlarmOnAppointment(String user,Appointment app){
 		try{
 			String query = 	"SELECT time " +
 							"FROM alarm " +
-							"WHERE person_appointment_appointment_idAppointment = '"+getAppointmentId(app)+"' " +
-							"AND person_appointment_person_idPerson = '"+getPersonId(person.getUsername())+"'";
+							"WHERE person_appointment_appointment_idAppointment = '"+ getAppointmentId(app) +"' " +
+							"AND person_appointment_person_idPerson = '"+ getPersonId(user) +"'";
 			
 			ResultSet res = con.createStatement().executeQuery(query);
 			
@@ -406,13 +354,11 @@ public class Database {
 				return new Alarm(new DateTime(temp2[0],temp2[1],temp2[2],temp3[0],temp3[1],temp3[2]));
 			}				
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR while getting alarm");
-		}
+		catch (Exception e) { e.printStackTrace(); }
 		return null;
 	}
 	
+	//Get list of alarm with date
 	public ArrayList<Alarm> getAlarmOnDate(String[] keyword){
 		ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
 		
@@ -420,18 +366,15 @@ public class Database {
 			String query = 	"SELECT time " +
 							"FROM alarm " +
 							"WHERE person_appointment_person_idPerson = '"+ getPersonId( keyword[0] ) +"' " +
-							"AND time LIKE '"+ keyword[1] +"%'";
+							"AND time LIKE '"+ keyword[1] +"%' " +
+							"ORDER BY time ASC";
 			
 			ResultSet res = con.createStatement().executeQuery(query);
 			
 			while(res.next()){
-				System.out.println(res.getString(1));
 				String [] temp = res.getString(1).split(" ");
 				int [] date = toInt(temp[0].split("-"));
 				int [] time = toInt(temp[1].substring(0, 7).split(":"));
-				
-				for(int i = 0; i < time.length; i++)
-					System.out.println();
 				
 				alarmList.add( new Alarm( new DateTime(date[0],date[1],date[2],time[0],time[1],time[2]) ) );
 			}	
@@ -453,24 +396,53 @@ public class Database {
 		return newInt;	
 	}
 	
+	//Return idAppointment from appointment
+	private String getAppointmentId(Appointment app){
+		try{
+			String query = 	"SELECT idAppointment " +
+							"FROM appointment " +
+							"WHERE title='" + app.getTitle() + "' " +
+							"AND sTime='" + app.getStart().toLocalTime().toString() + "' " +
+							"AND eTime='" + app.getEnd().toLocalTime().toString() + "' " +
+							"AND date='" + app.getStart().toLocalDate().toString() + "' " +
+							"AND description='" + app.getDescription() + "' " +
+							"AND admin = '" + app.getAdmin() + "'";
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			if(res.next()) return res.getString(1);
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return null;
+	}
+	
+	//Return idPerson from a user
+	private String getPersonId(String user){
+		try{
+			String query = 	"SELECT idPerson " +
+							"FROM person " +
+							"WHERE username = '"+ user +"'";
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			if(res.next()) return res.getString(1);
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return null;
+	}
+	
+	//Return idRoom from a Room
 	private String getRoomId(Room room) {
 		if(room == null){
 			return "1";
 		}
 		try{
-			String query = "Select idRoom " +
-					"FROM room " +
-					"WHERE name = '"+room.getName()+"'";
+			String query = 	"Select idRoom " +
+							"FROM room " +
+							"WHERE name = '"+ room.getName() +"'";
 			ResultSet res = con.createStatement().executeQuery(query);
 			
-			while(res.next()){
-				return res.getString(1);
-			}
+			if(res.next()) return res.getString(1);
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERRORR in getting roomID");
-		}
+		catch (Exception e) { e.printStackTrace(); }
 		return null;
 	}
 	
@@ -501,10 +473,6 @@ public class Database {
 		String[] keyword = new String[2];
 		keyword[0] = "test";
 		keyword[1] = "2013-03-14";
-		System.out.println(db.getAlarmOnDate(keyword).get(0).getAlarm());
 		
 	}
 }
-	
-
-
