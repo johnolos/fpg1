@@ -11,15 +11,15 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.62.42";
-	private final static int SERVERPORT = 4004;
+	private final static String SERVERIP = "78.91.10.150";
+	private final static int SERVERPORT = 4058;
 
 	public Server() {
-		startServer();
 	}
 
 	public void startServer() {
@@ -73,13 +73,16 @@ public class Server {
 				System.out.println("Waiting for message from client");
 				
 				// While-loop to ensure continuation of reading in-coming messages
-				while (true) {
+				while (objectIn.available()>0) {
 					
 					try {
-						Object obj = this.objectIn.readObject();
-						
+						SendObject obj =(SendObject) this.objectIn.readObject();
+						System.out.println(obj.getKeyword());
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
+					}
+					catch (SocketException e) {
+						System.out.println("Heiddfdf");
 					}
 					
 
@@ -91,46 +94,46 @@ public class Server {
 		}
 
 	}
-	private void isRequestObject(Object obj){
-		obj
-	}
-	
-	void databaseQuery(RequestObjects obj) {
+	void databaseQuery(SendObject obj) {
 		Database database = null;
 		try {
 			database = new Database();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("ERROR while connecting to database - ktnSTYLE");
-		}
-		
-		String[] keyword;
-		RequestEnum reType;
-		keyword = obj.getSearch();
-		reType = obj.getReType();
-		
-		
-		switch(reType) {
-		case LOGIN:
-			Boolean bol = database.login(keyword[0], keyword[1]);
-			System.out.println(bol);
-			break;
-		case APPOINTMENT:
 			
-			break;
-		case PERSON:
-			break;
-		case ALARM:
-			break;
-		case ROOM:
-			break;
-		default:
-			break;
 		}
+		if(!obj.isObject()){
+			String[] keyword;
+			RequestEnum reType;
+			keyword = obj.getKeyword();
+			reType = obj.getSendType();
+			
+			
+			switch(reType) {
+			case LOGIN:
+				Boolean bol = database.login(keyword);
+				System.out.println(bol);
+				break;
+			case APPOINTMENT:
+				
+				break;
+			case PERSON:
+				break;
+			case ALARM:
+				break;
+			case ROOM:
+				break;
+			default:
+				break;
+			}
+		}
+		
+		
 	}
 
 	// Main-function to start server
 	public static void main(String[] args) {
-		new Server(4295, "78.91.62.42").startServer();
+		new Server().startServer();
 	}
 }
