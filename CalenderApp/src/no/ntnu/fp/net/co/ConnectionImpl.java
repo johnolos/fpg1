@@ -51,7 +51,9 @@ public class ConnectionImpl extends AbstractConnection {
 	 *            - the local port to associate with this connection
 	 */
 	public ConnectionImpl(int myPort) {
-		throw new NotImplementedException();
+		super();
+		this.myPort = myPort;
+		this.myAddress = getIPv4Address();
 	}
 
 	private String getIPv4Address() {
@@ -90,12 +92,18 @@ public class ConnectionImpl extends AbstractConnection {
 			// Send SYN, receive SYN_ACK and send ACK
 			this.simplySendPacket(syn);
 			KtnDatagram synack = this.receiveAck();
+			this.lastValidPacketReceived = synack;
+			this.remotePort = synack.getSrc_port();
+			Thread.sleep(1000);
 			this.sendAck(synack, false);
 			
 			// Expendable code later -- Don't delete --
 			//ClSocket socket = new ClSocket();
 			//SendTimer sendtimer = new SendTimer(socket, syn);
 		} catch (ClException e) {
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		this.state = State.ESTABLISHED;
 	}
@@ -122,6 +130,7 @@ public class ConnectionImpl extends AbstractConnection {
 			} catch (Exception e) {
 			}
 		}
+		this.lastValidPacketReceived = syn;
 
 		ConnectionImpl connection = new ConnectionImpl(createPortNumber());
 		connection.remoteAddress = syn.getSrc_addr();
@@ -130,7 +139,11 @@ public class ConnectionImpl extends AbstractConnection {
 		this.state = state.SYN_RCVD;
 
 		KtnDatagram ack = null;
-
+		/*try {
+			Thread.sleep(200);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}*/
 		try {
 			int attemptsLeft = MAX_ATTEMPTS;
 			while (ack == null && attemptsLeft >= 1) {
@@ -185,9 +198,12 @@ public class ConnectionImpl extends AbstractConnection {
 		while(attemptsLeft > 0 && ack == null) {
 			ack = this.sendDataPacketWithRetransmit(data);
 			// Perhaps check SEQNR from data with ACK from ACK + 1
-			if (data.getAck() != ack.getSeq_nr()) {
-				ack=null;
+			if (ack != null && ack.getFlag() == Flag.ACK && ack.getAck() == data.getSeq_nr()) {
+				this.lastValidPacketReceived = ack;
+				this.lastDataPacketSent = data;
+				break;
 			}
+			ack = null;
 			attemptsLeft--; 
 		}
 	}
@@ -209,6 +225,11 @@ public class ConnectionImpl extends AbstractConnection {
 			dataInn=receivePacket(false);
 			}
     catch (EOFException e){
+    		try {
+				Thread.sleep(300);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
             this.sendAck(this.disconnectRequest, false);
             this.state=State.CLOSE_WAIT;
             throw e;
@@ -216,7 +237,6 @@ public class ConnectionImpl extends AbstractConnection {
 		
 		if(!(isValid(dataInn)))
 			throw new IOException("Packet not valid");
-		
 		this.lastValidPacketReceived=dataInn;
 		sendAck(dataInn,false);
 		return (String) dataInn.getPayload();
@@ -228,28 +248,39 @@ public class ConnectionImpl extends AbstractConnection {
 	 * @see Connection#close()
 	 */
 	public void close() throws IOException {
-		if(this.state != State.ESTABLISHED) {
-			throw new IllegalStateException("Cannot close if not connected");
-		}
 		// Has received close-request
 		if(this.disconnectRequest != null) {
 			try {
 				//this.sendAck(disconnectRequest, false);
 				// Perhaps wait time here
 				KtnDatagram fin = this.constructInternalPacket(Flag.FIN);
+				Thread.sleep(310);
 				this.simplySendPacket(fin);
 				this.receiveAck();
 			} catch (ClException e) {
 				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} else { // Hasn't received close-request
+			if(this.state != State.ESTABLISHED) {
+				throw new IllegalStateException("Cannot close if not connected");
+			}
 			KtnDatagram fin = this.constructInternalPacket(Flag.FIN);
 			try {
+				Thread.sleep(300);
 				this.simplySendPacket(fin);
+				this.state = State.FIN_WAIT_1;
 				this.receiveAck();
-				this.receivePacket(false);
-				this.sendAck(disconnectRequest, false);
+				this.state = State.FIN_WAIT_2;
+				this.lastValidPacketReceived = fin;
+				KtnDatagram fin_2 = this.receivePacket(false);
+				Thread.sleep(300);
+				this.sendAck(fin_2, false);
 			} catch (ClException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
@@ -267,13 +298,13 @@ public class ConnectionImpl extends AbstractConnection {
 	
 	protected boolean isValid(KtnDatagram packet) {
 		// Check if packetSent.ACK == packetReceived.SEQ
-		if(this.lastDataPacketSent.getAck() != packet.getSeq_nr())
+		if(this.lastValidPacketReceived.getSeq_nr() + 1 != packet.getSeq_nr())
 			return false;
-		// Check if packetSent.SEQ + 1 == packetReceived.ACK
-		if(this.lastDataPacketSent.getSeq_nr() + 1 != packet.getAck())
-			return false;
+//		// Check if packetSent.SEQ + 1 == packetReceived.ACK
+//		if(this.lastDataPacketSent.getSeq_nr() + 1 != packet.getAck())
+//			return false;
 		// Check checksm
-		if(this.lastDataPacketSent.getChecksum() != packet.getChecksum())
+		if(packet.getChecksum() != packet.calculateChecksum())
 			return false;
 		return true;
 	}
