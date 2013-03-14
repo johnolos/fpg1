@@ -84,14 +84,8 @@ public class OKNotificationBox extends JPanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(btnX)){
-			HomeGUI.list.clearSelection();
-			HomeGUI.layeredPane.moveToBack(this);
-		}
-		if(e.getSource().equals(okButton)){
-			HomeGUI.list.clearSelection();
-			HomeGUI.layeredPane.moveToBack(this);
-		}
+		HomeGUI.list.clearSelection();
+		HomeGUI.layeredPane.moveToBack(this);
 	}
 
 }

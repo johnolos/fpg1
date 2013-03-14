@@ -1,6 +1,8 @@
 package baseClasses;
+
+
  
-public class Person {
+public class Person implements Comparable {
        
         // Private
        
@@ -36,4 +38,19 @@ public class Person {
         public String getEmail() {
                 return email;
         }
+        
+		public int compareTo(Person arg0) {
+			if(this.lastname.compareTo(arg0.lastname) == 1){
+				return 1;
+			} else if (this.lastname.compareTo(arg0.lastname) == 0) {
+				return this.firstName.compareTo(arg0.firstName);
+			}
+			return -1;
+		}
+
+		@Override
+		public int compareTo(Object o) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 }

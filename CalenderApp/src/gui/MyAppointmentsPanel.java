@@ -3,6 +3,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.SpinnerModel;
@@ -26,6 +27,11 @@ import javax.swing.JTextArea;
 import javax.swing.JSpinner;
 
 import org.joda.time.DateTime;
+
+import baseClasses.Appointment;
+import baseClasses.Person;
+import baseClasses.Room;
+
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
@@ -37,9 +43,11 @@ public class MyAppointmentsPanel extends JPanel {
 	private JTextField titleField;
 	private JTextField locationField;
 	
-	private JComboBox roomComboBox;
+	private JComboBox<Room> roomComboBox;
+	DefaultComboBoxModel<Room> boxModel;
+	
 	private JTextArea descriptionArea;
-	private JList participantsList;
+	private JList<Person> participantsList;
 	
 	private JFrame frame;
 	
@@ -50,9 +58,11 @@ public class MyAppointmentsPanel extends JPanel {
 	JButton declineMeetingButton;
 	JButton cancelMeetingButton;
 	private JScrollPane scrollPane;
-	private JList myAppointmentsList;
+	private JList<Appointment> myAppointmentsList;
+	private DefaultListModel<Appointment> appointmentsModel;
+	DefaultListModel<Person> model;
 	private JLabel alarmLabel;
-	
+
 	JSpinner startHourSpinner;
 	JSpinner startMinuteSpinner;	
 	JSpinner endHourSpinner;
@@ -78,7 +88,7 @@ public class MyAppointmentsPanel extends JPanel {
 
 		frame = new JFrame();
 		frame.setTitle("Mine avtaler");
-		frame.setSize(787, 730);
+		frame.setSize(870, 730);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setContentPane(this);
@@ -113,8 +123,11 @@ public class MyAppointmentsPanel extends JPanel {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		roomComboBox = new JComboBox();
+		roomComboBox = new JComboBox<Room>();
 		roomComboBox.setEnabled(false);
+		boxModel = new DefaultComboBoxModel<Room>();
+		roomComboBox.setModel(boxModel);
+		roomComboBox.setRenderer(new ComboBoxRenderer());
 		
 		editParticipantsButton = new JButton("Edit");
 		editParticipantsButton.setEnabled(false);
@@ -141,7 +154,7 @@ public class MyAppointmentsPanel extends JPanel {
 		descriptionArea.setEnabled(false);
 		
 		scrollPane = new JScrollPane();
-		myAppointmentsList = new JList();
+		myAppointmentsList = new JList<Appointment>();
 		
 		alarmLabel = new JLabel("Alarm:");
 		
@@ -151,11 +164,7 @@ public class MyAppointmentsPanel extends JPanel {
 		startMinuteSpinner = new JSpinner();
 		startMinuteSpinner.setEnabled(false);
 		
-		JLabel startHourLabel = new JLabel("time:");
-		
-		JLabel startMinuteLabel = new JLabel("min.:");
-		
-		JLabel endHourLabel = new JLabel("time:");
+		JLabel startMinuteLabel = new JLabel(":");
 		
 		endHourSpinner = new JSpinner();
 		endHourSpinner.setEnabled(false);
@@ -163,7 +172,7 @@ public class MyAppointmentsPanel extends JPanel {
 		endMinuteSpinner = new JSpinner();
 		endMinuteSpinner.setEnabled(false);
 		
-		JLabel endMinuteLabel = new JLabel("min.:");
+		JLabel endMinuteLabel = new JLabel(":");
 		
 		JLabel dateMonthLabel = new JLabel("mnd.:");
 		
@@ -182,8 +191,6 @@ public class MyAppointmentsPanel extends JPanel {
 		
 		JLabel alarmMonthLabel = new JLabel("mnd.:");
 		
-		JLabel alarmHourLabel = new JLabel("time:");
-		
 		alarmDaySpinner = new JSpinner();
 		alarmDaySpinner.setEnabled(false);
 		
@@ -200,7 +207,7 @@ public class MyAppointmentsPanel extends JPanel {
 		alarmHourSpinner = new JSpinner();
 		alarmHourSpinner.setEnabled(false);
 		
-		JLabel alarmMinuteLabel = new JLabel("min.:");
+		JLabel alarmMinuteLabel = new JLabel(":");
 		
 		alarmMinuteSpinner = new JSpinner();
 		alarmMinuteSpinner.setEnabled(false);
@@ -240,7 +247,7 @@ public class MyAppointmentsPanel extends JPanel {
 									.addComponent(cancelMeetingButton)))
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 										.addGroup(groupLayout.createSequentialGroup()
 											.addGap(24)
 											.addComponent(saveChangesButton)
@@ -248,62 +255,54 @@ public class MyAppointmentsPanel extends JPanel {
 											.addComponent(cancelChangesButton))
 										.addGroup(groupLayout.createSequentialGroup()
 											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(titleField, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-												.addGroup(groupLayout.createSequentialGroup()
-													.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-														.addComponent(locationField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-														.addComponent(roomComboBox, Alignment.LEADING, 0, 227, Short.MAX_VALUE)
-														.addComponent(descriptionArea, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-														.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))
-													.addPreferredGap(ComponentPlacement.RELATED)
-													.addComponent(editParticipantsButton)
-													.addPreferredGap(ComponentPlacement.RELATED)))))
+											.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+												.addComponent(titleField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+												.addComponent(locationField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+												.addComponent(roomComboBox, Alignment.LEADING, 0, 258, Short.MAX_VALUE)
+												.addComponent(descriptionArea, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+												.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(editParticipantsButton)
+											.addPreferredGap(ComponentPlacement.RELATED)))
 									.addGroup(groupLayout.createSequentialGroup()
 										.addGap(18)
 										.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+											.addComponent(dateDayLabel)
 											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(endHourLabel)
-												.addComponent(startHourLabel))
-											.addComponent(dateDayLabel))
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-											.addGroup(groupLayout.createSequentialGroup()
 												.addComponent(endHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(endMinuteLabel))
-											.addGroup(groupLayout.createSequentialGroup()
-												.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-													.addComponent(dateDaySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-													.addComponent(startHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-													.addComponent(dateMonthLabel)
-													.addComponent(startMinuteLabel))))
+												.addComponent(startHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 										.addPreferredGap(ComponentPlacement.RELATED)
 										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-											.addComponent(endMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addComponent(startMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addGroup(groupLayout.createSequentialGroup()
-												.addGap(2)
-												.addComponent(dateMonthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-												.addGap(7)
-												.addComponent(dateYearLabel)
+												.addComponent(dateDaySpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(dateYearSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+												.addComponent(dateMonthLabel))
+											.addGroup(groupLayout.createSequentialGroup()
+												.addComponent(startMinuteLabel)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(startMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addGroup(groupLayout.createSequentialGroup()
+												.addComponent(endMinuteLabel)
+												.addPreferredGap(ComponentPlacement.RELATED)
+												.addComponent(endMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+										.addGap(2)
+										.addComponent(dateMonthSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addGap(7)
+										.addComponent(dateYearLabel)
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addComponent(dateYearSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGap(44)))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(18)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(alarmHourLabel)
-											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addGap(34)
 											.addComponent(alarmHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addGap(18)
+											.addPreferredGap(ComponentPlacement.RELATED)
 											.addComponent(alarmMinuteLabel)
 											.addPreferredGap(ComponentPlacement.RELATED)
 											.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addGap(18)
+											.addGap(32)
 											.addComponent(removeAlarmButton))
 										.addGroup(groupLayout.createSequentialGroup()
 											.addComponent(alarmDayLabel)
@@ -350,16 +349,14 @@ public class MyAppointmentsPanel extends JPanel {
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(startLabel)
 								.addComponent(startHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(startMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(startMinuteLabel)
-								.addComponent(startHourLabel))
+								.addComponent(startMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(endLabel)
-								.addComponent(endHourLabel)
 								.addComponent(endHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(endMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(endMinuteLabel))
+								.addComponent(endMinuteLabel)
+								.addComponent(endMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(locationLabel)
@@ -388,11 +385,10 @@ public class MyAppointmentsPanel extends JPanel {
 								.addComponent(alarmDayLabel))
 							.addGap(18)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(alarmHourLabel)
 								.addComponent(alarmHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(removeAlarmButton)
 								.addComponent(alarmMinuteLabel)
-								.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(removeAlarmButton))))
+								.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(30)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(cancelMeetingButton)
@@ -405,6 +401,24 @@ public class MyAppointmentsPanel extends JPanel {
 		myAppointmentsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				
+				Appointment ap = myAppointmentsList.getSelectedValue();
+				
+				titleField.setText(ap.getTitle());
+				dateDaySpinner.setValue(ap.getStart().getDayOfMonth());
+				dateMonthSpinner.setValue(ap.getStart().getMonthOfYear());
+				dateYearSpinner.setValue(ap.getStart().getYear());
+				startHourSpinner.setValue(ap.getStart().getHourOfDay());
+				startMinuteSpinner.setValue(ap.getStart().getMinuteOfHour());
+				endHourSpinner.setValue(ap.getEnd().getHourOfDay());
+				endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
+				locationField.setText(ap.getLocation());
+//				roomComboBox.setSelectedItem(ap.getRoom());
+				descriptionArea.setText(ap.getDescription());
+//				for(int i=0; i<ap.getParticipants().size(); i++){
+//					model.addElement(ap.getParticipants().get(i));
+//				}
+				
+				
 //				if(JEG ER LEDER AV AVTALEN)
 //					setAllFieldsEnabled(true);
 //				else
@@ -414,11 +428,18 @@ public class MyAppointmentsPanel extends JPanel {
 			}
 		});
 		scrollPane.setViewportView(myAppointmentsList);
+		appointmentsModel = new DefaultListModel<Appointment>();
+		myAppointmentsList.setModel(appointmentsModel);
+		myAppointmentsList.setCellRenderer(new appointmentListRenderer());
+		appointmentsModel.addElement(new Appointment(new DateTime(2014, 01, 02, 03, 00) , new DateTime(2014, 01, 02, 04, 04), "DunnoWhatThisFieldIs :(", "Videokonferanse med Steria", new Room(20, "testrom"), "WutIsDisField?", "WahtBistDeineFelt?"));
 		
-		participantsList = new JList();
+		participantsList = new JList<Person>();
 		participantsList.setBackground(UIManager.getColor("Panel.background"));
 		participantsList.setEnabled(false);
 		scrollPane_1.setViewportView(participantsList);
+		participantsList.setCellRenderer(new PersonListRenderer());
+		model = new DefaultListModel<Person>();
+		participantsList.setModel(model);
 		setLayout(groupLayout);
 		
 		restrictSpinners();
@@ -474,19 +495,19 @@ public class MyAppointmentsPanel extends JPanel {
 			removeAlarmButton.setEnabled(b);
 	}
 	private void restrictSpinners(){
-		startHourSpinner.setModel(new SpinnerNumberModel(0, 0, 24, 1));
-		endHourSpinner.setModel(new SpinnerNumberModel(0, 0, 24, 1));
-		alarmHourSpinner.setModel(new SpinnerNumberModel(0, 0, 24, 1));
+		startHourSpinner.setModel(new SpinnerNumberModel(0, 0, 23, 1));
+		endHourSpinner.setModel(new SpinnerNumberModel(0, 0, 23, 1));
+		alarmHourSpinner.setModel(new SpinnerNumberModel(0, 0, 23, 1));
 		
-		startMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 60, 1));
-		endMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 60, 1));
-		alarmMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 60, 1));
+		startMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+		endMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+		alarmMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 		
-		dateDaySpinner.setModel(new SpinnerNumberModel(0, 0, 31, 1));
-		alarmDaySpinner.setModel(new SpinnerNumberModel(0, 0, 31, 1));
+		dateDaySpinner.setModel(new SpinnerNumberModel(1, 1, 31, 1));
+		alarmDaySpinner.setModel(new SpinnerNumberModel(1, 1, 31, 1));
 		
-		dateMonthSpinner.setModel(new SpinnerNumberModel(0, 0, 12, 1));
-		alarmMonthSpinner.setModel(new SpinnerNumberModel(0, 0, 12, 1));
+		dateMonthSpinner.setModel(new SpinnerNumberModel(1, 1, 12, 1));
+		alarmMonthSpinner.setModel(new SpinnerNumberModel(1, 1, 12, 1));
 		
 		dateYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));
 		alarmYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));

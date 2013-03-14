@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -25,24 +26,27 @@ import javax.swing.JButton;
 import javax.tools.JavaFileManager.Location;
 import javax.swing.AbstractListModel;
 import javax.swing.ScrollPaneConstants;
+
+import baseClasses.Person;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class EditParticipantsPanel extends JPanel {
 	private JTextField searchField;
 
-	JList searchResultParticipantsList;
-	JList chosenParticipantsList;
+	JList<Person> searchResultParticipantsList;
+	JList<Person> chosenParticipantsList;
 	
-	DefaultListModel<Object> searchResultListModel = new DefaultListModel<Object>();
-	DefaultListModel<Object> chosenListModel = new DefaultListModel<Object>();
+	DefaultListModel<Person> searchResultListModel = new DefaultListModel<Person>();
+	DefaultListModel<Person> chosenListModel = new DefaultListModel<Person>();
 	
 	private JFrame frame;
 	
 	/**
 	 * Create the panel.
 	 */
-	public EditParticipantsPanel(JFrame utgangspunkt) {
+	public EditParticipantsPanel(JFrame utgangspunkt, DefaultListModel<Person> utgangspunktModel) {
 		
 		frame = new JFrame();
 		frame.setTitle("Endre deltagere");
@@ -63,6 +67,18 @@ public class EditParticipantsPanel extends JPanel {
 		JScrollPane searchResultParticipantsScrollPane = new JScrollPane();
 		
 		JButton saveButton = new JButton("Lagre");
+		saveButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CreateAppointmentPanel.model.removeAllElements();
+				for(int i=0; i<chosenListModel.getSize(); i++){
+					CreateAppointmentPanel.model.addElement(chosenListModel.get(i));
+				}
+				frame.dispose();
+			}
+			
+		});
 		
 		JScrollPane chosenParticipantsScrollPane = new JScrollPane();
 		
@@ -71,7 +87,7 @@ public class EditParticipantsPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				if(searchResultParticipantsList.getSelectedIndex() != -1 && searchResultParticipantsList.getSelectedValue() != null){
-					List<Object> selectedList = searchResultParticipantsList.getSelectedValuesList();
+					List<Person> selectedList = searchResultParticipantsList.getSelectedValuesList();
 					int[] selectedIndeces = searchResultParticipantsList.getSelectedIndices();
 					for(int i=0; i<selectedList.size(); i++){
 						chosenListModel.addElement(selectedList.get(i));
@@ -96,7 +112,7 @@ public class EditParticipantsPanel extends JPanel {
 			
 				if(chosenParticipantsList.getSelectedIndex() != -1 && chosenParticipantsList.getSelectedValue() != null){
 					
-					List<Object> selectedList = chosenParticipantsList.getSelectedValuesList();
+					List<Person> selectedList = chosenParticipantsList.getSelectedValuesList();
 					int[] selectedIndeces = chosenParticipantsList.getSelectedIndices();
 					for(int i=0; i<selectedList.size(); i++){
 						searchResultListModel.addElement(selectedList.get(i));
@@ -109,18 +125,7 @@ public class EditParticipantsPanel extends JPanel {
 							selectedIndeces[k] = selectedIndeces[k]-1;
 						}
 					}
-					
-					// sorterer den
-				     int numItems = searchResultListModel.getSize();
-				     String[] a = new String[numItems];
-				     for (int i=0;i<numItems;i++){
-				       a[i] = (String)searchResultListModel.getElementAt(i);
-				       }
-				     sortArray(Collator.getInstance(),a);
-				     for (int i=0;i<numItems;i++) {
-				       searchResultListModel.setElementAt(a[i], i);
-				     }
-				     //------------
+					//Collections.sort(searchResultParticipantsList);
 				}
 			}
 		});
@@ -186,36 +191,25 @@ public class EditParticipantsPanel extends JPanel {
 					.addGap(62))
 		);
 		
-		chosenParticipantsList = new JList();
+		chosenParticipantsList = new JList<Person>();
 		chosenParticipantsList.setModel(chosenListModel);
 		chosenParticipantsScrollPane.setViewportView(chosenParticipantsList);
+		chosenParticipantsList.setCellRenderer(new PersonListRenderer());
+		for(int i=0; i<utgangspunktModel.size(); i++){
+			chosenListModel.addElement(utgangspunktModel.get(i));
+		}
 		
-		searchResultParticipantsList = new JList();
+		searchResultParticipantsList = new JList<Person>();
 		searchResultParticipantsList.setModel(searchResultListModel);
-		searchResultListModel.addElement("Bjørn Christian Torp Olsen");
-		searchResultListModel.addElement("b");
-		searchResultListModel.addElement("c");
-		searchResultListModel.addElement("d");
-		searchResultListModel.addElement("e");
-		searchResultListModel.addElement("f");		
+		searchResultListModel.addElement(new Person("user1", "email1", "Torkjel", "Skjetne"));
+		searchResultListModel.addElement(new Person("user2", "email2", "John-Olav", "Storvold"));
+		searchResultListModel.addElement(new Person("user3", "email3", "Bjørn Christan", "Olsen"));
+		searchResultListModel.addElement(new Person("user4", "email4", "Hans-Olav", "Hessen"));
 		searchResultParticipantsScrollPane.setViewportView(searchResultParticipantsList);
+		searchResultParticipantsList.setCellRenderer(new PersonListRenderer());
 		setLayout(groupLayout);
 
 		
 		
 	}
-	
-	public static void sortArray(Collator collator, String[] strArray) {
-		   String tmp;
-		   if (strArray.length == 1) return;
-		   for (int i = 0; i < strArray.length; i++) {
-		    for (int j = i + 1; j < strArray.length; j++) {
-		      if( collator.compare(strArray[i], strArray[j] ) > 0 ) {
-		        tmp = strArray[i];
-		        strArray[i] = strArray[j];
-		        strArray[j] = tmp;
-		        }
-		      }
-		    } 
-		   }
 }

@@ -132,7 +132,7 @@ public class HomeGUI extends JPanel {
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		headlineLabel = new JLabel("GRUPPE 1s KALENDERSYSTEM!!!");
 		headlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		weekLabel = new JLabel("Uke" + ukeNr);
+		weekLabel = new JLabel("Uke " + ukeNr);
 
 		// ----------------------------------------------------------------//
 		// Buttons
@@ -155,7 +155,8 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		weekTextField = new JTextField();
-		weekTextField.setColumns(2);			
+		weekTextField.setColumns(3);			
+		weekTextField.setDocument(new JTextFieldLimit(2));
 
 
 		// ----------------------------------------------------------------//
@@ -178,9 +179,17 @@ public class HomeGUI extends JPanel {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					int textFieldNumber = Integer.parseInt(weekTextField
 							.getText());
-					if (textFieldNumber > 0 && textFieldNumber < 52) {
+					if (textFieldNumber > 0 && textFieldNumber <= 52) {
 						ukeNr = textFieldNumber;
 						weekLabel.setText("Uke " + textFieldNumber);
+					}
+					else if(textFieldNumber < 1){
+						ukeNr = 1;
+						weekLabel.setText("Uke " + 1);
+					}
+					else if(textFieldNumber > 52){
+						ukeNr = 52;
+						weekLabel.setText("Uke " + 52);
 					}
 				}
 

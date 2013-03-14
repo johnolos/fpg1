@@ -18,6 +18,8 @@ import java.text.Collator;
 import java.util.List;
 import javax.swing.UIManager;
 
+import baseClasses.Person;
+
 public class ShowColleaguesPanel extends JPanel {
 	
 	
@@ -25,11 +27,11 @@ public class ShowColleaguesPanel extends JPanel {
 	
 	private JFrame frame;
 	
-	JList searchResultColleaguesList;
-	JList shownColleaguesList;
+	JList<Person> searchResultColleaguesList;
+	JList<Person> shownColleaguesList;
 	
-	DefaultListModel<Object> searchResultListModel = new DefaultListModel<Object>();
-	DefaultListModel<Object> shownListModel = new DefaultListModel<Object>();
+	DefaultListModel<Person> searchResultListModel = new DefaultListModel<Person>();
+	DefaultListModel<Person> shownListModel = new DefaultListModel<Person>();
 	
 
 	/**
@@ -59,7 +61,7 @@ public class ShowColleaguesPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				if(searchResultColleaguesList.getSelectedIndex() != -1 && searchResultColleaguesList.getSelectedValue() != null){
-					List<Object> selectedList = searchResultColleaguesList.getSelectedValuesList();
+					List<Person> selectedList = searchResultColleaguesList.getSelectedValuesList();
 					int[] selectedIndeces = searchResultColleaguesList.getSelectedIndices();
 					for(int i=0; i<selectedList.size(); i++){
 						shownListModel.addElement(selectedList.get(i));
@@ -84,7 +86,7 @@ public class ShowColleaguesPanel extends JPanel {
 			
 				if(shownColleaguesList.getSelectedIndex() != -1 && shownColleaguesList.getSelectedValue() != null){
 					
-					List<Object> selectedList = shownColleaguesList.getSelectedValuesList();
+					List<Person> selectedList = shownColleaguesList.getSelectedValuesList();
 					int[] selectedIndeces = shownColleaguesList.getSelectedIndices();
 					for(int i=0; i<selectedList.size(); i++){
 						searchResultListModel.addElement(selectedList.get(i));
@@ -98,17 +100,7 @@ public class ShowColleaguesPanel extends JPanel {
 						}
 					}
 					
-					// sorterer den
-				     int numItems = searchResultListModel.getSize();
-				     String[] a = new String[numItems];
-				     for (int i=0;i<numItems;i++){
-				       a[i] = (String)searchResultListModel.getElementAt(i);
-				       }
-				     sortArray(Collator.getInstance(),a);
-				     for (int i=0;i<numItems;i++) {
-				       searchResultListModel.setElementAt(a[i], i);
-				     }
-				     //------------
+					
 				}
 				
 				shownColleaguesList.setSelectionInterval(0,0);
@@ -193,17 +185,17 @@ public class ShowColleaguesPanel extends JPanel {
 		
 		shownColleaguesList = new JList();
 		shownColleaguesList.setModel(shownListModel);
+		shownColleaguesList.setCellRenderer(new PersonListRenderer());
 		scrollPane_1.setViewportView(shownColleaguesList);
 		
 		searchResultColleaguesList = new JList();
 		searchResultColleaguesList.setModel(searchResultListModel);
-		searchResultListModel.addElement("Bjørn Christian Torp Olsen");
-		searchResultListModel.addElement("b");
-		searchResultListModel.addElement("c");
-		searchResultListModel.addElement("d");
-		searchResultListModel.addElement("e");
-		searchResultListModel.addElement("f");
+		searchResultListModel.addElement(new Person("user1", "email1", "Torkjel", "Skjetne"));
+		searchResultListModel.addElement(new Person("user2", "email2", "John-Olav", "Storvold"));
+		searchResultListModel.addElement(new Person("user3", "email3", "Bjørn Christan", "Olsen"));
+		searchResultListModel.addElement(new Person("user4", "email4", "Hans-Olav", "Hessen"));
 		searchResultColleaguesList.setSelectionInterval(0,0);
+		searchResultColleaguesList.setCellRenderer(new PersonListRenderer());
 		scrollPane.setViewportView(searchResultColleaguesList);
 		setLayout(groupLayout);
 
