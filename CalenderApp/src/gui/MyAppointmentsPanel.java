@@ -1,4 +1,4 @@
-package src.gui;
+package gui;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
@@ -461,7 +461,7 @@ public class MyAppointmentsPanel extends JPanel {
 		cancelChangesButton.setEnabled(b);
 		
 //		//Enable "Meld avbud" eller "Avlys avtale" avhengig av om man er leder eller ikke
-//		if(JEG IKKE ER LEDER AV MØTET){
+//		if(JEG IKKE ER LEDER AV Mï¿½TET){
 //			declineMeetingButton.setEnabled(true);
 //			cancelMeetingButton.setEnabled(false);
 //		}
