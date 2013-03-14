@@ -186,7 +186,7 @@ public class ConnectionImpl extends AbstractConnection {
 			ack = this.sendDataPacketWithRetransmit(data);
 			// Perhaps check SEQNR from data with ACK from ACK + 1
 			if (data.getAck() != ack.getSeq_nr()) {
-				throw new IOException("Wrong ACK received");
+				ack=null;
 			}
 			attemptsLeft--; 
 		}
@@ -209,6 +209,8 @@ public class ConnectionImpl extends AbstractConnection {
 			dataInn=receivePacket(false);
 			}
     catch (EOFException e){
+            this.sendAck(this.disconnectRequest, false);
+            this.state=State.CLOSE_WAIT;
             throw e;
     }
 		
@@ -232,7 +234,7 @@ public class ConnectionImpl extends AbstractConnection {
 		// Has received close-request
 		if(this.disconnectRequest != null) {
 			try {
-				this.sendAck(disconnectRequest, false);
+				//this.sendAck(disconnectRequest, false);
 				// Perhaps wait time here
 				KtnDatagram fin = this.constructInternalPacket(Flag.FIN);
 				this.simplySendPacket(fin);
@@ -276,4 +278,4 @@ public class ConnectionImpl extends AbstractConnection {
 		return true;
 	}
 }
-}
+
