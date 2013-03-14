@@ -63,9 +63,9 @@ public class Server {
 				InputStreamReader inFromClient = new InputStreamReader(clientInputStream);
 				
 				// Create ObjectOutputStream
-				ObjectOutputStream objectOut = new ObjectOutputStream(clientOutputStream);
+				//ObjectOutputStream objectOut = new ObjectOutputStream(clientOutputStream);
 				//Create InputObjectStream
-				ObjectInputStream objectIn = new ObjectInputStream(clientInputStream);
+				//ObjectInputStream objectIn = new ObjectInputStream(clientInputStream);
 				// Create Buffer InputStreamReader
 				BufferedReader stringFromClient = new BufferedReader(inFromClient);
 				// Create PrintWriter for OutputStream
