@@ -4,11 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import baseClasses.Person;
 
 //TCP client
 public class Client {
@@ -59,7 +63,9 @@ public class Client {
 	class OutputClass extends Thread {
 		private BufferedReader inFromUser;
 		private PrintWriter outToServer;
-
+		private ObjectOutputStream objectOut;
+		
+		
 		OutputClass(BufferedReader inFromUser, PrintWriter outToServer) {
 			this.inFromUser = inFromUser;
 			this.outToServer = outToServer;
@@ -83,17 +89,21 @@ public class Client {
 	
 	// Class for showing received messages from server through BufferedReader
 	class InputClass extends Thread{
-		BufferedReader stringFromServer;
+		private ObjectInputStream objectIn;
 		
 		
-		InputClass(BufferedReader stringFromServer) {
-			this.stringFromServer = stringFromServer;
+		InputClass(InputStream input) {
+			try {
+				this.objectIn = new ObjectInputStream(input);
+			} catch (IOException e) {e.printStackTrace();
+			}
 		}
-		@Override
 		public void run() {
 			while(true) {
 				try {
-					// Fetches lines from BufferedReader and printing them to console
+					Object obj = this.objectIn.readObject();
+					Person person = (Person) obj;
+					
 					String response = stringFromServer.readLine();
 					System.out.println(response);
 				} catch (IOException e) {
