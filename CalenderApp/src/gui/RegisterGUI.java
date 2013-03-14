@@ -22,6 +22,8 @@ import database.Database;
 
 public class RegisterGUI extends JPanel {
 
+	//Når username deselekteres, skal brukeren få vite om brukernavnet er ledig eller ei.
+	
 	// ----------------------------------------------------------------//
 	// Fields
 	// ----------------------------------------------------------------//

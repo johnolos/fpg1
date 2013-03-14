@@ -73,6 +73,7 @@ public class ShowColleaguesPanel extends JPanel {
 					}
 					
 				}
+				searchResultColleaguesList.setSelectionInterval(0,0);
 				
 			}
 		});
@@ -110,7 +111,10 @@ public class ShowColleaguesPanel extends JPanel {
 				     //------------
 				}
 				
+				shownColleaguesList.setSelectionInterval(0,0);
+				
 			}
+			
 		});
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -199,6 +203,7 @@ public class ShowColleaguesPanel extends JPanel {
 		searchResultListModel.addElement("d");
 		searchResultListModel.addElement("e");
 		searchResultListModel.addElement("f");
+		searchResultColleaguesList.setSelectionInterval(0,0);
 		scrollPane.setViewportView(searchResultColleaguesList);
 		setLayout(groupLayout);
 

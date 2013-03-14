@@ -1,3 +1,4 @@
+
 package gui;
 
 
@@ -25,6 +26,7 @@ import database.Database;
 
 public class LoginPanel extends JPanel {
 
+	
 	// ----------------------------------------------------------------//
 	// Fields
 	// ----------------------------------------------------------------//
@@ -36,7 +38,7 @@ public class LoginPanel extends JPanel {
 	private JLabel nameLabel;
 	private JLabel imageLabel;
 	private JLabel passwordLabel;
-	private JLabel lblWrongUsernameOr;
+	private JLabel wrongInputLabel;
 	
 	private JTextField nameTextField;
 	private JPasswordField passwordField;
@@ -117,7 +119,13 @@ public class LoginPanel extends JPanel {
 		loginButton = new JButton("Logg inn");
 		registerButton = new JButton("Registrer bruker");
 
+		// ----------------------------------------------------------------//
+		// Label(s)
+		// ----------------------------------------------------------------//
 		
+		wrongInputLabel = new JLabel("Wrong username or password");
+		wrongInputLabel.setVisible(false);
+		wrongInputLabel.setForeground(Color.RED);
 
 		// ----------------------------------------------------------------//
 		// MethodCalls
@@ -135,9 +143,7 @@ public class LoginPanel extends JPanel {
 
 	public void addStuffToPanels(){
 		
-		lblWrongUsernameOr = new JLabel("Wrong username or password");
-		lblWrongUsernameOr.setVisible(false);
-		middlePanel.add(lblWrongUsernameOr, "cell 1 0");
+		middlePanel.add(wrongInputLabel, "cell 1 0");
 		middlePanel.add(registerButton, "cell 0 4 2 1,grow");
 		middlePanel.add(loginButton, "cell 0 3 2 1,grow");
 		middlePanel.add(passwordField, "cell 1 2,growx");
@@ -165,7 +171,7 @@ public class LoginPanel extends JPanel {
 					HomeGUI gotoHome = new HomeGUI();
 				}
 				else{
-					lblWrongUsernameOr.setVisible(true);
+					wrongInputLabel.setVisible(true);
 					
 				}
 
