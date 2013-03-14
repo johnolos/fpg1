@@ -96,8 +96,15 @@ public class Server {
 	}
 	
 	
-	void databaseQuery(RequestObject obj) {
-		Database database = new Database();
+	void databaseQuery(RequestObjects obj) {
+		Database database = null;
+		try {
+			database = new Database();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while connecting to database - ktnSTYLE");
+		}
+		
 		String[] keyword;
 		RequestEnum reType;
 		keyword = obj.getSearch();
@@ -107,6 +114,7 @@ public class Server {
 		switch(reType) {
 		case LOGIN:
 			Boolean bol = database.login(keyword[0], keyword[1]);
+			System.out.println(bol);
 			break;
 		case APPOINTMENT:
 			
