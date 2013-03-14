@@ -47,12 +47,31 @@ public class Client {
 	}
 	
 	// Login function
-	public void login(String username, String password) {
+	public boolean login(String username, String password) {
 		String[] keyword = {username,password};
 		RequestObjects reqObj = new RequestObjects(RequestEnum.LOGIN, keyword);
+		this.send(reqObj);
+		SendObject receivedObject = receive();
+		if(!checkObject(RequestEnum.BOOLEAN,receivedObject))
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		Boolean bol = (Boolean)receivedObject.getObject();
+		return bol.booleanValue();	
 	}
 	
-	// Send function
+	// Check function to check the type of in-comming object
+	private boolean checkObject(RequestEnum value, SendObject object) {
+		if(object.getSendType() == value) {
+			return true;
+		}
+		return false;
+		
+	}
+	
+	// Send function to send object over ObjectOutputStream
 	private void send(RequestObjects reqObj) {
 		try {
 			this.objectOutput.writeObject(reqObj);
@@ -62,8 +81,8 @@ public class Client {
 		}
 	}
 	
-	// receive function
-	private Object receive() {
+	// Receive function to read object from ObjectInputStream
+	private SendObject receive() {
 		Object receivedObject = null;
 		try {
 			receivedObject = this.objectInput.readObject();
@@ -72,7 +91,7 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return receivedObject;
+		return (SendObject)receivedObject;
 	}
 	
 	public void startClient() {
