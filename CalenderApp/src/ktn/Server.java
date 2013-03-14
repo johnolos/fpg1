@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -59,6 +61,11 @@ public class Server {
 				OutputStream clientOutputStream = this.connection.getOutputStream();
 				// Create InputStreamReader for InputStream
 				InputStreamReader inFromClient = new InputStreamReader(clientInputStream);
+				
+				// Create ObjectOutputStream
+				ObjectOutputStream objectOut = new ObjectOutputStream(clientOutputStream);
+				//Create InputObjectStream
+				ObjectInputStream objectIn = new ObjectInputStream(clientInputStream);
 				// Create Buffer InputStreamReader
 				BufferedReader stringFromClient = new BufferedReader(inFromClient);
 				// Create PrintWriter for OutputStream
@@ -68,6 +75,9 @@ public class Server {
 				// While-loop to ensure continuation of reading in-coming messages
 				String fromClient;
 				while (true) {
+					
+					
+					
 					// Reads message from buffer
 					fromClient = stringFromClient.readLine();
 					System.out.println("Message from client: " + fromClient);
