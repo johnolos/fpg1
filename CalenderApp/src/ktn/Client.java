@@ -106,7 +106,7 @@ public class Client {
 
 	// Function to initiate a client
 	public static void main(String[] args) {
-		new Client(7899,"127.0.0.1").startClient();
+		new Client(4004,"78.91.62.42").startClient();
 		//new Client(7899,"127.0.0.1").startClient();
 	}
 }

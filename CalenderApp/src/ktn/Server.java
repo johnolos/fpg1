@@ -12,6 +12,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import database.Database;
+
 public class Server {
 	private int port;
 	private String serverAddress;
@@ -92,9 +94,36 @@ public class Server {
 		}
 
 	}
+	
+	
+	void databaseQuery(RequestObject obj) {
+		Database database = new Database();
+		String[] keyword;
+		RequestEnum reType;
+		keyword = obj.getSearch();
+		reType = obj.getReType();
+		
+		
+		switch(reType) {
+		case LOGIN:
+			Boolean bol = database.login(keyword[0], keyword[1]);
+			break;
+		case APPOINTMENT:
+			
+			break;
+		case PERSON:
+			break;
+		case ALARM:
+			break;
+		case ROOM:
+			break;
+		default:
+			break;
+		}
+	}
 
 	// Main-function to start server
 	public static void main(String[] args) {
-		new Server(7899, "127.0.0.1").startServer();
+		new Server(4295, "78.91.62.42").startServer();
 	}
 }
