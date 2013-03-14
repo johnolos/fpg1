@@ -1,4 +1,4 @@
-package gui;
+package src.gui;
 
 
 import javax.swing.DefaultListModel;
@@ -20,6 +20,7 @@ import javax.swing.JTextPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractListModel;
+import javax.swing.ScrollPaneConstants;
 
 
 public class CreateAppointmentPanel extends JPanel {
@@ -104,6 +105,7 @@ public class CreateAppointmentPanel extends JPanel {
 		model.addElement("asdads");
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		JButton saveButton = new JButton("Lagre");
 
