@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import ktn.RequestEnum;
 import ktn.RequestObjects;
@@ -20,20 +21,21 @@ import baseClasses.Alarm;
 import baseClasses.Appointment;
 import baseClasses.Person;
 import baseClasses.Room;
+import baseClasses.Notification;
 
 //TCP client
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.62.42";
-	private final static int SERVERPORT = 4004;
+	private final static String SERVERIP = "78.91.10.150";
+	private final static int SERVERPORT = 4058;
 	
 	private ObjectOutputStream objectOutput;
 	private ObjectInputStream objectInput;
 	
 	
+	
 	public Client() {
-
 	}
 	
 	// Opens a connction
@@ -43,7 +45,14 @@ public class Client {
 	
 	// Closes the connection
 	public void close() {
-		
+		this.objectInput = null;
+		this.objectOutput = null;
+		try {
+			this.connection.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.connection = null;
 	}
 	
 	// Login function
@@ -80,6 +89,17 @@ public class Client {
 		}
 	}
 	
+	private void send(SendObject obj) {
+		try {
+			System.out.println("hei");
+			this.objectOutput.writeObject(obj);
+			System.out.println("sendt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	// Receive function to read object from ObjectInputStream
 	private SendObject receive() {
 		Object receivedObject = null;
@@ -92,6 +112,108 @@ public class Client {
 		}
 		return (SendObject)receivedObject;
 	}
+	
+	// Fetches all notifications available to the specified user.
+	public ArrayList<Notification> fetchNotifications(String username) {
+		String[] keyword = {username};
+		RequestObjects reqObj = new RequestObjects(RequestEnum.NOTIFICATION, keyword);
+		this.send(reqObj);
+		SendObject obj = this.receive();
+		if(!checkObject(RequestEnum.NOTIFICATION,obj)) {
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ArrayList<Notification> notifications = (ArrayList<Notification>)obj.getObject();
+		return notifications;
+	}
+	// Fetches all appointments at the specified date.
+	public ArrayList<Appointment> fetchAppointments(String user, String date) {
+		String[] keyword = {user,date};
+		RequestObjects reqObj = new RequestObjects(RequestEnum.APPOINTMENT, keyword);
+		this.send(reqObj);
+		SendObject obj = this.receive();
+		if(!checkObject(RequestEnum.APPOINTMENT,obj)) {
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ArrayList<Appointment> appointments = (ArrayList<Appointment>)obj.getObject();
+		return appointments;
+	}
+	
+	// Fetches all rooms available 
+	public ArrayList<Room> fetchRooms(String date,String start, String end) { 
+		// hh:mm - YYYY-MM-DD
+		String[] keyword = {date, start, end};
+		RequestObjects reqObj = new RequestObjects(RequestEnum.ROOM, keyword);
+		this.send(reqObj);
+		SendObject obj = this.receive();
+		if(!checkObject(RequestEnum.ROOM, obj)) {
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ArrayList<Room> rooms = (ArrayList<Room>)obj.getObject();
+		return rooms;
+	}
+	
+	// Fetches Person with searchWord, if "" then everybody
+	public ArrayList<Person> fetchPersons(String searchWord) {
+		String[] keyword = {searchWord};
+		RequestObjects reqObj = new RequestObjects(RequestEnum.PERSON, keyword);
+		this.send(reqObj);
+		SendObject obj = this.receive();
+		if(!checkObject(RequestEnum.PERSON, obj)) {
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ArrayList<Person> persons = (ArrayList<Person>)obj.getObject();
+		return persons;
+	}
+	
+	// Fetches Alarms from a specific date
+	public ArrayList<Alarm> fetchAlarms(String date, String user) {
+		String[] keyword = {user, date};
+		RequestObjects reqObj = new RequestObjects(RequestEnum.ALARM, keyword);
+		this.send(reqObj);
+		SendObject obj = this.receive();
+		if(!checkObject(RequestEnum.ALARM, obj)) {
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		ArrayList<Alarm> alarms = (ArrayList<Alarm>)obj.getObject();
+		return alarms;
+	}
+
+	// Admin is stored in Appointment. Server gets the username from this field.
+	public boolean setAppointment(Appointment app) {
+		SendObject sendObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
+		this.send(sendObj);
+		SendObject receivedObj = this.receive();
+		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
+			try {
+				throw new IOException("Login failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		Boolean bol = (Boolean)receivedObj.getObject();
+		return bol.booleanValue();	
+	}
+	
+	
 	
 	public void startClient() {
 		try {
@@ -115,6 +237,25 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	public static void main(String[] args) {
+		new Client().connect();
+	}
+	public void test() throws InterruptedException{
+		String [] hans = {"Hans","test"};
+		SendObject obj = new SendObject(RequestEnum.LOGIN,hans);
+		this.send(obj);
+		Thread.sleep(2000);
+	}
+}
+	
+
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	// --- SHALL BE DELETED. PRESERVED FOR REUSE OF CODE ---
@@ -158,4 +299,3 @@ public class Client {
 //		
 //	}
 //	
-}
