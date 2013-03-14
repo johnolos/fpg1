@@ -1,4 +1,4 @@
-package src.gui;
+package gui;
 
 
 import javax.swing.ImageIcon;
@@ -21,6 +21,8 @@ import javax.swing.JPasswordField;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
+import database.Database;
+
 public class LoginPanel extends JPanel {
 
 	// ----------------------------------------------------------------//
@@ -34,6 +36,7 @@ public class LoginPanel extends JPanel {
 	private JLabel nameLabel;
 	private JLabel imageLabel;
 	private JLabel passwordLabel;
+	private JLabel lblWrongUsernameOr;
 	
 	private JTextField nameTextField;
 	private JPasswordField passwordField;
@@ -42,9 +45,19 @@ public class LoginPanel extends JPanel {
 	private JButton registerButton;
 	
 	private ImageIcon image;
+	
+	private Database db;
 
 
 	public LoginPanel() {
+		
+		try {
+			db = new Database();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Could not connect to the database");
+		}
 		
 		// ----------------------------------------------------------------//
 		// NimbusLook
@@ -57,7 +70,7 @@ public class LoginPanel extends JPanel {
 		// ----------------------------------------------------------------//
 
 		topPanel = new JPanel(new MigLayout());
-		middlePanel = new JPanel(new MigLayout("", "[grow][]", "[][][][][]"));
+		middlePanel = new JPanel(new MigLayout("", "[grow][]", "[][][][][][]"));
 
 		this.add(topPanel);
 		this.add(middlePanel);
@@ -121,12 +134,16 @@ public class LoginPanel extends JPanel {
 	// ----------------------------------------------------------------//
 
 	public void addStuffToPanels(){
-		middlePanel.add(registerButton, "cell 0 3 2 1,grow");
-		middlePanel.add(loginButton, "cell 0 2 2 1,grow");
-		middlePanel.add(passwordField, "cell 1 1,growx");
-		middlePanel.add(passwordLabel, "cell 0 1");
-		middlePanel.add(nameTextField, "cell 1 0");
-		middlePanel.add(nameLabel, "cell 0 0");
+		
+		lblWrongUsernameOr = new JLabel("Wrong username or password");
+		lblWrongUsernameOr.setVisible(false);
+		middlePanel.add(lblWrongUsernameOr, "cell 1 0");
+		middlePanel.add(registerButton, "cell 0 4 2 1,grow");
+		middlePanel.add(loginButton, "cell 0 3 2 1,grow");
+		middlePanel.add(passwordField, "cell 1 2,growx");
+		middlePanel.add(passwordLabel, "cell 0 2");
+		middlePanel.add(nameTextField, "cell 1 1");
+		middlePanel.add(nameLabel, "cell 0 1");
 		topPanel.add(imageLabel, "push, align center");
 		
 		
@@ -143,8 +160,14 @@ public class LoginPanel extends JPanel {
 		
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				HomeGUI gotoHome = new HomeGUI();
+				if(db.login(nameTextField.getText(), passwordField.getText())){
+					frame.dispose();
+					HomeGUI gotoHome = new HomeGUI();
+				}
+				else{
+					lblWrongUsernameOr.setVisible(true);
+					
+				}
 
 			}
 		});
@@ -152,8 +175,7 @@ public class LoginPanel extends JPanel {
 		passwordField.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					frame.dispose();
-					HomeGUI gotoHome = new HomeGUI();
+					loginButton.doClick();
 				}
 			}
 
@@ -236,5 +258,4 @@ public class LoginPanel extends JPanel {
 		this.setLayout(gl_mainPanel);
 
 	}
-
 }

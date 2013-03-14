@@ -46,11 +46,12 @@ public class RegisterGUI extends JPanel {
 	private JFrame frame;
 	private JButton registerButton;
 	private JButton abortButton;
-
 	
 	Database db;
 
 	public RegisterGUI() {
+		
+		
 		
 		try {
 			db = new Database();
@@ -141,8 +142,15 @@ public class RegisterGUI extends JPanel {
 		
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				registerUser();
-				frame.dispose();
+				if(!passwordTextField.getText().equals(confirmPasswordTextField.getText())){
+					passwordLabel.setBackground(Color.RED);
+					confirmPasswordLabel.setBackground(Color.RED);
+					frame.repaint();
+				}
+				else{
+					registerUser();
+					frame.dispose();
+				}
 			}
 		});
 		
@@ -150,13 +158,22 @@ public class RegisterGUI extends JPanel {
 			public void keyReleased(KeyEvent e) {
 				if ((e.getKeyCode() == KeyEvent.VK_ENTER)){
 					if (confirmPasswordTextField.getPassword().length > 0) {
-					frame.dispose();
-					LoginPanel gotoLogin = new LoginPanel();
+					registerButton.doClick();
+					//LoginPanel gotoLogin = new LoginPanel();
 					} else
 					System.out.println("You didn't type nothing, dawg");
 				}
 			}
 
+		});
+		
+		telephoneTextField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (confirmPasswordTextField.getText().length() > 0) {
+					registerButton.doClick();
+				} else
+					System.out.println("ERROR");
+			}
 		});
 		
 		
@@ -249,6 +266,6 @@ public class RegisterGUI extends JPanel {
 	}
 	
 	public void registerUser(){
-		db.registerUser(usernameTextField.getText(), passwordTextField.getPassword().toString(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText());
+		db.registerUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText());
 	}
 }
