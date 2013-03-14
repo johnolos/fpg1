@@ -27,11 +27,12 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.62.42";
-	private final static int SERVERPORT = 4004;
+	private final static String SERVERIP = "78.91.10.150";
+	private final static int SERVERPORT = 4058;
 	
 	private ObjectOutputStream objectOutput;
 	private ObjectInputStream objectInput;
+	
 	
 	
 	public Client() {
@@ -90,7 +91,9 @@ public class Client {
 	
 	private void send(SendObject obj) {
 		try {
+			System.out.println("hei");
 			this.objectOutput.writeObject(obj);
+			System.out.println("sendt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -233,6 +236,15 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public static void main(String[] args) {
+		new Client().connect();
+	}
+	public void test() throws InterruptedException{
+		String [] hans = {"Hans","test"};
+		SendObject obj = new SendObject(RequestEnum.LOGIN,hans);
+		this.send(obj);
+		Thread.sleep(2000);
 	}
 }
 	

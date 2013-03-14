@@ -34,7 +34,7 @@ public class SendObject implements Serializable {
 	public Object getObject() {
 		return object;
 	}
-	public boolean containsObject(){
+	public boolean isObject(){
 		return this.value;
 	}
 	public String [] getKeyword(){
