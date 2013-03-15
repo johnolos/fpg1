@@ -61,21 +61,22 @@ public class Database {
 	}
 	
 	//Confirms that a person with username and password exists
-	public boolean login(String[] keyword){
+	public Person login(String[] keyword){
 		try {
-			String query = 	"SELECT username " +
+			String query = 	"SELECT * " +
 							"FROM person " +
 							"WHERE username='"+ keyword[0] +"' " +
 							"AND password=SHA1('"+ keyword[1] +"')";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
-			
-			if(res.next()) return true;
-			else return false;
+			Person person;
+			if(res.next()){
+				return new Person(res.getString(2),res.getString(4),res.getString(5),res.getString(6));
+			}
 			
 		} catch (SQLException e) { e.printStackTrace(); }
 		
-		return false;
+		return null;
 	}
 	
 	//Find persons with search word
@@ -223,7 +224,7 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	public void createAppointment(Appointment app){
+	public Boolean createAppointment(Appointment app){
 		try {
 			String query = 	"INSERT INTO appointment (title,sTime,eTime,date,description,location,admin,room_idRoom) " +
 							"VALUES ('"+ app.getTitle() + 
@@ -236,11 +237,13 @@ public class Database {
 									"', '"+ getRoomId( app.getRoom() )+ "')";
 			
 			con.createStatement().executeUpdate(query);
-			
 			//Connect person to appointment
 			createPersonAppointment(app.getAdmin(), app);
-			agreedAppointment(app.getAdmin(), app);
-		} catch (SQLException e) { e.printStackTrace(); }
+			//agreedAppointment(app.getAdmin(), app);
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace(); }
+		return false;
 		
 	}
 
@@ -268,7 +271,7 @@ public class Database {
 			String query = 	"UPDATE person_appointment "+
 							"SET hasAgreed = '1' "+
 							"WHERE person_appointment_person_idPerson ='"+ getPersonId(user) +"' "+
-							"AND person_appointment_appointment_idAppointment ='"+ getAppointmentId(app);
+							"AND person_appointment_appointment_idAppointment ='"+ getAppointmentId(app)+"'";
 			con.createStatement().executeUpdate(query);
 		}
 		catch (Exception e) { e.printStackTrace(); }

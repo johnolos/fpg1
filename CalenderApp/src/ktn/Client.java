@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 
 import baseClasses.Alarm;
 import baseClasses.Appointment;
@@ -52,22 +54,20 @@ public class Client {
 	}
 	
 	// Login function
-	public boolean login(String username, String password) {
-		String[] keyword = {username,password};
+	public Person login(String [] keyword) {
 		//Creates requestObject
 		SendObject reqObj = new SendObject(RequestEnum.LOGIN, keyword);
 		//Sends object to server
 		this.send(reqObj);
 		//Returns object from server
 		SendObject receivedObject = receive();
-		if(!checkObject(RequestEnum.BOOLEAN,receivedObject))
+		if(!checkObject(RequestEnum.PERSON,receivedObject))
 			try {
 				throw new IOException("Login failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		Boolean bol = (Boolean)receivedObject.getObject();
-		return bol.booleanValue();	
+		return (Person)receivedObject.getObject();	
 	}
 	
 	// Check function to check the type of in-comming object
@@ -198,7 +198,7 @@ public class Client {
 	}
 
 	// Admin is stored in Appointment. Server gets the username from this field.
-	public boolean setAppointment(Appointment app) {
+	public boolean createAppointment(Appointment app) {
 		SendObject sendObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
 		this.send(sendObj);
 		SendObject receivedObj = this.receive();
@@ -238,6 +238,10 @@ public class Client {
 		new Client().connect();
 	}
 	public void test() throws InterruptedException{
-		System.out.println(login("Hans", "test"));
+		/*String [] hans = {"Hans","test"};
+		Person person = login(hans);
+		System.out.println("Final : "+ person.getUsername());*/
+		Appointment app = new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "PORN", null, "Ingen", "Hans");
+		System.out.println(createAppointment(app));
 	}
 }

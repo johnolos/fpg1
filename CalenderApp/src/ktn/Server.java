@@ -13,6 +13,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import baseClasses.Appointment;
+import baseClasses.Person;
+
 import database.Database;
 
 public class Server {
@@ -117,18 +120,16 @@ public class Server {
 			System.out.println("ERROR while connecting to database - ktnSTYLE");
 			
 		}
+		String[] keyword;
+		RequestEnum reType;
+		keyword = obj.getKeyword();
+		reType = obj.getSendType();
 		if(obj.isRequest()){
-			String[] keyword;
-			RequestEnum reType;
-			keyword = obj.getKeyword();
-			reType = obj.getSendType();
 			
 			switch(reType) {
 			case LOGIN:
-				System.out.println(keyword);
-				Boolean bol = new Boolean(database.login(keyword));
-				System.out.println(bol);
-				SendObject sObject = new SendObject(RequestEnum.BOOLEAN, bol);
+				Person person = database.login(keyword);
+				SendObject sObject = new SendObject(RequestEnum.PERSON, person);
 				return sObject;
 			case APPOINTMENT:
 				
@@ -139,6 +140,17 @@ public class Server {
 				break;
 			case ROOM:
 				break;
+			default:
+				break;
+			}
+		}
+		else{
+			Object dataO = obj.getObject(); 
+			switch (reType) {
+			case S_APPOINTMENT:
+				Boolean bool = database.createAppointment((Appointment)dataO);
+				SendObject sObject = new SendObject(RequestEnum.BOOLEAN, bool);
+				return sObject;
 			default:
 				break;
 			}

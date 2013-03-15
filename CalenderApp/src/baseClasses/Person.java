@@ -1,8 +1,10 @@
 package baseClasses;
 
+import java.io.Serializable;
+
 
  
-public class Person implements Comparable {
+public class Person implements Comparable, Serializable {
        
         // Private
        
