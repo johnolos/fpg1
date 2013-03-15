@@ -14,16 +14,13 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
-import javax.swing.JTextArea;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.SystemColor;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -33,11 +30,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JLayeredPane;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
 import baseClasses.Notification;
 import baseClasses.NotificationEnum;
+import baseClasses.Person;
 
 public class HomeGUI extends JPanel {
 
@@ -88,6 +85,7 @@ public class HomeGUI extends JPanel {
 
 	static JLayeredPane layeredPane;
 	static ArrayList<Object> listOfFrames;
+	static Person currentUser;
 
 	public HomeGUI() {
 

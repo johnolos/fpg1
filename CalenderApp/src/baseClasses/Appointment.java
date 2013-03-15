@@ -1,6 +1,7 @@
 package baseClasses;
  
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.joda.time.DateTime;
  
@@ -17,7 +18,9 @@ public class Appointment implements Serializable {
         private String title;
         private String description;
        
-        private String admin;            
+        private String admin;          
+        
+        private ArrayList<Person> participants;
  
         public Appointment(DateTime start, DateTime end, String location, String title, Room room, String description, String admin) {
                 this.start = start;
@@ -27,6 +30,7 @@ public class Appointment implements Serializable {
                 this.description = description;
                 this.admin = admin;
                 this.title = title;
+                this.participants = new ArrayList<Person>();
         }
  
  
@@ -62,6 +66,10 @@ public class Appointment implements Serializable {
  
         public String getAdmin() {
                 return admin;
+        }
+        
+        public ArrayList<Person> getParticipants(){
+        	return participants;
         }
        
  

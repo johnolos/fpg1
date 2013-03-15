@@ -76,6 +76,7 @@ public class MyAppointmentsPanel extends JPanel {
 	JSpinner alarmHourSpinner;
 	JSpinner alarmMinuteSpinner;
 	
+	Appointment ap;
 	
 	/**
 	 * Create the panel.
@@ -401,7 +402,7 @@ public class MyAppointmentsPanel extends JPanel {
 		myAppointmentsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				
-				Appointment ap = myAppointmentsList.getSelectedValue();
+				ap = myAppointmentsList.getSelectedValue();
 				
 				titleField.setText(ap.getTitle());
 				dateDaySpinner.setValue(ap.getStart().getDayOfMonth());
@@ -412,17 +413,19 @@ public class MyAppointmentsPanel extends JPanel {
 				endHourSpinner.setValue(ap.getEnd().getHourOfDay());
 				endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
 				locationField.setText(ap.getLocation());
-//				roomComboBox.setSelectedItem(ap.getRoom());
+				Room room = ap.getRoom();
+				boxModel.addElement(room);
+				roomComboBox.setSelectedItem(room);
 				descriptionArea.setText(ap.getDescription());
-//				for(int i=0; i<ap.getParticipants().size(); i++){
-//					model.addElement(ap.getParticipants().get(i));
-//				}
+				for(int i=0; i<ap.getParticipants().size(); i++){
+					model.addElement(ap.getParticipants().get(i));
+				}
 				
 				
-//				if(JEG ER LEDER AV AVTALEN)
+//				if(HomeGUI.currentUser.equals(ap.getAdmin()))
 //					setAllFieldsEnabled(true);
 //				else
-//					setAlarmFieldsEnabled(true);
+					setAlarmFieldsEnabled(true);
 				setButtonsEnabled(true);
 				
 			}
@@ -482,9 +485,9 @@ public class MyAppointmentsPanel extends JPanel {
 		cancelChangesButton.setEnabled(b);
 		
 //		//Enable "Meld avbud" eller "Avlys avtale" avhengig av om man er leder eller ikke
-//		if(JEG IKKE ER LEDER AV M�TET){
-//			declineMeetingButton.setEnabled(true);
-//			cancelMeetingButton.setEnabled(false);
+//		if(HomeGUI.currentUser.equals(ap.getAdmin())){
+			declineMeetingButton.setEnabled(true);
+			cancelMeetingButton.setEnabled(false);
 //		}
 //		else{
 //			declineMeetingButton.setEnabled(false);
