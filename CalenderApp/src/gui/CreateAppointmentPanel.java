@@ -45,6 +45,14 @@ public class CreateAppointmentPanel extends JPanel {
 	JList<Person> list;
 	static DefaultListModel<Person> model;
 	
+	JSpinner dateDaySpinner;
+	JSpinner dateMonthSpinner;
+	JSpinner dateYearSpinner;
+	JSpinner startHourSpinner;
+	JSpinner startMinuteSpinner;
+	JSpinner endHourSpinner;
+	JSpinner endMinuteSpinner;
+	
 	CreateAppointmentPanel(){
 		
 		// ----------------------------------------------------------------//
@@ -119,31 +127,31 @@ public class CreateAppointmentPanel extends JPanel {
 		
 		JLabel lblDag = new JLabel("dag:");
 		
-		JSpinner dateDaySpinner = new JSpinner();
+		dateDaySpinner = new JSpinner();
 		
 		JLabel lblMnd = new JLabel("mnd.:");
 		
-		JSpinner dateMonthSpinner = new JSpinner();
+		dateMonthSpinner = new JSpinner();
 		
 		JLabel lblr = new JLabel("\u00E5r:");
 		
-		JSpinner dateYearSpinner = new JSpinner();
+		dateYearSpinner = new JSpinner();
 		dateDaySpinner.setModel(new SpinnerNumberModel(1, 1, 31, 1));
 		dateMonthSpinner.setModel(new SpinnerNumberModel(1, 1, 12, 1));
 		dateYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));
 		
 		
-		JSpinner startHourSpinner = new JSpinner();
+		startHourSpinner = new JSpinner();
 		
 		JLabel label = new JLabel(":");
 		
-		JSpinner startMinuteSpinner = new JSpinner();
+		startMinuteSpinner = new JSpinner();
 		
-		JSpinner endHourSpinner = new JSpinner();
+		endHourSpinner = new JSpinner();
 		
 		JLabel label_1 = new JLabel(":");
 		
-		JSpinner endMinuteSpinner = new JSpinner();
+		endMinuteSpinner = new JSpinner();
 		
 		startHourSpinner.setModel(new SpinnerNumberModel(0, 0, 23, 1));
 		startMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 59, 1));
@@ -273,12 +281,33 @@ public class CreateAppointmentPanel extends JPanel {
 					.addGap(43))
 		);
 		
+		saveButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				//FØRST SEND TIL DATABASE
+				
+				//if(DATABASE SIER GREIT){
+					HomeGUI.table.setValueAt(formatNumber((int)startHourSpinner.getValue()) + ":" + formatNumber((int)startMinuteSpinner.getValue()) + " - " + formatNumber((int)endHourSpinner.getValue()) + ":" + formatNumber((int)endMinuteSpinner.getValue()) + "\n" + titleField.getText(), 2, 2);
+				//}
+				
+			}
+			
+		});
+		
 		list = new JList<Person>();
 		list.setModel(model);
 		list.setCellRenderer(new PersonListRenderer());
 		scrollPane.setViewportView(list);
 		setLayout(groupLayout);
 		
+	}
+	
+	private String formatNumber(int number){
+		if(number <=9)
+			return "0"+number;
+		return number+"";
 	}
 	
 	
