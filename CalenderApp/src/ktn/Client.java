@@ -38,7 +38,6 @@ public class Client {
 	// Opens a connction
 	public void connect() throws InterruptedException {
 		this.startClient();
-		test();
 	}
 	
 	// Closes the connection
@@ -236,12 +235,5 @@ public class Client {
 	}
 	public static void main(String[] args) throws InterruptedException {
 		new Client().connect();
-	}
-	public void test() throws InterruptedException{
-		/*String [] hans = {"Hans","test"};
-		Person person = login(hans);
-		System.out.println("Final : "+ person.getUsername());*/
-		Appointment app = new Appointment(new DateTime(2013,05,05,12,0), new DateTime(2013,05,05,13,0), "Jkefd", "PORN", null, "Ingen", "Hans");
-		System.out.println(createAppointment(app));
 	}
 }
