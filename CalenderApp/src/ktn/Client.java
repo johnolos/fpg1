@@ -1,21 +1,16 @@
 package ktn;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import ktn.RequestEnum;
-import ktn.RequestObjects;
-import ktn.SendObject;
 
 import baseClasses.Alarm;
 import baseClasses.Appointment;
@@ -27,7 +22,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.10.150";
+	private final static String SERVERIP = "78.91.10.38";
 	private final static int SERVERPORT = 4058;
 	
 	private ObjectOutputStream objectOutput;
@@ -39,8 +34,9 @@ public class Client {
 	}
 	
 	// Opens a connction
-	public void connect() {
+	public void connect() throws InterruptedException {
 		this.startClient();
+		test();
 	}
 	
 	// Closes the connection
@@ -91,7 +87,6 @@ public class Client {
 	
 	private void send(SendObject obj) {
 		try {
-			System.out.println("hei");
 			this.objectOutput.writeObject(obj);
 			System.out.println("sendt");
 		} catch (IOException e) {
@@ -237,65 +232,13 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		new Client().connect();
 	}
 	public void test() throws InterruptedException{
 		String [] hans = {"Hans","test"};
 		SendObject obj = new SendObject(RequestEnum.LOGIN,hans);
 		this.send(obj);
-		Thread.sleep(2000);
+		//Thread.sleep(2000);
 	}
 }
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// --- SHALL BE DELETED. PRESERVED FOR REUSE OF CODE ---
-//	class InputClass extends Thread{
-//		private ObjectInputStream objectIn;
-//		
-//		
-//		InputClass(InputStream serverInputStream) {
-//			try {
-//				this.objectIn = new ObjectInputStream(serverInputStream);
-//			} catch (IOException e) {e.printStackTrace();
-//			}
-//		}
-//		public void run() {
-//			while(true) {
-//				SendObject object;
-//				try {
-//					object = (SendObject) this.objectIn.readObject();
-//					switch(object.getSendType()) {
-//					case LOGIN:
-//						Boolean bol = (Boolean) object.getObject();
-//						break;
-//					case APPOINTMENT:
-//						Appointment app = (Appointment) object.getObject();
-//						break;
-//					case PERSON:
-//						Person person = (Person) object.getObject();
-//						break;
-//					case ALARM:
-//						Alarm alarm = (Alarm) object.getObject();
-//					case ROOM:
-//						Room room = (Room) object.getObject();
-//					default:
-//						break;
-//					}
-//				} catch (IOException | ClassNotFoundException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//		
-//	}
-//	
