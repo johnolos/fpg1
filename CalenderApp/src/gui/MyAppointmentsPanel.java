@@ -422,7 +422,7 @@ public class MyAppointmentsPanel extends JPanel {
 				}
 				
 				
-//				if(HomeGUI.currentUser.equals(ap.getAdmin()))
+				if(HomeGUI.currentUser.getUsername().equals(ap.getAdmin()))
 //					setAllFieldsEnabled(true);
 //				else
 					setAlarmFieldsEnabled(true);
@@ -485,7 +485,7 @@ public class MyAppointmentsPanel extends JPanel {
 		cancelChangesButton.setEnabled(b);
 		
 //		//Enable "Meld avbud" eller "Avlys avtale" avhengig av om man er leder eller ikke
-//		if(HomeGUI.currentUser.equals(ap.getAdmin())){
+//		if(HomeGUI.currentUser.getUsername().equals(ap.getAdmin()){
 			declineMeetingButton.setEnabled(true);
 			cancelMeetingButton.setEnabled(false);
 //		}

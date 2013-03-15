@@ -201,12 +201,26 @@ public class EditParticipantsPanel extends JPanel {
 		
 		searchResultParticipantsList = new JList<Person>();
 		searchResultParticipantsList.setModel(searchResultListModel);
-		searchResultListModel.addElement(new Person("user1", "email1", "Torkjel", "Skjetne"));
-		searchResultListModel.addElement(new Person("user2", "email2", "John-Olav", "Storvold"));
-		searchResultListModel.addElement(new Person("user3", "email3", "Bjørn Christan", "Olsen"));
-		searchResultListModel.addElement(new Person("user4", "email4", "Hans-Olav", "Hessen"));
+		ArrayList<Person> peopleFromDatabase = new ArrayList<Person>();
+		peopleFromDatabase.add(new Person("user1", "email1", "Torkjel", "Skjetne"));
+		peopleFromDatabase.add(new Person("user2", "email2", "John-Olav", "Storvold"));
+	
 		searchResultParticipantsScrollPane.setViewportView(searchResultParticipantsList);
 		searchResultParticipantsList.setCellRenderer(new PersonListRenderer());
+		
+		if(chosenListModel.size() != 0){
+			for(int i=0; i<peopleFromDatabase.size(); i++){
+				for(int j=0; j<chosenListModel.size(); j++){
+					if(peopleFromDatabase.get(i).getUsername().equals(chosenListModel.get(j).getUsername())){
+						peopleFromDatabase.remove(i);
+					}
+				}
+			}
+		}
+		for(int i=0; i<peopleFromDatabase.size(); i++){
+			searchResultListModel.addElement(peopleFromDatabase.get(i));
+		}
+
 		setLayout(groupLayout);
 
 		
