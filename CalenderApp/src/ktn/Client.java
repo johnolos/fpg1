@@ -255,7 +255,12 @@ public class Client {
 		return bol.booleanValue();	
 	}
 
-	// Admin is stored in Appointment. Server gets the username from this field.
+	/**
+	 * Changes an exisiting entry on the server with the updated information.
+	 * @param oldApp
+	 * @param newApp
+	 * @return
+	 */
 	public boolean changeAppointment(Appointment oldApp, Appointment newApp) {
 		ArrayList<Appointment> changeList = new ArrayList<Appointment>();
 		changeList.add(oldApp);
@@ -275,7 +280,12 @@ public class Client {
 	
 	
 	
-	// Create person from login-menu
+	/**
+	 * Creates an new Person entry on the server, which can be used to
+	 * add new users to the application.
+	 * @param person
+	 * @return
+	 */
 	public boolean createPerson(Person person) {
 		SendObject sendObject = new SendObject(RequestEnum.S_PERSON, person);
 		this.send(sendObject);
@@ -289,7 +299,9 @@ public class Client {
 		Boolean bol = (Boolean)receivedObj.getObject();
 		return bol.booleanValue();
 	}
-	
+	/**
+	 * Internal function to start client
+	 */
 	private void startClient() {
 		try {
 			// Create a TCP connection to Server/Client
