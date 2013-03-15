@@ -13,6 +13,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import database.Database;
+
 public class Server {
 	private final static String SERVERIP = "78.91.10.38";
 	private final static int SERVERPORT = 4058;
