@@ -35,12 +35,17 @@ public class Client {
 	public Client() {
 	}
 	
-	// Opens a connction
+	/**
+	 * Connects a client to the server
+	 * @throws InterruptedException 
+	 */
 	public void connect() throws InterruptedException {
 		this.startClient();
 	}
 	
-	// Closes the connection
+	/**
+	 * Closes a connection if a connection has been made
+	 */
 	public void close() {
 		this.objectInput = null;
 		this.objectOutput = null;
@@ -52,7 +57,11 @@ public class Client {
 		this.connection = null;
 	}
 	
-	// Login function
+	/**
+	 * Logs a user in by making a LOGIN request to the server.
+	 * @param keyword String array as {user, password}
+	 * @return
+	 */
 	public Person login(String [] keyword) {
 		//Creates requestObject
 		SendObject reqObj = new SendObject(RequestEnum.LOGIN, keyword);
@@ -69,24 +78,23 @@ public class Client {
 		return (Person)receivedObject.getObject();	
 	}
 	
-	// Check function to check the type of in-comming object
+	/**
+	 * Checks a SendObjects RequestType with the expected RequestType.
+	 * Returns false if the values differ from each other.
+	 * @param value
+	 * @param object
+	 * @return
+	 */
 	private boolean checkObject(RequestEnum value, SendObject object) {
 		if(object.getSendType() == value) {
 			return true;
 		}
 		return false;
 	}
-	
-	// Send function to send object over ObjectOutputStream
-	private void send(RequestObjects reqObj) {
-		try {
-			this.objectOutput.writeObject(reqObj);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Client: Object couldn't be sent");
-		}
-	}
-	
+	/**
+	 * Sends a SendObject to the server trough the open connection
+	 * @param obj
+	 */
 	private void send(SendObject obj) {
 		try {
 			this.objectOutput.writeObject(obj);
@@ -97,7 +105,11 @@ public class Client {
 		}
 	}
 	
-	// Receive function to read object from ObjectInputStream
+	/**
+	 * Receive a SendObject from the server through the open connection.
+	 * The function blocks until the object is received.
+	 * @return
+	 */
 	private SendObject receive() {
 		Object receivedObject = null;
 		try {
@@ -110,7 +122,11 @@ public class Client {
 		return (SendObject)receivedObject;
 	}
 	
-	// Fetches all notifications available to the specified user.
+	/**
+	 * Fetches all the notification available to the specified user.
+	 * @param username
+	 * @return
+	 */
 	public ArrayList<Notification> fetchNotifications(String username) {
 		String[] keyword = {username};
 		SendObject reqObj = new SendObject(RequestEnum.NOTIFICATION, keyword);
@@ -127,7 +143,13 @@ public class Client {
 		return notifications;
 	}
 	
-	// Fetches all appointments at the specified date.
+	/**
+	 * Fetches all Appointments to the used on the specified date.
+	 * If the date string is empty, the function will return all appointments.
+	 * @param user
+	 * @param date
+	 * @return
+	 */
 	public ArrayList<Appointment> fetchAppointments(String user, String date) {
 		String[] keyword = {user,date};
 		SendObject reqObj = new SendObject(RequestEnum.APPOINTMENT, keyword);
@@ -144,7 +166,13 @@ public class Client {
 		return appointments;
 	}
 	
-	// Fetches all rooms available 
+	/**
+	 * Fetches all rooms available the specified date in the time intervall.
+	 * @param date
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public ArrayList<Room> fetchRooms(String date,String start, String end) { 
 		// hh:mm - YYYY-MM-DD
 		String[] keyword = {date, start, end};
@@ -162,7 +190,12 @@ public class Client {
 		return rooms;
 	}
 	
-	// Fetches Person with searchWord, if "" then everybody
+	/**
+	 * Fetches all persons available in the database based on
+	 * the searchword given.
+	 * @param searchWord
+	 * @return
+	 */
 	public ArrayList<Person> fetchPersons(String searchWord) {
 		String[] keyword = {searchWord};
 		SendObject reqObj = new SendObject(RequestEnum.PERSON, keyword);
@@ -179,8 +212,13 @@ public class Client {
 		return persons;
 	}
 	
-	// Fetches Alarms from a specific date
-	public ArrayList<Alarm> fetchAlarms(String date, String user) {
+	/**
+	 * Fetches all available Alarms to the user on the specified date.
+	 * @param date
+	 * @param user
+	 * @return
+	 */
+	public ArrayList<Alarm> fetchAlarms(String user, String date) {
 		String[] keyword = {user, date};
 		SendObject reqObj = new SendObject(RequestEnum.ALARM, keyword);
 		this.send(reqObj);
@@ -196,7 +234,13 @@ public class Client {
 		return alarms;
 	}
 
-	// Admin is stored in Appointment. Server gets the username from this field.
+	/**
+	 * Creates an Appointment entry on the server.
+	 * Admin is stored in Appointment, server gets 
+	 * the username from this field.
+	 * @param app
+	 * @return
+	 */
 	public boolean createAppointment(Appointment app) {
 		SendObject sendObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
 		this.send(sendObj);
