@@ -21,6 +21,8 @@ import javax.swing.JScrollBar;
 import javax.swing.JTextPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
 import javax.swing.AbstractListModel;
 import javax.swing.ScrollPaneConstants;
 
@@ -324,12 +326,24 @@ public class CreateAppointmentPanel extends JPanel {
 			}
 			
 		});
-		
 		list = new JList<Person>();
 		list.setModel(model);
 		list.setCellRenderer(new PersonListRenderer());
 		scrollPane.setViewportView(list);
 		setLayout(groupLayout);
+		
+	}
+	private void setModelContent(){
+		Client client = new Client();
+		try {
+			client.connect();
+		} catch (InterruptedException e) {
+		}
+		ArrayList<Person> persons = client.fetchPersons("H");//Må gjøre noe her!
+		while(persons.size()>0){
+			this.model.addElement(persons.remove(0));
+		}
+		
 		
 	}
 	
