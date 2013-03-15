@@ -13,6 +13,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import database.Database;
+
 public class Server {
 	private final static String SERVERIP = "78.91.10.38";
 	private final static int SERVERPORT = 4058;
@@ -51,6 +53,15 @@ public class Server {
 		ClientConnection(Socket connection) {
 			this.connection = connection;
 		}
+		private void send(SendObject obj) {
+			try {
+				this.objectOut.writeObject(obj);
+				System.out.println("sendt");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		public void run() {
 			System.out.println("Connected to client on " + this.connection.getRemoteSocketAddress());
@@ -75,9 +86,12 @@ public class Server {
 				while (i>0) {
 					i--;
 					try {
+						//Receive object from client
 						SendObject obj =(SendObject) this.objectIn.readObject();
-						System.out.println(obj.getKeyword() + "Dsfd");
-						SendObject obj = databaseQuery(obj);
+						//Sends object to databsefunction and return result-object
+						SendObject dbObj = databaseQuery(obj); 
+						//Sends object back to client
+						send(dbObj);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					}
@@ -93,6 +107,7 @@ public class Server {
 		}
 
 	}
+	
 	SendObject databaseQuery(SendObject obj) {
 		Database database = null;
 		try {
@@ -103,7 +118,6 @@ public class Server {
 			
 		}
 		if(obj.isRequest()){
-			System.out.println("hadsdfdsf");
 			String[] keyword;
 			RequestEnum reType;
 			keyword = obj.getKeyword();
@@ -111,10 +125,11 @@ public class Server {
 			
 			switch(reType) {
 			case LOGIN:
-				Boolean bol = database.login(keyword);
+				System.out.println(keyword);
+				Boolean bol = new Boolean(database.login(keyword));
 				System.out.println(bol);
-				return bol;
-				break;
+				SendObject sObject = new SendObject(RequestEnum.BOOLEAN, bol);
+				return sObject;
 			case APPOINTMENT:
 				
 				break;
@@ -128,18 +143,11 @@ public class Server {
 				break;
 			}
 		}
+		return null;
 		
 		
 	}
-	private void send(SendObject obj) {
-		try {
-			this.objectOutput.writeObject(obj);
-			System.out.println("sendt");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 
 	// Main-function to start server
 	public static void main(String[] args) {
