@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.UIManager;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -74,6 +76,7 @@ public class RegisterGUI extends JPanel {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.setContentPane(this);
+		frame.setBackground(UIManager.getColor("Panel.background"));
 
 		// ----------------------------------------------------------------//
 		// Labels
@@ -125,7 +128,6 @@ public class RegisterGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		createLayout();
-		setBackground(Color.DARK_GRAY);
 		addListeners();
 
 	}
@@ -159,11 +161,9 @@ public class RegisterGUI extends JPanel {
 		confirmPasswordTextField.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				if ((e.getKeyCode() == KeyEvent.VK_ENTER)){
-					if (confirmPasswordTextField.getPassword().length > 0) {
+					if (confirmPasswordTextField.getPassword().length > 0){
 					registerButton.doClick();
-					//LoginPanel gotoLogin = new LoginPanel();
-					} else
-					System.out.println("You didn't type nothing, dawg");
+					}
 				}
 			}
 
