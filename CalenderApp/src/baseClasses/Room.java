@@ -1,6 +1,8 @@
 package baseClasses;
 
-public class Room {
+import java.io.Serializable;
+
+public class Room implements Serializable{
 	
 	// Version 2232
 	private int capacity;

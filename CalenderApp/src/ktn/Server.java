@@ -12,9 +12,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 import baseClasses.Appointment;
 import baseClasses.Person;
+import baseClasses.Room;
 
 import database.Database;
 
@@ -141,7 +143,9 @@ public class Server {
 			case ALARM:
 				break;
 			case ROOM:
-				break;
+				ArrayList<Room> rooms= database.fetchRooms(keyword);
+				SendObject roomsObject = new SendObject(RequestEnum.ROOM,rooms);
+				return roomsObject;
 			default:
 				break;
 			}

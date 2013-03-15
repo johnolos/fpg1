@@ -483,4 +483,29 @@ public class Database {
 		keyword[1] = "2013-03-14";
 		
 	}
+
+	public ArrayList<Room> fetchRooms(String[] keyword) {
+		String date = keyword[0];
+		String start = keyword[1];
+		String end = keyword[2];
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		try{
+			String query = "SELECT r.capacity,r.name " +
+					"FROM room as r, appointment as a " +
+					"WHERE a.sTime  not between '"+start+"' AND '"+end+"' " +
+					"AND a.eTime not between '"+start+"' AND '"+end+"' " +
+					"AND a.date != '"+date+"' " +
+					"AND a.room_idRoom = r.idRoom " +
+					"GROUP BY r.name";
+			ResultSet res = con.createStatement().executeQuery(query);
+			while(res.next()){
+				rooms.add(new Room(Integer.parseInt(res.getString(1)), res.getString(2)));
+			}
+			return rooms;
+		}
+		catch (Exception e) {
+			System.out.println("Can't fetch rooms from database in that period");
+		}
+		return null;
+	}
 }

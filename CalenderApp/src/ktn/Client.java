@@ -167,6 +167,22 @@ public class Client {
 	}
 	
 	/**
+	 * Creates an new Person entry on the server, which can be used to
+	 * add new users to the application.
+	 * @param person
+	 * @return
+	 */
+	public boolean createPerson(String[] keyword) {
+		// Creates requestObject
+		SendObject reqObj = new SendObject(RequestEnum.S_PERSON, keyword);
+		// Sends object to server
+		this.send(reqObj);
+		// Returns object from server
+		SendObject receivedObj = receive();
+		// Return to GUI if the person is registered
+		return (Boolean) receivedObj.getObject();
+	}
+	/**
 	 * Fetches all rooms available the specified date in the time intervall.
 	 * @param date
 	 * @param start
@@ -179,13 +195,14 @@ public class Client {
 		SendObject reqObj = new SendObject(RequestEnum.ROOM, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
+		/*
 		if(!checkObject(RequestEnum.ROOM, obj)) {
 			try {
 				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		ArrayList<Room> rooms = (ArrayList<Room>)obj.getObject();
 		return rooms;
 	}
@@ -275,23 +292,6 @@ public class Client {
 		return bol.booleanValue();	
 	}
 
-	
-	/**
-	 * Creates an new Person entry on the server, which can be used to
-	 * add new users to the application.
-	 * @param person
-	 * @return
-	 */
-	public boolean createPerson(String[] keyword) {
-		// Creates requestObject
-		SendObject reqObj = new SendObject(RequestEnum.S_PERSON, keyword);
-		// Sends object to server
-		this.send(reqObj);
-		// Returns object from server
-		SendObject receivedObj = receive();
-		// Return to GUI if the person is registered
-		return (Boolean) receivedObj.getObject();
-	}
 	/**
 	 * Internal function to start client
 	 */
