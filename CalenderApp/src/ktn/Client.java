@@ -211,6 +211,22 @@ public class Client {
 		return bol.booleanValue();	
 	}
 	
+	// Create person from login-menu
+	public boolean createPerson(Person person) {
+		SendObject sendObject = new SendObject(RequestEnum.S_PERSON, person);
+		this.send(sendObject);
+		SendObject receivedObj = this.receive();
+		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
+			try {
+				throw new IOException("Register Failed. Try again!");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		Boolean bol = (Boolean)receivedObj.getObject();
+		return bol.booleanValue();
+	}
+	
+	
 	private void startClient() {
 		try {
 			// Create a TCP connection to Server/Client
