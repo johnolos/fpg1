@@ -15,6 +15,7 @@ import javax.swing.JList;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JFrame;
@@ -28,6 +29,8 @@ import javax.swing.JSpinner;
 
 import org.joda.time.DateTime;
 
+import database.Database;
+
 import baseClasses.Appointment;
 import baseClasses.Person;
 import baseClasses.Room;
@@ -37,6 +40,8 @@ import javax.swing.UIManager;
 
 
 public class MyAppointmentsPanel extends JPanel {
+	
+	Database db;
 	
 	DateTime jodaTime = new DateTime();
 	
@@ -82,6 +87,12 @@ public class MyAppointmentsPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public MyAppointmentsPanel() {
+		
+		try{
+			db = new Database();
+		} catch(Exception e){
+			//lulz
+		}
 		
 		// ----------------------------------------------------------------//
 		// Frame
@@ -388,7 +399,6 @@ public class MyAppointmentsPanel extends JPanel {
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(alarmHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(removeAlarmButton)
-								.addComponent(alarmMinuteLabel)
 								.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(30)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -434,7 +444,14 @@ public class MyAppointmentsPanel extends JPanel {
 		appointmentsModel = new DefaultListModel<Appointment>();
 		myAppointmentsList.setModel(appointmentsModel);
 		myAppointmentsList.setCellRenderer(new appointmentListRenderer());
-		appointmentsModel.addElement(new Appointment(new DateTime(2014, 01, 02, 03, 00) , new DateTime(2014, 01, 02, 04, 04), "DunnoWhatThisFieldIs :(", "Videokonferanse med Steria", new Room(20, "testrom"), "WutIsDisField?", "WahtBistDeineFelt?"));
+//		appointmentsModel.addElement(new Appointment(new DateTime(2014, 01, 02, 03, 00) , new DateTime(2014, 01, 02, 04, 04), "DunnoWhatThisFieldIs :(", "Videokonferanse med Steria", new Room(20, "testrom"), "WutIsDisField?", "WahtBistDeineFelt?"));
+		
+		String[] keyword = {HomeGUI.currentUser.getUsername()};
+		ArrayList<Appointment> appointmentsFromDatabase = db.getAppointmentsOnPerson(keyword);
+		for(int i=0; i<appointmentsFromDatabase.size(); i++){
+			appointmentsModel.addElement(appointmentsFromDatabase.get(i));
+		}
+		
 		
 		participantsList = new JList<Person>();
 		participantsList.setBackground(UIManager.getColor("Panel.background"));

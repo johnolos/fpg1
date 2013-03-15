@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import org.joda.time.DateTime;
+
 
 import baseClasses.Alarm;
 import baseClasses.Appointment;
@@ -22,8 +24,8 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.10.38";
-	private final static int SERVERPORT = 4058;
+	private final static String SERVERIP = "78.91.62.42";
+	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
 	private ObjectInputStream objectInput;
@@ -33,13 +35,17 @@ public class Client {
 	public Client() {
 	}
 	
-	// Opens a connction
+	/**
+	 * Connects a client to the server
+	 * @throws InterruptedException 
+	 */
 	public void connect() throws InterruptedException {
 		this.startClient();
-		test();
 	}
 	
-	// Closes the connection
+	/**
+	 * Closes a connection if a connection has been made
+	 */
 	public void close() {
 		this.objectInput = null;
 		this.objectOutput = null;
@@ -51,43 +57,44 @@ public class Client {
 		this.connection = null;
 	}
 	
-	// Login function
-	public boolean login(String username, String password) {
-		String[] keyword = {username,password};
+	/**
+	 * Logs a user in by making a LOGIN request to the server.
+	 * @param keyword String array as {user, password}
+	 * @return
+	 */
+	public Person login(String [] keyword) {
 		//Creates requestObject
 		SendObject reqObj = new SendObject(RequestEnum.LOGIN, keyword);
 		//Sends object to server
 		this.send(reqObj);
 		//Returns object from server
 		SendObject receivedObject = receive();
-		if(!checkObject(RequestEnum.BOOLEAN,receivedObject))
+		if(!checkObject(RequestEnum.PERSON,receivedObject))
 			try {
 				throw new IOException("Login failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		Boolean bol = (Boolean)receivedObject.getObject();
-		return bol.booleanValue();	
+		return (Person)receivedObject.getObject();	
 	}
 	
-	// Check function to check the type of in-comming object
+	/**
+	 * Checks a SendObjects RequestType with the expected RequestType.
+	 * Returns false if the values differ from each other.
+	 * @param value
+	 * @param object
+	 * @return
+	 */
 	private boolean checkObject(RequestEnum value, SendObject object) {
 		if(object.getSendType() == value) {
 			return true;
 		}
 		return false;
 	}
-	
-	// Send function to send object over ObjectOutputStream
-	private void send(RequestObjects reqObj) {
-		try {
-			this.objectOutput.writeObject(reqObj);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Client: Object couldn't be sent");
-		}
-	}
-	
+	/**
+	 * Sends a SendObject to the server trough the open connection
+	 * @param obj
+	 */
 	private void send(SendObject obj) {
 		try {
 			this.objectOutput.writeObject(obj);
@@ -98,7 +105,11 @@ public class Client {
 		}
 	}
 	
-	// Receive function to read object from ObjectInputStream
+	/**
+	 * Receive a SendObject from the server through the open connection.
+	 * The function blocks until the object is received.
+	 * @return
+	 */
 	private SendObject receive() {
 		Object receivedObject = null;
 		try {
@@ -111,15 +122,19 @@ public class Client {
 		return (SendObject)receivedObject;
 	}
 	
-	// Fetches all notifications available to the specified user.
+	/**
+	 * Fetches all the notification available to the specified user.
+	 * @param username
+	 * @return
+	 */
 	public ArrayList<Notification> fetchNotifications(String username) {
 		String[] keyword = {username};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.NOTIFICATION, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.NOTIFICATION, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.NOTIFICATION,obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -128,15 +143,21 @@ public class Client {
 		return notifications;
 	}
 	
-	// Fetches all appointments at the specified date.
+	/**
+	 * Fetches all Appointments to the used on the specified date.
+	 * If the date string is empty, the function will return all appointments.
+	 * @param user
+	 * @param date
+	 * @return
+	 */
 	public ArrayList<Appointment> fetchAppointments(String user, String date) {
 		String[] keyword = {user,date};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.APPOINTMENT, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.APPOINTMENT, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.APPOINTMENT,obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -145,16 +166,22 @@ public class Client {
 		return appointments;
 	}
 	
-	// Fetches all rooms available 
+	/**
+	 * Fetches all rooms available the specified date in the time intervall.
+	 * @param date
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public ArrayList<Room> fetchRooms(String date,String start, String end) { 
 		// hh:mm - YYYY-MM-DD
 		String[] keyword = {date, start, end};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.ROOM, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.ROOM, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.ROOM, obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -163,15 +190,20 @@ public class Client {
 		return rooms;
 	}
 	
-	// Fetches Person with searchWord, if "" then everybody
+	/**
+	 * Fetches all persons available in the database based on
+	 * the searchword given.
+	 * @param searchWord
+	 * @return
+	 */
 	public ArrayList<Person> fetchPersons(String searchWord) {
 		String[] keyword = {searchWord};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.PERSON, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.PERSON, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.PERSON, obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Retry query from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -180,10 +212,15 @@ public class Client {
 		return persons;
 	}
 	
-	// Fetches Alarms from a specific date
-	public ArrayList<Alarm> fetchAlarms(String date, String user) {
+	/**
+	 * Fetches all available Alarms to the user on the specified date.
+	 * @param date
+	 * @param user
+	 * @return
+	 */
+	public ArrayList<Alarm> fetchAlarms(String user, String date) {
 		String[] keyword = {user, date};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.ALARM, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.ALARM, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.ALARM, obj)) {
@@ -197,14 +234,43 @@ public class Client {
 		return alarms;
 	}
 
-	// Admin is stored in Appointment. Server gets the username from this field.
-	public boolean setAppointment(Appointment app) {
+	/**
+	 * Creates an Appointment entry on the server.
+	 * Admin is stored in Appointment, server gets 
+	 * the username from this field.
+	 * @param app
+	 * @return
+	 */
+	public boolean createAppointment(Appointment app) {
 		SendObject sendObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
 		this.send(sendObj);
 		SendObject receivedObj = this.receive();
 		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Creating Appointment failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		Boolean bol = (Boolean)receivedObj.getObject();
+		return bol.booleanValue();	
+	}
+
+	/**
+	 * Changes an exisiting entry on the server with the updated information.
+	 * @param oldApp
+	 * @param newApp
+	 * @return
+	 */
+	public boolean changeAppointment(Appointment oldApp, Appointment newApp) {
+		ArrayList<Appointment> changeList = new ArrayList<Appointment>();
+		changeList.add(oldApp);
+		changeList.add(newApp);
+		SendObject sendObj = new SendObject(RequestEnum.C_APPOINTMENT, changeList);
+		this.send(sendObj);
+		SendObject receivedObj = this.receive();
+		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
+			try {
+				throw new IOException("Creating Appointment failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -212,6 +278,30 @@ public class Client {
 		return bol.booleanValue();	
 	}
 	
+	
+	
+	/**
+	 * Creates an new Person entry on the server, which can be used to
+	 * add new users to the application.
+	 * @param person
+	 * @return
+	 */
+	public boolean createPerson(Person person) {
+		SendObject sendObject = new SendObject(RequestEnum.S_PERSON, person);
+		this.send(sendObject);
+		SendObject receivedObj = this.receive();
+		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
+			try {
+				throw new IOException("Register Failed. Try again!");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		Boolean bol = (Boolean)receivedObj.getObject();
+		return bol.booleanValue();
+	}
+	/**
+	 * Internal function to start client
+	 */
 	private void startClient() {
 		try {
 			// Create a TCP connection to Server/Client
@@ -236,8 +326,5 @@ public class Client {
 	}
 	public static void main(String[] args) throws InterruptedException {
 		new Client().connect();
-	}
-	public void test() throws InterruptedException{
-		System.out.println(login("Hans", "test"));
 	}
 }

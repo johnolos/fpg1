@@ -22,6 +22,10 @@ import javax.swing.JPasswordField;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
+import baseClasses.Person;
+
+import ktn.Client;
+
 import database.Database;
 
 public class LoginPanel extends JPanel {
@@ -171,9 +175,17 @@ public class LoginPanel extends JPanel {
 					pass+=passwordField.getPassword()[i];
 				}
 				String[] keyword = {nameTextField.getText(), pass};
-				if(db.login(keyword)){
+				Client client = new Client();
+				try {
+					client.connect();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				Person person = client.login(keyword);
+				if(person != null){
 					frame.dispose();
 					HomeGUI gotoHome = new HomeGUI();
+					HomeGUI.currentUser = person;
 				}
 				else{
 					wrongInputLabel.setVisible(true);
