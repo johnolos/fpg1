@@ -210,6 +210,26 @@ public class Client {
 		Boolean bol = (Boolean)receivedObj.getObject();
 		return bol.booleanValue();	
 	}
+
+	// Admin is stored in Appointment. Server gets the username from this field.
+	public boolean changeAppointment(Appointment oldApp, Appointment newApp) {
+		ArrayList<Appointment> changeList = new ArrayList<Appointment>();
+		changeList.add(oldApp);
+		changeList.add(newApp);
+		SendObject sendObj = new SendObject(RequestEnum.C_APPOINTMENT, changeList);
+		this.send(sendObj);
+		SendObject receivedObj = this.receive();
+		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
+			try {
+				throw new IOException("Creating Appointment failed. Wrong object received from server");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		Boolean bol = (Boolean)receivedObj.getObject();
+		return bol.booleanValue();	
+	}
+	
+	
 	
 	// Create person from login-menu
 	public boolean createPerson(Person person) {
@@ -225,7 +245,6 @@ public class Client {
 		Boolean bol = (Boolean)receivedObj.getObject();
 		return bol.booleanValue();
 	}
-	
 	
 	private void startClient() {
 		try {
