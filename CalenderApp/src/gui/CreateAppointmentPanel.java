@@ -24,20 +24,33 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractListModel;
 import javax.swing.ScrollPaneConstants;
 
+import baseClasses.Appointment;
 import baseClasses.Person;
 import baseClasses.Room;
 import javax.swing.JSpinner;
 
 import org.joda.time.DateTime;
 
+import database.Database;
+
 
 public class CreateAppointmentPanel extends JPanel {
+	
+	Database db;
 	
 	DateTime jodaTime = new DateTime();
 	
 	JFrame frmOpprettAvtale;
 	private JTextField titleField;
 	private JTextField locationField;
+	
+	JSpinner startHourSpinner;
+	JSpinner startMinuteSpinner;
+	JSpinner endHourSpinner;
+	JSpinner endMinuteSpinner;
+	JSpinner dateDaySpinner;
+	JSpinner dateMonthSpinner;
+	JSpinner dateYearSpinner;
 	
 	JComboBox<Room> roomBox;
 	DefaultComboBoxModel<Room> boxModel;
@@ -92,7 +105,7 @@ public class CreateAppointmentPanel extends JPanel {
 		roomBox.setModel(boxModel);
 		roomBox.setRenderer(new ComboBoxRenderer());
 		
-		JTextPane descreptionArea = new JTextPane();
+		JTextPane descriptionArea = new JTextPane();
 		
 		JButton cancelButton = new JButton("Avbryt");
 		cancelButton.addActionListener(new ActionListener() {
@@ -115,35 +128,47 @@ public class CreateAppointmentPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
+		try{
+			db = new Database();
+		} catch(Exception e){
+			
+		}
+		
 		JButton saveButton = new JButton("Lagre");
+		saveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//DateTime start, DateTime end, String location, String title, Room room, String description, String admin
+				db.createAppointment(new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), new Room(5, "test"), "", HomeGUI.currentUser.getUsername()));
+			}
+		});
 		
 		JLabel lblDag = new JLabel("dag:");
 		
-		JSpinner dateDaySpinner = new JSpinner();
+		dateDaySpinner = new JSpinner();
 		
 		JLabel lblMnd = new JLabel("mnd.:");
 		
-		JSpinner dateMonthSpinner = new JSpinner();
+		dateMonthSpinner = new JSpinner();
 		
 		JLabel lblr = new JLabel("\u00E5r:");
 		
-		JSpinner dateYearSpinner = new JSpinner();
+		dateYearSpinner = new JSpinner();
 		dateDaySpinner.setModel(new SpinnerNumberModel(1, 1, 31, 1));
 		dateMonthSpinner.setModel(new SpinnerNumberModel(1, 1, 12, 1));
 		dateYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));
 		
 		
-		JSpinner startHourSpinner = new JSpinner();
+		startHourSpinner = new JSpinner();
 		
 		JLabel label = new JLabel(":");
 		
-		JSpinner startMinuteSpinner = new JSpinner();
+		startMinuteSpinner = new JSpinner();
 		
-		JSpinner endHourSpinner = new JSpinner();
+		endHourSpinner = new JSpinner();
 		
 		JLabel label_1 = new JLabel(":");
 		
-		JSpinner endMinuteSpinner = new JSpinner();
+		endMinuteSpinner = new JSpinner();
 		
 		startHourSpinner.setModel(new SpinnerNumberModel(0, 0, 23, 1));
 		startMinuteSpinner.setModel(new SpinnerNumberModel(0, 0, 59, 1));
@@ -182,7 +207,7 @@ public class CreateAppointmentPanel extends JPanel {
 														.addPreferredGap(ComponentPlacement.UNRELATED)
 														.addComponent(cancelButton)
 														.addGap(29))
-													.addComponent(descreptionArea, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+													.addComponent(descriptionArea, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
 													.addComponent(titleField, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
 												.addPreferredGap(ComponentPlacement.RELATED)
 												.addComponent(editParticipantsButton, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
@@ -257,7 +282,7 @@ public class CreateAppointmentPanel extends JPanel {
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(descriptionLabel)
-						.addComponent(descreptionArea, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))
+						.addComponent(descriptionArea, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()

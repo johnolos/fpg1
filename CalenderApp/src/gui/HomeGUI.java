@@ -85,7 +85,7 @@ public class HomeGUI extends JPanel {
 
 	static JLayeredPane layeredPane;
 	static ArrayList<Object> listOfFrames;
-	static Person currentUser;
+	static Person currentUser = new Person("asd", "", "", "");
 
 	public HomeGUI() {
 
