@@ -42,7 +42,7 @@ public class Database {
 	}
 	
 	//Register a user in the database
-	public void registerUser(String[] keyword){
+	public void registerUser(String[] keyword) throws Exception{
 		try {
 			String query = "" + 
 					"INSERT INTO person(username, password, firstName, lastName, email, telefon) " +
@@ -55,7 +55,9 @@ public class Database {
 				
 			con.createStatement().executeUpdate(query);
 			
-		} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e) { 
+			throw e;//e.printStackTrace(); 
+		}
 	}
 	
 	//Confirms that a person with username and password exists
