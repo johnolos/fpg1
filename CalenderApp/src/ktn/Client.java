@@ -127,6 +127,7 @@ public class Client {
 		ArrayList<Notification> notifications = (ArrayList<Notification>)obj.getObject();
 		return notifications;
 	}
+	
 	// Fetches all appointments at the specified date.
 	public ArrayList<Appointment> fetchAppointments(String user, String date) {
 		String[] keyword = {user,date};
@@ -211,9 +212,7 @@ public class Client {
 		return bol.booleanValue();	
 	}
 	
-	
-	
-	public void startClient() {
+	private void startClient() {
 		try {
 			// Create a TCP connection to Server/Client
 			connection = new Socket(InetAddress.getByName(Client.SERVERIP), Client.SERVERPORT);
