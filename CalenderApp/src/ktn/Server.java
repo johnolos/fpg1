@@ -19,7 +19,7 @@ import baseClasses.Person;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.13.222";
+	private final static String SERVERIP = "78.91.10.38";
 	private final static int SERVERPORT = 4004;
 
 	public Server() {
@@ -134,8 +134,10 @@ public class Server {
 			case APPOINTMENT:
 				
 				break;
-			case PERSON:
-				break;
+			case S_PERSON:
+				Boolean bool2 = database.registerUser(keyword);
+				SendObject sObject2 = new SendObject(RequestEnum.BOOLEAN,bool2);
+				return sObject2;
 			case ALARM:
 				break;
 			case ROOM:
@@ -145,12 +147,11 @@ public class Server {
 			}
 		}
 		else{
-			Object dataO = obj.getObject(); 
 			switch (reType) {
 			case S_APPOINTMENT:
-				Boolean bool = database.createAppointment((Appointment)dataO);
-				SendObject sObject = new SendObject(RequestEnum.BOOLEAN, bool);
-				return sObject;
+				Boolean bool3 = database.createAppointment((Appointment)obj.getObject());
+				SendObject sObject3 = new SendObject(RequestEnum.BOOLEAN,bool3);
+				return sObject3;
 			default:
 				break;
 			}

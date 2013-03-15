@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.13.222";
+	private final static String SERVERIP = "78.91.10.38";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
@@ -242,17 +242,14 @@ public class Client {
 	 * @return
 	 */
 	public boolean createAppointment(Appointment app) {
-		SendObject sendObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
-		this.send(sendObj);
-		SendObject receivedObj = this.receive();
-		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
-			try {
-				throw new IOException("Creating Appointment failed. Wrong object received from server");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		Boolean bol = (Boolean)receivedObj.getObject();
-		return bol.booleanValue();	
+		// Creates requestObject
+		SendObject reqObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
+		//Sens object to server
+		this.send(reqObj);
+		//Return object from server
+		SendObject receivedObj = receive();
+		//Return to GUI if the appointment is registered
+		return (Boolean)receivedObj.getObject();
 	}
 
 	/**
@@ -277,8 +274,7 @@ public class Client {
 		Boolean bol = (Boolean)receivedObj.getObject();
 		return bol.booleanValue();	
 	}
-	
-	
+
 	
 	/**
 	 * Creates an new Person entry on the server, which can be used to
@@ -286,18 +282,15 @@ public class Client {
 	 * @param person
 	 * @return
 	 */
-	public boolean createPerson(Person person) {
-		SendObject sendObject = new SendObject(RequestEnum.S_PERSON, person);
-		this.send(sendObject);
-		SendObject receivedObj = this.receive();
-		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
-			try {
-				throw new IOException("Register Failed. Try again!");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		Boolean bol = (Boolean)receivedObj.getObject();
-		return bol.booleanValue();
+	public boolean createPerson(String[] keyword) {
+		// Creates requestObject
+		SendObject reqObj = new SendObject(RequestEnum.S_PERSON, keyword);
+		// Sends object to server
+		this.send(reqObj);
+		// Returns object from server
+		SendObject receivedObj = receive();
+		// Return to GUI if the person is registered
+		return (Boolean) receivedObj.getObject();
 	}
 	/**
 	 * Internal function to start client

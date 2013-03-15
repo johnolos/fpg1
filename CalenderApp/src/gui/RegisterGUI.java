@@ -20,6 +20,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 
+import ktn.Client;
+
 import database.Database;
 
 public class RegisterGUI extends JPanel {
@@ -284,12 +286,18 @@ public class RegisterGUI extends JPanel {
 			pass += passwordTextField.getPassword()[i];
 		}
 		String[] keyword = {usernameTextField.getText(), pass, firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText()};
-		try{
-			db.registerUser(keyword);
-			frame.dispose();
-		} catch (Exception e){
-			takenUsernameLabel.setVisible(true);
-			
+		Client client = new Client();
+		try {
+			client.connect();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
 		}
+		if(client.createPerson(keyword)){
+			frame.dispose();
+		}
+		else{
+			takenUsernameLabel.setVisible(true);
+		}
+			
 	}
 }

@@ -42,7 +42,7 @@ public class Database {
 	}
 	
 	//Register a user in the database
-	public void registerUser(String[] keyword) throws Exception{
+	public boolean registerUser(String[] keyword){
 		try {
 			String query = "" + 
 					"INSERT INTO person(username, password, firstName, lastName, email, telefon) " +
@@ -54,10 +54,10 @@ public class Database {
 							"','"+ 		keyword[5] +"')";
 				
 			con.createStatement().executeUpdate(query);
-			
 		} catch (SQLException e) { 
-			throw e;//e.printStackTrace(); 
+			return false;
 		}
+		return true;
 	}
 	
 	//Confirms that a person with username and password exists
@@ -225,6 +225,9 @@ public class Database {
 	}
 	
 	public Boolean createAppointment(Appointment app){
+		if(app.getRoom() == null){
+			app.setRoom(new Room(0, "Ingen rom"));
+		}
 		try {
 			String query = 	"INSERT INTO appointment (title,sTime,eTime,date,description,location,admin,room_idRoom) " +
 							"VALUES ('"+ app.getTitle() + 

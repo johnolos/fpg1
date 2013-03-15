@@ -29,6 +29,8 @@ import baseClasses.Person;
 import baseClasses.Room;
 import javax.swing.JSpinner;
 
+import ktn.Client;
+
 import org.joda.time.DateTime;
 
 import database.Database;
@@ -138,8 +140,17 @@ public class CreateAppointmentPanel extends JPanel {
 		JButton saveButton = new JButton("Lagre");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//DateTime start, DateTime end, String location, String title, Room room, String description, String admin
-				db.createAppointment(new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), new Room(5, "test"), "", HomeGUI.currentUser.getUsername()));
+				Appointment app = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), null, "", HomeGUI.currentUser.getUsername());
+				Client client = new Client();
+				try {
+					client.connect();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				if(client.createAppointment(app)){
+					
+					frmOpprettAvtale.dispose();
+				}
 			}
 		});
 		

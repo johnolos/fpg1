@@ -71,6 +71,12 @@ public class Appointment implements Serializable {
         public ArrayList<Person> getParticipants(){
         	return participants;
         }
+
+
+		public void setRoom(Room room2) {
+			this.room = room2;
+			
+		}
        
  
 }
