@@ -268,6 +268,11 @@ public class RegisterGUI extends JPanel {
 	}
 	
 	public void registerUser(){
-		db.registerUser(usernameTextField.getText(), passwordTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText());
+		String pass = "";
+		for(int i=0; i<passwordTextField.getPassword().length;i++){
+			pass += passwordTextField.getPassword()[i];
+		}
+		String[] keyword = {usernameTextField.getText(), pass, firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText()};
+		db.registerUser(keyword);
 	}
 }
