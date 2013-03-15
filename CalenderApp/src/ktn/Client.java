@@ -54,8 +54,11 @@ public class Client {
 	// Login function
 	public boolean login(String username, String password) {
 		String[] keyword = {username,password};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.LOGIN, keyword);
+		//Creates requestObject
+		SendObject reqObj = new SendObject(RequestEnum.LOGIN, keyword);
+		//Sends object to server
 		this.send(reqObj);
+		//Returns object from server
 		SendObject receivedObject = receive();
 		if(!checkObject(RequestEnum.BOOLEAN,receivedObject))
 			try {
@@ -236,9 +239,6 @@ public class Client {
 		new Client().connect();
 	}
 	public void test() throws InterruptedException{
-		String [] hans = {"Hans","test"};
-		SendObject obj = new SendObject(RequestEnum.LOGIN,hans);
-		this.send(obj);
-		//Thread.sleep(2000);
+		System.out.println(login("Hans", "test"));
 	}
 }
