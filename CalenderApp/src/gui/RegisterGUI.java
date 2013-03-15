@@ -38,6 +38,7 @@ public class RegisterGUI extends JPanel {
 	private JLabel emailLabel;
 	private JLabel telephoneLabel;
 	private JLabel registerUserHeadlineLabel;
+	private JLabel takenUsernameLabel;
 
 	private JTextField usernameTextField;
 	private JPasswordField passwordTextField;
@@ -92,6 +93,12 @@ public class RegisterGUI extends JPanel {
 
 		registerUserHeadlineLabel = new JLabel("Registrer bruker");
 		registerUserHeadlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		
+		
+		takenUsernameLabel = new JLabel("Utilgjengelig brukernavn");
+		takenUsernameLabel.setForeground(Color.RED);
+		takenUsernameLabel.setVisible(false);
+		
 
 		// ----------------------------------------------------------------//
 		// TextFields
@@ -153,7 +160,6 @@ public class RegisterGUI extends JPanel {
 				}
 				else{
 					registerUser();
-					frame.dispose();
 				}
 			}
 		});
@@ -182,7 +188,7 @@ public class RegisterGUI extends JPanel {
 	}
 	
 	public void createLayout() {
-		
+
 
 		// ----------------------------------------------------------------//
 		// Layout
@@ -194,41 +200,46 @@ public class RegisterGUI extends JPanel {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-								.addComponent(passwordLabel)
-								.addComponent(emailLabel)
-								.addComponent(telephoneLabel)
-								.addComponent(lastNameLabel)
-								.addComponent(usernameLabel)
-								.addComponent(firstNameLabel)
-								.addComponent(confirmPasswordLabel))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(telephoneTextField, 243, 243, Short.MAX_VALUE)
-								.addComponent(emailTextField, 243, 243, Short.MAX_VALUE)
-								.addComponent(lastNameTextField, 243, 243, 243)
-								.addComponent(usernameTextField, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
-								.addComponent(confirmPasswordTextField, 243, 243, 243)
-								.addComponent(firstNameTextField, 243, 243, 243)
-								.addComponent(passwordTextField, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)))
+						.addComponent(passwordLabel)
+						.addComponent(emailLabel)
+						.addComponent(telephoneLabel)
+						.addComponent(lastNameLabel)
+						.addComponent(usernameLabel)
+						.addComponent(firstNameLabel)
+						.addComponent(confirmPasswordLabel))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(telephoneTextField, Alignment.LEADING, 243, 243, Short.MAX_VALUE)
+						.addComponent(emailTextField, Alignment.LEADING, 243, 243, Short.MAX_VALUE)
+						.addComponent(lastNameTextField, Alignment.LEADING, 243, 243, 243)
+						.addComponent(usernameTextField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+						.addComponent(confirmPasswordTextField, Alignment.LEADING, 243, 243, 243)
+						.addComponent(firstNameTextField, Alignment.LEADING, 243, 243, 243)
+						.addComponent(passwordTextField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(registerButton)
-							.addGap(27)
+							.addGap(32)
 							.addComponent(abortButton)
-							.addGap(39)))
+							.addGap(46)))
 					.addGap(56))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(134)
-					.addComponent(registerUserHeadlineLabel, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-					.addGap(130))
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addGap(145)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(takenUsernameLabel)
+							.addContainerGap())
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(registerUserHeadlineLabel, GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+							.addGap(77))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(29)
+					.addContainerGap()
 					.addComponent(registerUserHeadlineLabel)
-					.addGap(18)
+					.addGap(16)
+					.addComponent(takenUsernameLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(usernameLabel)
 						.addComponent(usernameTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -258,9 +269,9 @@ public class RegisterGUI extends JPanel {
 						.addComponent(telephoneTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(abortButton)
-						.addComponent(registerButton))
-					.addGap(63))
+						.addComponent(registerButton)
+						.addComponent(abortButton))
+					.addGap(84))
 		);
 
 		setLayout(groupLayout);
@@ -273,6 +284,12 @@ public class RegisterGUI extends JPanel {
 			pass += passwordTextField.getPassword()[i];
 		}
 		String[] keyword = {usernameTextField.getText(), pass, firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), telephoneTextField.getText()};
-		db.registerUser(keyword);
+		try{
+			db.registerUser(keyword);
+			frame.dispose();
+		} catch (Exception e){
+			takenUsernameLabel.setVisible(true);
+			
+		}
 	}
 }
