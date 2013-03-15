@@ -133,10 +133,14 @@ public class Server {
 				Person person = database.login(keyword);
 				SendObject sObject = new SendObject(RequestEnum.PERSON, person);
 				return sObject;
+			case PERSON:
+				ArrayList<Person> persons = database.getPerson(keyword);
+				SendObject personsObj = new SendObject(RequestEnum.PERSON, persons);
+				return personsObj;
 			case APPOINTMENT:
 				
 				break;
-			case S_PERSON:
+			case S_PERSON://Returns person after completed login
 				Boolean bool2 = database.registerUser(keyword);
 				SendObject sObject2 = new SendObject(RequestEnum.BOOLEAN,bool2);
 				return sObject2;

@@ -21,7 +21,12 @@ public class TestFile {
 		Client client = new Client();
 		client.connect();
 		
-		ArrayList<Room> rooms = client.fetchRooms("2013","14:00:00","15:00:00");
+		/*String searchWord = "H";
+		ArrayList<Person> persons = client.fetchPersons(searchWord);
+		System.out.println(persons.get(0).getUsername());
+		System.out.println(persons.get(1).getUsername());*/
+		
+		//ArrayList<Room> rooms = client.fetchRooms("2013","14:00:00","15:00:00");
 		/*String [] hans = {"Hans","sdf"};
 		Person person = client.login(hans);
 		System.out.println("Final : "+ person.getUsername());

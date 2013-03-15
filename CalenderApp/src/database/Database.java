@@ -82,7 +82,6 @@ public class Database {
 	//Find persons with search word
 	public ArrayList<Person> getPerson(String[] keyword){
 		ArrayList<Person> personList = new ArrayList<Person>();
-		
 		try {
 			String query = "" +
 					"SELECT username, email, firstName, lastName " +
@@ -485,6 +484,7 @@ public class Database {
 	}
 
 	public ArrayList<Room> fetchRooms(String[] keyword) {
+		//Henter ut alle ledige rom mellom et gitt tidspunkt. 
 		String date = keyword[0];
 		String start = keyword[1];
 		String end = keyword[2];
