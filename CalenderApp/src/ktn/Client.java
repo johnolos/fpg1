@@ -113,12 +113,12 @@ public class Client {
 	// Fetches all notifications available to the specified user.
 	public ArrayList<Notification> fetchNotifications(String username) {
 		String[] keyword = {username};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.NOTIFICATION, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.NOTIFICATION, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.NOTIFICATION,obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -130,12 +130,12 @@ public class Client {
 	// Fetches all appointments at the specified date.
 	public ArrayList<Appointment> fetchAppointments(String user, String date) {
 		String[] keyword = {user,date};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.APPOINTMENT, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.APPOINTMENT, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.APPOINTMENT,obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -148,12 +148,12 @@ public class Client {
 	public ArrayList<Room> fetchRooms(String date,String start, String end) { 
 		// hh:mm - YYYY-MM-DD
 		String[] keyword = {date, start, end};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.ROOM, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.ROOM, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.ROOM, obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -165,12 +165,12 @@ public class Client {
 	// Fetches Person with searchWord, if "" then everybody
 	public ArrayList<Person> fetchPersons(String searchWord) {
 		String[] keyword = {searchWord};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.PERSON, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.PERSON, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.PERSON, obj)) {
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Request failed. Retry query from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -182,7 +182,7 @@ public class Client {
 	// Fetches Alarms from a specific date
 	public ArrayList<Alarm> fetchAlarms(String date, String user) {
 		String[] keyword = {user, date};
-		RequestObjects reqObj = new RequestObjects(RequestEnum.ALARM, keyword);
+		SendObject reqObj = new SendObject(RequestEnum.ALARM, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.ALARM, obj)) {
@@ -203,7 +203,7 @@ public class Client {
 		SendObject receivedObj = this.receive();
 		if(!checkObject(RequestEnum.BOOLEAN,receivedObj))
 			try {
-				throw new IOException("Login failed. Wrong object received from server");
+				throw new IOException("Creating Appointment failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
