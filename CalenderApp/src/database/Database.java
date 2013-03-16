@@ -288,7 +288,7 @@ public class Database {
 			
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
-
+	
 	//Delete a user from appointment
 	public void deletePersonAppointment(String user, Appointment app){
 		try{

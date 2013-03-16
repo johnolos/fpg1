@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "192.168.1.9";
+	private final static String SERVERIP = "192.168.10.132";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
@@ -97,6 +97,7 @@ public class Client {
 	 */
 	private void send(SendObject obj) {
 		try {
+			System.out.println(obj.getKeyword());
 			this.objectOutput.writeObject(obj);
 			System.out.println("sendt");
 		} catch (IOException e) {
@@ -168,7 +169,7 @@ public class Client {
 	
 	/**
 	 * Fetches all appointments for a user.
-	 * @param user
+	 * @param keyword
 	 * @return
 	 */
 	public ArrayList<Appointment> fetchAllAppointments(String user) {
@@ -326,7 +327,19 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	private void updateNotifications(Person person) {
+		while(true) {
+			
+			this.fetchNotifications(person.getUsername();
+			Thread.sleep(5000);
+		}
+	}
+	*/
+	
 	public static void main(String[] args) throws InterruptedException {
 		new Client().connect();
 	}
 }
+

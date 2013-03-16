@@ -62,8 +62,12 @@ public class CreateAppointmentPanel extends JPanel {
 	JSpinner startMinuteSpinner;
 	JSpinner endHourSpinner;
 	JSpinner endMinuteSpinner;
+
+	private Client client;
 	
-	CreateAppointmentPanel(){
+	CreateAppointmentPanel(final Client client){
+		
+		this.client = client;
 		
 		// ----------------------------------------------------------------//
 		// Frame
@@ -142,15 +146,8 @@ public class CreateAppointmentPanel extends JPanel {
 		JButton saveButton = new JButton("Lagre");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Appointment app = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), null, "", HomeGUI.currentUser.getUsername());
-				Client client = new Client();
-				try {
-					client.connect();
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				Appointment app = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), new Room(40, "S5"), "", HomeGUI.getCurrentUser().getUsername());
 				if(client.createAppointment(app)){
-					
 					frmOpprettAvtale.dispose();
 				}
 			}

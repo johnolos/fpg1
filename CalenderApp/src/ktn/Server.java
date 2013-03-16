@@ -21,8 +21,9 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "192.168.1.9";
+	private final static String SERVERIP = "192.168.10.132";
 	private final static int SERVERPORT = 4004;
+	private Database database;
 
 	public Server() {
 	}
@@ -34,6 +35,14 @@ public class Server {
 			// Printing IP:Port for the server
 			System.out.println("Waiting for connections on " + this.SERVERIP + " : " + this.SERVERPORT);
 			
+			
+			// Establishing connection to database
+			try {
+				this.database = new Database();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("ERROR while connecting to database - ktnSTYLE");
+			}
 			// A never-ending while-loop that constantly listens to the Socket
 			Socket newConnectionSocket;
 			while (true) {
@@ -61,7 +70,6 @@ public class Server {
 		private void send(SendObject obj) {
 			try {
 				this.objectOut.writeObject(obj);
-				System.out.println("sendt");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -83,8 +91,6 @@ public class Server {
 				objectOut = new ObjectOutputStream(clientOutputStream);
 				//Create InputObjectStream
 				objectIn = new ObjectInputStream(clientInputStream);
-				
-				System.out.println("Waiting for message from client");
 				
 				// While-loop to ensure continuation of reading in-coming messages
 				int i = 10;
@@ -114,14 +120,6 @@ public class Server {
 	}
 	
 	SendObject databaseQuery(SendObject obj) {
-		Database database = null;
-		try {
-			database = new Database();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR while connecting to database - ktnSTYLE");
-			
-		}
 		String[] keyword;
 		RequestEnum reType;
 		keyword = obj.getKeyword();
@@ -131,14 +129,19 @@ public class Server {
 		if(obj.isRequest()){
 			switch(reType) {
 			case LOGIN:
+				System.out.println("Login requested for user: "+ keyword[0]);
 				Person person = database.login(keyword);
 				sObject = new SendObject(RequestEnum.PERSON, person);
+				System.out.println("Request for login sent.");
 				return sObject;
 			case PERSON:
+				System.out.println("Request for persons with search: " + keyword[0]);
 				ArrayList<Person> persons = database.getPerson(keyword);
 				sObject = new SendObject(RequestEnum.PERSON, persons);
+				System.out.println("Request for person sent.");
 				return sObject;
 			case APPOINTMENT:
+				System.out.println("Request for appointments for user: " + keyword[0]);
 				ArrayList<Appointment> appointments;
 				
 				/*
@@ -158,14 +161,17 @@ public class Server {
 					 appointments = database.getAppointmentsOnPerson(keyword);
 					 sObject = new SendObject(RequestEnum.APPOINTMENT, appointments);
 				}
+				System.out.println("Request for appointments sent.");
 				return sObject;
 			case S_PERSON://Returns person after completed login
 				Boolean bool2 = database.registerUser(keyword);
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool2);
+				System.out.println("Request for user registration sent.");
 				return sObject;
 			case ROOM:
 				ArrayList<Room> rooms= database.fetchRooms(keyword);
 				sObject = new SendObject(RequestEnum.ROOM,rooms);
+				System.out.println("Request for rooms sent.");
 				return sObject;
 			default:
 				break;
@@ -176,6 +182,7 @@ public class Server {
 			case S_APPOINTMENT:
 				Boolean bool3 = database.createAppointment((Appointment)obj.getObject());
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool3);
+				System.out.println("Request for storing an appointment sent.");
 				return sObject;
 			default:
 				break;
@@ -184,6 +191,25 @@ public class Server {
 		return null;
 		
 		
+	}
+	/**
+	 * Used to create notifications for all users when someone creates an appointment for them.
+	 * Input boolean alter is used to indicate if the appointment already exists or is a new one.
+	 * @param appointment
+	 * @param alter
+	 * @throws Exception 
+	 */
+	private void createNotificationForAll(Appointment appointment, boolean alter) throws Exception {
+		if(alter) {
+			for(int i = 0; i < appointment.getParticipants().size(); i++) {
+				throw new Exception("Not implemented");
+			}
+			
+		} else {
+			for(int i = 0; i < appointment.getParticipants().size(); i++) {
+				throw new Exception("Not implementdd");
+			}
+		}
 	}
 
 

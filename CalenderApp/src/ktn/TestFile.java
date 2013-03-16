@@ -31,6 +31,9 @@ public class TestFile {
 		Person person = client.login(hans);
 		System.out.println("Final : "+ person.getUsername());
 		*/
+		String [] john = {"john","test2"};
+		Person person = client.login(john);
+		System.out.println(person.getFirstName());
 	}
 
 }
