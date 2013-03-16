@@ -144,7 +144,7 @@ public class Client {
 	}
 	
 	/**
-	 * Fetches appointments on a specified date.
+	 * Fetches appointments on a specified date for a user.
 	 * If the date string is empty, the function will return all appointments.
 	 * @param user
 	 * @param date
@@ -168,6 +168,8 @@ public class Client {
 	
 	/**
 	 * Fetches all appointments for a user.
+	 * @param user
+	 * @return
 	 */
 	public ArrayList<Appointment> fetchAllAppointments(String user) {
 		return fetchAppointments(user, "");
