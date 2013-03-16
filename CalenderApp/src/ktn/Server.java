@@ -126,30 +126,47 @@ public class Server {
 		RequestEnum reType;
 		keyword = obj.getKeyword();
 		reType = obj.getSendType();
+		// This is the object that the server sends.
+		SendObject sObject;
 		if(obj.isRequest()){
-			
 			switch(reType) {
 			case LOGIN:
 				Person person = database.login(keyword);
-				SendObject sObject = new SendObject(RequestEnum.PERSON, person);
+				sObject = new SendObject(RequestEnum.PERSON, person);
 				return sObject;
 			case PERSON:
 				ArrayList<Person> persons = database.getPerson(keyword);
-				SendObject personsObj = new SendObject(RequestEnum.PERSON, persons);
-				return personsObj;
+				sObject = new SendObject(RequestEnum.PERSON, persons);
+				return sObject;
 			case APPOINTMENT:
+				ArrayList<Appointment> appointments;
 				
-				break;
+				/*
+				 * If string is empty, then all available appointments shall be delivered.
+				 * Used inside change Appointments panel in gui.
+				 */
+				if(keyword[1] == "") {
+					appointments = database.getAppointmentsOnPerson(keyword);
+					sObject = new SendObject(RequestEnum.APPOINTMENT, appointments);
+				}
+				/*
+				 * If string is not empty, appointments a specific date is received.
+				 * This one is used to get appointments for each row in a day view
+				 * in calender.
+				 */
+				 else {
+					 appointments = database.getAppointmentsOnPerson(keyword);
+					 sObject = new SendObject(RequestEnum.APPOINTMENT, appointments);
+				}
+				return sObject;
 			case S_PERSON://Returns person after completed login
 				Boolean bool2 = database.registerUser(keyword);
-				SendObject sObject2 = new SendObject(RequestEnum.BOOLEAN,bool2);
-				return sObject2;
-			case ALARM:
-				break;
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool2);
+				return sObject;
 			case ROOM:
 				ArrayList<Room> rooms= database.fetchRooms(keyword);
-				SendObject roomsObject = new SendObject(RequestEnum.ROOM,rooms);
-				return roomsObject;
+				sObject = new SendObject(RequestEnum.ROOM,rooms);
+				return sObject;
 			default:
 				break;
 			}
@@ -158,8 +175,8 @@ public class Server {
 			switch (reType) {
 			case S_APPOINTMENT:
 				Boolean bool3 = database.createAppointment((Appointment)obj.getObject());
-				SendObject sObject3 = new SendObject(RequestEnum.BOOLEAN,bool3);
-				return sObject3;
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool3);
+				return sObject;
 			default:
 				break;
 			}
