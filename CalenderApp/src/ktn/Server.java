@@ -136,11 +136,13 @@ public class Server {
 				System.out.println("Login requested for user: " + keyword[0]);
 				Person person = database.login(keyword);
 				sObject = new SendObject(RequestEnum.PERSON, person);
+				System.out.println("Confirmation for login sent.");
 				return sObject;
 			case PERSON:
 				System.out.println("Persons requested.");
 				ArrayList<Person> persons = database.getPerson(keyword);
 				sObject = new SendObject(RequestEnum.PERSON, persons);
+				System.out.println("Persons sent.");
 				return sObject;
 			case APPOINTMENT:
 				System.out.println("Appointment requested.");
@@ -163,16 +165,19 @@ public class Server {
 					 appointments = database.getAppointmentsOnPerson(keyword);
 					 sObject = new SendObject(RequestEnum.APPOINTMENT, appointments);
 				}
+				System.out.println("Appointments sent.");
 				return sObject;
 			case S_PERSON:
 				System.out.println("Registration for new user requested.");
 				Boolean bool2 = database.registerUser(keyword);
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool2);
+				System.out.println("Confirmation for reqistration sent.");
 				return sObject;
 			case ROOM:
 				System.out.println("Request for rooms.");
 				System.out.println();
 				ArrayList<Room> rooms= database.fetchRooms(keyword);
+				System.out.println("Rooms sent.");
 				sObject = new SendObject(RequestEnum.ROOM,rooms);
 				return sObject;
 			default:
