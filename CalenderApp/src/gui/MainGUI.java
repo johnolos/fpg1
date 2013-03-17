@@ -4,6 +4,9 @@ package gui;
 import javax.swing.JPanel;
 
 public class MainGUI extends JPanel {
+	
+	// THIS class should be deleted. logic > Calendar.java
+	// takes over its functionality.
 
 	/**
 	 * FØRSTE SETNING FRAM TIL FØRSTE PUNKTUM BLIR BOLD.
