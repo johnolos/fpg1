@@ -7,6 +7,7 @@ public class Notification {
 	private NotificationEnum type;
 	private String listMessage;
 	
+	
 	//Fields for all 3 boxes (and the only fields for OKBOX)
 	public String description;
 	public String title;

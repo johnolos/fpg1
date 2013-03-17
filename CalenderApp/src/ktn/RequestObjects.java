@@ -6,6 +6,7 @@ import baseClasses.Appointment;
 
 public class RequestObjects implements Serializable{
 	
+	
 	/**
 	 * 
 	 */

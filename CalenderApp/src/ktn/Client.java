@@ -204,6 +204,7 @@ public class Client {
 		SendObject reqObj = new SendObject(RequestEnum.ROOM, keyword);
 		this.send(reqObj);
 		SendObject obj = this.receive();
+		
 		/*
 		if(!checkObject(RequestEnum.ROOM, obj)) {
 			try {

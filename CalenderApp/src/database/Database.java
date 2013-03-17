@@ -21,6 +21,7 @@ import org.joda.time.LocalTime;
 
 public class Database {
 	
+	
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String CONNECTION = "jdbc:mysql://localhost:3306/mydb";
 	private final static String USER = "root";

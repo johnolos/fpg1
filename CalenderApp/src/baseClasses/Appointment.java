@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
  
 public class Appointment implements Serializable {
        
+	
         // version 2.234
        
         private DateTime start = new DateTime();

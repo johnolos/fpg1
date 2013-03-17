@@ -5,6 +5,7 @@ public enum RequestEnum {
 	
 	/** USED TO REQUEST AND SEND INFORMATION **/
 	
+	
 	LOGIN, 			// Used to query the server for LOGINrequest.
 	APPOINTMENT, 	// Used to query the server to get APPOINTMENTs.
 	PERSON, 		// Used to query the server to query PERSONs.

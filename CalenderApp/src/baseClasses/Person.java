@@ -8,6 +8,7 @@ public class Person implements Comparable, Serializable {
        
         // Private
        
+	
         private String username;
         private String email;
         private String firstName;

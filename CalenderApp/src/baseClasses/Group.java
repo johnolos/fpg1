@@ -7,10 +7,6 @@ public class Group implements Serializable {
         private String name;
         private ArrayList<Person> members=new ArrayList<Person>();
  
-        // Version 2
-        // awe9j0q3
-        ///kulti
-       
         public Group(String name){
                 this.name=name;
         }
