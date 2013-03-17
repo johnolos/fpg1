@@ -485,6 +485,7 @@ public class Database {
 
 	public ArrayList<Room> fetchRooms(String[] keyword) {
 		//Henter ut alle ledige rom mellom et gitt tidspunkt. 
+		// Time hh:mm Date: YYYY/MM/DD
 		String date = keyword[0];
 		String start = keyword[1];
 		String end = keyword[2];
