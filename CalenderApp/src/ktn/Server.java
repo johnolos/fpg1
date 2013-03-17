@@ -190,6 +190,16 @@ public class Server {
 				System.out.println("Requests for storing an appointment.");
 				Boolean bool3 = database.createAppointment((Appointment)obj.getObject());
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool3);
+				createNotificationForAll((Appointment)obj.getObject(),false);
+				System.out.println("Confirmation sent and notifications created.");
+				return sObject;
+			case C_APPOINTMENT: // Received old and new appointment - ArrayList<Appointment> = {old,new}
+				System.out.println("Request for changing an appointment.");
+				// SKAL IKKE FUNCTIONEN UNDER TA I MOT TO APPOINTMENTS ? - JONSKI
+				Boolean bool = database.changeAppointment((Appointment)obj.getObject());
+				createNotificationForAll((Appointment)obj.getObject(),true);
+				System.out.println("Old appointment changed and notification created.");
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
 			default:
 				break;
@@ -206,15 +216,19 @@ public class Server {
 	 * @param alter
 	 * @throws Exception 
 	 */
-	private void createNotificationForAll(Appointment appointment, boolean alter) throws Exception {
+	private void createNotificationForAll(Appointment appointment, boolean alter){
+		// IF AN APPOINTMENT CHANGE HAS BEEN MADE
 		if(alter) {
 			for(int i = 0; i < appointment.getParticipants().size(); i++) {
-				throw new Exception("Not implemented");
+				System.out.println("Not implemnted");
 			}
 			
+			
+			
+		// IF AN NEW APPOINTMENT HAS BEEN CREATED
 		} else {
 			for(int i = 0; i < appointment.getParticipants().size(); i++) {
-				throw new Exception("Not implementdd");
+				System.out.println("Not implemented");
 			}
 		}
 	}
