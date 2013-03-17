@@ -24,6 +24,7 @@ import database.Database;
 public class Server {
 	private final static String SERVERIP = "192.168.10.132";
 	private final static int SERVERPORT = 4004;
+	private Database database;
 
 	public Server() {
 	}
@@ -35,6 +36,14 @@ public class Server {
 			// Printing IP:Port for the server
 			System.out.println("Waiting for connections on " + this.SERVERIP + " : " + this.SERVERPORT);
 			
+			
+			// Establishing connection to database
+			try {
+				this.database = new Database();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("ERROR while connecting to database - ktnSTYLE");
+			}
 			// A never-ending while-loop that constantly listens to the Socket
 			Socket newConnectionSocket;
 			while (true) {
@@ -115,14 +124,6 @@ public class Server {
 	}
 	
 	SendObject databaseQuery(SendObject obj) {
-		Database database = null;
-		try {
-			database = new Database();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR while connecting to database - ktnSTYLE");
-			
-		}
 		String[] keyword;
 		RequestEnum reType;
 		keyword = obj.getKeyword();
@@ -132,14 +133,17 @@ public class Server {
 		if(obj.isRequest()){
 			switch(reType) {
 			case LOGIN:
+				System.out.println("Login requested for user: " + keyword[0]);
 				Person person = database.login(keyword);
 				sObject = new SendObject(RequestEnum.PERSON, person);
 				return sObject;
 			case PERSON:
+				System.out.println("Persons requested.");
 				ArrayList<Person> persons = database.getPerson(keyword);
 				sObject = new SendObject(RequestEnum.PERSON, persons);
 				return sObject;
 			case APPOINTMENT:
+				System.out.println("Appointment requested.");
 				ArrayList<Appointment> appointments;
 				
 				/*
@@ -160,11 +164,14 @@ public class Server {
 					 sObject = new SendObject(RequestEnum.APPOINTMENT, appointments);
 				}
 				return sObject;
-			case S_PERSON://Returns person after completed login
+			case S_PERSON:
+				System.out.println("Registration for new user requested.");
 				Boolean bool2 = database.registerUser(keyword);
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool2);
 				return sObject;
 			case ROOM:
+				System.out.println("Request for rooms.");
+				System.out.println();
 				ArrayList<Room> rooms= database.fetchRooms(keyword);
 				sObject = new SendObject(RequestEnum.ROOM,rooms);
 				return sObject;
@@ -175,6 +182,7 @@ public class Server {
 		else{
 			switch (reType) {
 			case S_APPOINTMENT:
+				System.out.println("Requests for storing an appointment.");
 				Boolean bool3 = database.createAppointment((Appointment)obj.getObject());
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool3);
 				return sObject;
@@ -186,6 +194,26 @@ public class Server {
 		
 		
 	}
+	/**
+	 * Used to create notifications for all users when someone creates an appointment for them.
+	 * Input boolean alter is used to indicate if the appointment already exists or is a new one.
+	 * @param appointment
+	 * @param alter
+	 * @throws Exception 
+	 */
+	private void createNotificationForAll(Appointment appointment, boolean alter) throws Exception {
+		if(alter) {
+			for(int i = 0; i < appointment.getParticipants().size(); i++) {
+				throw new Exception("Not implemented");
+			}
+			
+		} else {
+			for(int i = 0; i < appointment.getParticipants().size(); i++) {
+				throw new Exception("Not implementdd");
+			}
+		}
+	}
+	
 
 
 	// Main-function to start server
