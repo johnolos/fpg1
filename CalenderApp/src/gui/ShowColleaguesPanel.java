@@ -14,9 +14,14 @@ import javax.swing.JList;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.UIManager;
+
+import ktn.Client;
 
 import baseClasses.Person;
 
@@ -32,10 +37,12 @@ public class ShowColleaguesPanel extends JPanel {
 	DefaultListModel<Person> searchResultListModel = new DefaultListModel<Person>();
 	DefaultListModel<Person> shownListModel = new DefaultListModel<Person>();
 
+	private Client client;
 	/**
 	 * Create the panel.
 	 */
-	public ShowColleaguesPanel() {
+	public ShowColleaguesPanel(Client client) {
+		this.client = client;
 
 		frame = new JFrame();
 		frame.setTitle("Vis kollegaer");
@@ -49,6 +56,26 @@ public class ShowColleaguesPanel extends JPanel {
 
 		searchField = new JTextField();
 		searchField.setColumns(10);
+		
+		searchField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyChar() == (KeyEvent.VK_ENTER)) {
+					updatePersons();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		JLabel searchLabel = new JLabel("S\u00F8k:");
 
@@ -265,8 +292,10 @@ public class ShowColleaguesPanel extends JPanel {
 		shownColleaguesList.setCellRenderer(new PersonListRenderer());
 		scrollPane_1.setViewportView(shownColleaguesList);
 
+
 		searchResultColleaguesList = new JList();
 		searchResultColleaguesList.setModel(searchResultListModel);
+		/*
 		searchResultListModel.addElement(new Person("user1", "email1",
 				"Torkjel", "Skjetne"));
 		searchResultListModel.addElement(new Person("user2", "email2",
@@ -276,8 +305,11 @@ public class ShowColleaguesPanel extends JPanel {
 		searchResultListModel.addElement(new Person("user4", "email4",
 				"Hans-Olav", "Hessen"));
 		searchResultColleaguesList.setSelectionInterval(0, 0);
+		*/
 		searchResultColleaguesList.setCellRenderer(new PersonListRenderer());
 		scrollPane.setViewportView(searchResultColleaguesList);
+		
+		updatePersons();
 		setLayout(groupLayout);
 
 	}
@@ -294,6 +326,14 @@ public class ShowColleaguesPanel extends JPanel {
 					strArray[j] = tmp;
 				}
 			}
+		}
+	}
+	
+	private void updatePersons() {
+		searchResultListModel.removeAllElements();
+		ArrayList<Person> persons = client.fetchPersons(searchField.getText());
+		for(int i = 0; i < persons.size(); i++) {
+			searchResultListModel.addElement(persons.get(i));
 		}
 	}
 }

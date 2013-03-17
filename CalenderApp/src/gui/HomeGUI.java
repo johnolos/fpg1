@@ -228,7 +228,7 @@ public class HomeGUI extends JPanel {
 		showColleaguesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				ShowColleaguesPanel showColleagues = new ShowColleaguesPanel();
+				ShowColleaguesPanel showColleagues = new ShowColleaguesPanel(client);
 				
 			}
 		});
