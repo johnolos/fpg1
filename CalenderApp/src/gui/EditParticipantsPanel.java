@@ -74,6 +74,13 @@ public class EditParticipantsPanel extends JPanel {
 
 			@Override
 			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyChar() == (KeyEvent.VK_ENTER)) {
+					searchResultListModel.removeAllElements();
+					ArrayList<Person> persons = client.fetchPersons(searchField.getText());
+					for(int i = 0; i < persons.size(); i++) {
+						searchResultListModel.addElement(persons.get(i));
+					}
+				}
 			}
 
 			@Override
@@ -82,11 +89,14 @@ public class EditParticipantsPanel extends JPanel {
 
 			@Override
 			public void keyTyped(KeyEvent arg0) {
+				/* THIS CODE FITS BETTER UNDER ENTER IS PRESSED
+				 * BIT BUGGY ELSE. PROGRAM FREEZES.
 				searchResultListModel.removeAllElements();
 				ArrayList<Person> persons = client.fetchPersons(searchField.getText());
 				for(int i = 0; i < persons.size(); i++) {
 					searchResultListModel.addElement(persons.get(i));
 				}
+				*/
 			}
 			
 		});
