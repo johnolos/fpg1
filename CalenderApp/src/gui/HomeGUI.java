@@ -46,6 +46,8 @@ import baseClasses.Person;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import ktn.Client;
+
 public class HomeGUI extends JPanel {
 
 	// ----------------------------------------------------------------//
@@ -99,11 +101,13 @@ public class HomeGUI extends JPanel {
 	static JLayeredPane layeredPane;
 	static ArrayList<Object> listOfFrames;
 	
+	private static Person currentUser;
+	private Client client;
 
-	static Person currentUser = new Person("asd", "", "", "");
 
-
-	public HomeGUI() {
+	public HomeGUI(Person user, Client client) {
+		this.currentUser = user;
+		this.client = client;
 		
 		appointment = new Appointment(new DateTime(2014, 2, 2, 13, 37), new DateTime(2014, 2, 2, 14, 38), "hei", "hallo", null, "jøde", "kristen");
 
@@ -215,7 +219,8 @@ public class HomeGUI extends JPanel {
 		
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				LoginPanel gotoLogin = new LoginPanel();
+				client.close();
+				LoginPanel gotoLogin = new LoginPanel(new Client());
 				frame.dispose();
 			}
 		});
@@ -274,12 +279,12 @@ public class HomeGUI extends JPanel {
 		
 		myAppointmentsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel();
+				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client);
 			}
 		});
 		createAppointmentButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				CreateAppointmentPanel createAppointmentPanel = new CreateAppointmentPanel();
+				CreateAppointmentPanel createAppointmentPanel = new CreateAppointmentPanel(client);
 			}
 		});
 	}
@@ -564,5 +569,9 @@ public class HomeGUI extends JPanel {
 		buttonPanel.add(showColleaguesButton);
 		setLayout(groupLayout);
 
+	}
+
+	public static Person getCurrentUser() {
+		return currentUser;
 	}
 }

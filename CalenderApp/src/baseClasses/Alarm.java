@@ -9,7 +9,6 @@ public class Alarm implements Serializable {
 	private DateTime alarm;
 	
 	
-	
 	public Alarm(DateTime time) {
 		this.alarm = time;
 	}

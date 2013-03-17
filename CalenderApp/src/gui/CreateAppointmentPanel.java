@@ -21,6 +21,8 @@ import javax.swing.JScrollBar;
 import javax.swing.JTextPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractListModel;
@@ -53,7 +55,8 @@ public class CreateAppointmentPanel extends JPanel {
 	DefaultComboBoxModel<Room> boxModel;
 	
 	JList<Person> list;
-	static DefaultListModel<Person> model;
+	DefaultListModel<Person> model;
+	JTextPane descriptionArea;
 	
 	JSpinner dateDaySpinner;
 	JSpinner dateMonthSpinner;
@@ -62,8 +65,12 @@ public class CreateAppointmentPanel extends JPanel {
 	JSpinner startMinuteSpinner;
 	JSpinner endHourSpinner;
 	JSpinner endMinuteSpinner;
+
+	private Client client;
 	
-	CreateAppointmentPanel(){
+	CreateAppointmentPanel(final Client client){
+		
+		this.client = client;
 		
 		// ----------------------------------------------------------------//
 		// Frame
@@ -103,6 +110,18 @@ public class CreateAppointmentPanel extends JPanel {
 		locationField.setColumns(10);
 		
 		roomBox = new JComboBox<Room>();
+		roomBox.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				updateRooms();
+			}
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+			}
+			
+		});
 		
 		boxModel = new DefaultComboBoxModel<Room>();
 //		boxModel.addElement(new Room(20, "TESTROM"));
@@ -110,7 +129,7 @@ public class CreateAppointmentPanel extends JPanel {
 		roomBox.setModel(boxModel);
 		roomBox.setRenderer(new ComboBoxRenderer());
 		
-		JTextPane descriptionArea = new JTextPane();
+		descriptionArea = new JTextPane();
 		
 		JButton cancelButton = new JButton("Avbryt");
 		cancelButton.addActionListener(new ActionListener() {
@@ -139,18 +158,15 @@ public class CreateAppointmentPanel extends JPanel {
 			
 		}
 		
+		/*
+		 * Denne fungerer med unntak av Room, som er satt til roomID = 1,
+		 * da den ikke kan være satt til null.
+		 */
 		JButton saveButton = new JButton("Lagre");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Appointment app = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), null, "", HomeGUI.currentUser.getUsername());
-				Client client = new Client();
-				try {
-					client.connect();
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				Appointment app = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), new Room(40, "S5"), descriptionArea.getText(), HomeGUI.getCurrentUser().getUsername());
 				if(client.createAppointment(app)){
-					
 					frmOpprettAvtale.dispose();
 				}
 			}
@@ -319,12 +335,13 @@ public class CreateAppointmentPanel extends JPanel {
 				
 				//FØRST SEND TIL DATABASE
 				
+				// DETTE FORKLARER INGEN TING FOR DE SOM SKAL LESE KODEN
+				
 				//if(DATABASE SIER GREIT){
 					HomeGUI.table.setValueAt(formatNumber((int)startHourSpinner.getValue()) + ":" + formatNumber((int)startMinuteSpinner.getValue()) + " - " + formatNumber((int)endHourSpinner.getValue()) + ":" + formatNumber((int)endMinuteSpinner.getValue()) + "\n" + titleField.getText(), 2, 2);
 				//}
 				
-			}
-			
+			}	
 		});
 		list = new JList<Person>();
 		list.setModel(model);
@@ -334,17 +351,26 @@ public class CreateAppointmentPanel extends JPanel {
 		
 	}
 	private void setModelContent(){
-		Client client = new Client();
-		try {
-			client.connect();
-		} catch (InterruptedException e) {
-		}
 		ArrayList<Person> persons = client.fetchPersons("H");//Må gjøre noe her!
+		// HER OGSÅ! DETTE FORKLARER IKKE HVA SOM MÅ GJØRES.
+		// I tilfellet noen andre må gjøre arbeidet.
 		while(persons.size()>0){
 			this.model.addElement(persons.remove(0));
 		}
-		
-		
+	}
+	/**
+	 * Used to update room model
+	 */
+	private void updateRooms() {
+		// hh:mm - YYYY-MM-DD
+		this.boxModel.removeAllElements();
+		ArrayList<Room> rooms = client.fetchRooms(String.valueOf((int)dateYearSpinner.getValue())+ "/" + String.valueOf((int)dateMonthSpinner.getValue()) + "/" +String.valueOf((int)dateDaySpinner.getValue()),
+				String.valueOf((int)startHourSpinner.getValue()) + ":" + String.valueOf((int)startMinuteSpinner.getValue()),
+				String.valueOf((int)endHourSpinner.getValue()) + ":" + String.valueOf((int)endHourSpinner.getValue()));
+
+		for(int i = 0; i < rooms.size(); i++) {
+			boxModel.addElement(rooms.get(i));
+		}
 	}
 	
 	private String formatNumber(int number){

@@ -21,7 +21,6 @@ import org.joda.time.LocalTime;
 
 public class Database {
 	
-	
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String CONNECTION = "jdbc:mysql://localhost:3306/mydb";
 	private final static String USER = "root";
@@ -289,7 +288,7 @@ public class Database {
 			
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
-
+	
 	//Delete a user from appointment
 	public void deletePersonAppointment(String user, Appointment app){
 		try{
@@ -486,6 +485,7 @@ public class Database {
 
 	public ArrayList<Room> fetchRooms(String[] keyword) {
 		//Henter ut alle ledige rom mellom et gitt tidspunkt. 
+		// Time hh:mm Date: YYYY/MM/DD
 		String date = keyword[0];
 		String start = keyword[1];
 		String end = keyword[2];

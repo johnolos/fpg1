@@ -4,5 +4,4 @@ public enum NotificationEnum {
 	
 	DECLINED, OKBOX, INVITATION;
 
-	
 }

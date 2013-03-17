@@ -38,6 +38,8 @@ import baseClasses.Room;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
+import ktn.Client;
+
 
 public class MyAppointmentsPanel extends JPanel {
 	
@@ -83,10 +85,13 @@ public class MyAppointmentsPanel extends JPanel {
 	
 	Appointment ap;
 	
+	private Client client;
+	
 	/**
 	 * Create the panel.
 	 */
-	public MyAppointmentsPanel() {
+	public MyAppointmentsPanel(Client client) {
+		this.client = client;
 		
 		try{
 			db = new Database();
@@ -432,9 +437,9 @@ public class MyAppointmentsPanel extends JPanel {
 				}
 				
 				
-				if(HomeGUI.currentUser.getUsername().equals(ap.getAdmin()))
-//					setAllFieldsEnabled(true);
-//				else
+				if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
+					setAllFieldsEnabled(true);
+				else
 					setAlarmFieldsEnabled(true);
 				setButtonsEnabled(true);
 				
@@ -446,8 +451,8 @@ public class MyAppointmentsPanel extends JPanel {
 		myAppointmentsList.setCellRenderer(new appointmentListRenderer());
 //		appointmentsModel.addElement(new Appointment(new DateTime(2014, 01, 02, 03, 00) , new DateTime(2014, 01, 02, 04, 04), "DunnoWhatThisFieldIs :(", "Videokonferanse med Steria", new Room(20, "testrom"), "WutIsDisField?", "WahtBistDeineFelt?"));
 		
-		String[] keyword = {HomeGUI.currentUser.getUsername()};
-		ArrayList<Appointment> appointmentsFromDatabase = db.getAppointmentsOnPerson(keyword);
+		String user = HomeGUI.getCurrentUser().getUsername();
+		ArrayList<Appointment> appointmentsFromDatabase = this.client.fetchAllAppointments(user);
 		for(int i=0; i<appointmentsFromDatabase.size(); i++){
 			appointmentsModel.addElement(appointmentsFromDatabase.get(i));
 		}

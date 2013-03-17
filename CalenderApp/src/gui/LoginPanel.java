@@ -53,10 +53,18 @@ public class LoginPanel extends JPanel {
 	private ImageIcon image;
 	
 	private Database db;
+	
+	private Client client;
 
 
-	public LoginPanel() {
-		
+	public LoginPanel(Client client) {
+		this.client = client;
+		try {
+			this.client.connect();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		/* Database shall be removed from GUI
 		try {
 			db = new Database();
 		} catch (Exception e) {
@@ -64,6 +72,7 @@ public class LoginPanel extends JPanel {
 			e.printStackTrace();
 			System.out.println("Could not connect to the database");
 		}
+		*/
 		
 		// ----------------------------------------------------------------//
 		// NimbusLook
@@ -172,26 +181,18 @@ public class LoginPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String pass = "";
 				for(int i=0; i<passwordField.getPassword().length; i++){
-					pass+=passwordField.getPassword()[i];
+					pass += passwordField.getPassword()[i];
 				}
 				String[] keyword = {nameTextField.getText(), pass};
-				Client client = new Client();
-				try {
-					client.connect();
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
 				Person person = client.login(keyword);
+				System.out.println(person.getFirstName());
 				if(person != null){
 					frame.dispose();
-					HomeGUI gotoHome = new HomeGUI();
-					HomeGUI.currentUser = person;
+					HomeGUI gotoHome = new HomeGUI(person,client);
 				}
-				else{
+				else {
 					wrongInputLabel.setVisible(true);
-					
 				}
-
 			}
 		});
 		
