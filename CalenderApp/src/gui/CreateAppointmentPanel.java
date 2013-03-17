@@ -54,6 +54,7 @@ public class CreateAppointmentPanel extends JPanel {
 	
 	JList<Person> list;
 	static DefaultListModel<Person> model;
+	JTextPane descriptionArea;
 	
 	JSpinner dateDaySpinner;
 	JSpinner dateMonthSpinner;
@@ -114,7 +115,7 @@ public class CreateAppointmentPanel extends JPanel {
 		roomBox.setModel(boxModel);
 		roomBox.setRenderer(new ComboBoxRenderer());
 		
-		JTextPane descriptionArea = new JTextPane();
+		descriptionArea = new JTextPane();
 		
 		JButton cancelButton = new JButton("Avbryt");
 		cancelButton.addActionListener(new ActionListener() {
@@ -143,10 +144,14 @@ public class CreateAppointmentPanel extends JPanel {
 			
 		}
 		
+		/*
+		 * Denne fungerer med unntak av Room, som er satt til roomID = 1,
+		 * da den ikke kan være satt til null.
+		 */
 		JButton saveButton = new JButton("Lagre");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Appointment app = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), new Room(40, "S5"), "", HomeGUI.getCurrentUser().getUsername());
+				Appointment app = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)startHourSpinner.getValue(), (int)startMinuteSpinner.getValue()), new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(), (int)endHourSpinner.getValue(), (int)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), new Room(40, "S5"), descriptionArea.getText(), HomeGUI.getCurrentUser().getUsername());
 				if(client.createAppointment(app)){
 					frmOpprettAvtale.dispose();
 				}
