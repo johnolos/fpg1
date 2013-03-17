@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "192.168.1.9";
+	private final static String SERVERIP = "192.168.10.132";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;

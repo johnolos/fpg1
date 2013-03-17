@@ -142,7 +142,7 @@ public class CreateAppointmentPanel extends JPanel {
 		editParticipantsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			
-				EditParticipantsPanel editParticipantsPanel = new EditParticipantsPanel(frmOpprettAvtale, model);
+				EditParticipantsPanel editParticipantsPanel = new EditParticipantsPanel(frmOpprettAvtale, model, client);
 			
 			}
 		});
