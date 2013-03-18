@@ -12,6 +12,7 @@ public enum RequestEnum {
 	ALARM, 			// Used to query the server for ALARMs.
 	ROOM, 			// Used to query the server for ROOMs.
 	NOTIFICATION, 	// Used to query the server for NOTIFICATIONs.
+	ACCEPT,			// Used to reply on a notification
 	
 	
 	/** USED TO STORE OR REPLY ON ACTIONS **/
