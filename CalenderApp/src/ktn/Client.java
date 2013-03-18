@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.13.75";
+	private final static String SERVERIP = "78.91.61.224";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
@@ -287,8 +287,8 @@ public class Client {
 	 */
 	public boolean changeAppointment(Appointment oldApp, Appointment newApp) {
 		ArrayList<Appointment> changeList = new ArrayList<Appointment>();
-		changeList.add(oldApp);
 		changeList.add(newApp);
+		changeList.add(oldApp);
 		SendObject sendObj = new SendObject(RequestEnum.C_APPOINTMENT, changeList);
 		this.send(sendObj);
 		SendObject receivedObj = this.receive();
