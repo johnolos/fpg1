@@ -3,6 +3,8 @@ package gui;
 
 import javax.swing.JPanel;
 
+import ktn.Client;
+
 public class MainGUI extends JPanel {
 	
 	// THIS class should be deleted. logic > Calendar.java
@@ -15,7 +17,7 @@ public class MainGUI extends JPanel {
 	 *    //har man en return vil det stå til slutt @return, og der (som på @param) forklarer du hva returnen er
 	 */
 	public static void main(String args[]) {
-		LoginPanel commenceLoginPanel = new LoginPanel();
+		LoginPanel commenceLoginPanel = new LoginPanel(new Client());
 	}
 
 }

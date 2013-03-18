@@ -55,7 +55,7 @@ public class CreateAppointmentPanel extends JPanel {
 	DefaultComboBoxModel<Room> boxModel;
 	
 	JList<Person> list;
-	DefaultListModel<Person> model;
+	static DefaultListModel<Person> model;
 	JTextPane descriptionArea;
 	
 	JSpinner dateDaySpinner;
@@ -336,6 +336,8 @@ public class CreateAppointmentPanel extends JPanel {
 				//FØRST SEND TIL DATABASE
 				
 				// DETTE FORKLARER INGEN TING FOR DE SOM SKAL LESE KODEN
+					//DIN TISS, DET VAR IKKE MENINGEN HELLER, DET VAR FOR MEG SELV, du er en sopp.
+						//ENIG, HILSEN HENRIK!! DET VAR BARE TIL OSS TO! IKKE TIL DEG. SLUTTE Å SNOKE I KODEN VÅR!
 				
 				//if(DATABASE SIER GREIT){
 					HomeGUI.table.setValueAt(formatNumber((int)startHourSpinner.getValue()) + ":" + formatNumber((int)startMinuteSpinner.getValue()) + " - " + formatNumber((int)endHourSpinner.getValue()) + ":" + formatNumber((int)endMinuteSpinner.getValue()) + "\n" + titleField.getText(), 2, 2);
