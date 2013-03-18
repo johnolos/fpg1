@@ -310,6 +310,7 @@ public class Database {
 							"WHERE person_idPerson ='"+ getPersonId(user) +"' "+
 							"AND appointment_idAppointment ='"+ getAppointmentId(app)+"'";
 			con.createStatement().executeUpdate(query);
+			deleteNotification(new String[] {user,app.getAdmin()}, app);
 		}
 		catch (Exception e) { e.printStackTrace(); }
 	}
