@@ -124,14 +124,11 @@ public class HomeGUI extends JPanel {
 
 	public HomeGUI(Person user, Client client) {
 		
-		yearAndDateLabel = new JLabel();
 		createDateTime();
 		
 		this.currentUser = user;
 		this.client = client;
 		
-		appointment = new Appointment(new DateTime(2014, 2, 2, 13, 37), new DateTime(2014, 2, 2, 14, 38), "hei", "hallo", null, "jï¿½de", "kristen");
-
 		// ----------------------------------------------------------------//
 		// Panels
 		// ----------------------------------------------------------------//
@@ -169,7 +166,7 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		skipToWeekLabel = new JLabel("Hopp til uke:");
-		skipToYearLabel = new JLabel("Hopp til ï¿½r:");
+		skipToYearLabel = new JLabel("Hopp til år:");
 		
 		notificationLabel = new JLabel("Notifikasjoner");
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -179,7 +176,7 @@ public class HomeGUI extends JPanel {
 		
 		weekLabel = new JLabel("Uke " + week);
 		
-		yearAndDateLabel = new JLabel("" + startDay + ". " + monthStr + " - " + endDay + ". " + monthStr + " "  + year);
+		yearAndDateLabel = new JLabel("" + startDay + ". " + monthString + " - " + endDay + ". " + endMonthString + " "  + year);
 		yearAndDateLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
 		// ----------------------------------------------------------------//
@@ -284,27 +281,39 @@ public class HomeGUI extends JPanel {
 			}
 			if (endMonth == 13){
 				endMonth = 1;
+				year += 1;
 		}
 	}
 	
 	public void createDateTime() {
 
-		date = new DateTime(2014, 5, 13, 0, 0, 0, 0);
+		date = new DateTime(2014, 1, 2, 0, 0, 0, 0);
 
 		year = date.getYear();
 		month = date.getMonthOfYear();
 		endMonth = month;
+		week = date.getWeekOfWeekyear();
 		dayOfMonth = date.getDayOfMonth();
 		dayOfWeek = date.getDayOfWeek();
-		week = date.getWeekOfWeekyear();
 		startDay = dayOfMonth - (dayOfWeek - 1);
+		if (startDay < 1 && week == 1){
+			startDay += 31;
+			monthString = endMonth + 11 + "";
+			monthString = "desember";
+			
+		}
+		
+		else {
+			monthString = date.monthOfYear().getAsText();
+		}
+		
 		endDay = dayOfMonth + (7 - dayOfWeek);
-		monthString = date.monthOfYear().getAsText();
 
 		adjustMonth();
 		
 		endMonthDate = new DateTime(year, endMonth, endDay, 0, 0, 0, 0);
 		endMonthString = endMonthDate.monthOfYear().getAsText();
+		System.out.println(endMonthString);
 	}
 	
 	
@@ -357,25 +366,25 @@ public class HomeGUI extends JPanel {
 					week = 1;
 				weekLabel.setText("Uke " + week);
 				
-				year = date.getYear();
-				month = date.getMonthOfYear();
-				endMonth = month;
-				dayOfMonth = date.getDayOfMonth();
-				dayOfWeek = date.getDayOfWeek();
-				week = date.getWeekOfWeekyear();
-				startDay = dayOfMonth - (dayOfWeek - 1);
-				endDay = dayOfMonth + (7 - dayOfWeek);
-				monthString = date.monthOfYear().getAsText();
-
-				
-				adjustMonth();
-				
-				endMonthDate = new DateTime(year, endMonth, endDay, 0, 0, 0, 0);
-				endMonthString = endMonthDate.monthOfYear().getAsText();
-				System.out.println(endMonthDate);
-				
-				yearAndDateLabel.setText("" + startDay + ". " + monthString + " - " + endDay + ". " + endMonthString + " " + year);
-				System.out.println(yearAndDateLabel);
+//				year = date.getYear();
+//				month = date.getMonthOfYear();
+//				endMonth = month;
+//				dayOfMonth = date.getDayOfMonth();
+//				dayOfWeek = date.getDayOfWeek();
+//				week = date.getWeekOfWeekyear();
+//				startDay = dayOfMonth - (dayOfWeek - 1);
+//				endDay = dayOfMonth + (7 - dayOfWeek);
+//				monthString = date.monthOfYear().getAsText();
+//
+//				
+//				adjustMonth();
+//				
+//				endMonthDate = new DateTime(year, endMonth, endDay, 0, 0, 0, 0);
+//				endMonthString = endMonthDate.monthOfYear().getAsText();
+//				System.out.println(endMonthDate);
+//				
+//				yearAndDateLabel.setText("" + startDay + ". " + monthString + " - " + endDay + ". " + endMonthString + " " + year);
+//				System.out.println(yearAndDateLabel);
 			}
 		});
 		
@@ -394,26 +403,8 @@ public class HomeGUI extends JPanel {
 		});
 		
 		skipToYearTextField.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
-					
-					year =  Integer.parseInt(skipToYearTextField.getText());
-					date = new DateTime(year + "-" + month + "-" + dayOfMonth);
-					monthStr = date.monthOfYear().getAsText();
-					month = date.getMonthOfYear();
-					
-					
-					
-					dayOfMonth = date.getDayOfMonth();
-					dayOfWeek = date.getDayOfWeek();
-					
-					startDay = dayOfMonth - (dayOfWeek - 1);
-					endDay = dayOfMonth + (7 - dayOfWeek);
-					
-					week = date.getWeekOfWeekyear();
-					
-					yearAndDateLabel.setText("" + startDay + ". " + monthStr + " - " + endDay + ". " + monthStr + " "  + year);
-				
+	
 			}
 		});
 		
@@ -554,15 +545,10 @@ public class HomeGUI extends JPanel {
 						{"18:00", "", "", "", "", "", "", ""},
 					},
 					new String[]  {
-						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lï¿½rdag", "Sï¿½ndag"});
+						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"});
 		table.setModel(tableModel);
 		calendarPanel.setLayout(gl_calendarPanel);
 		
-		day = appointment.getStart().getDayOfWeek();
-		startTime = appointment.getStart().getHourOfDay() + ":" + appointment.getStart().getMinuteOfHour() + "";
-		endTime = appointment.getEnd().getHourOfDay()+ ":" + appointment.getEnd().getMinuteOfHour() + "";
-		
-		table.setValueAt("Start: "+startTime+ " End: " + endTime + "\nllllllllllllllllllllllllllllllll", 1, 1);
 		for(int i=1; i<table.getColumnCount();i++){
 			table.getColumnModel().getColumn(i).setCellRenderer(new MyRenderer());
 		}
@@ -670,7 +656,7 @@ public class HomeGUI extends JPanel {
 				if(list.getValueIsAdjusting() == false && list.getSelectedIndex() != -1){
 					n =  list.getSelectedValue();
 					if(n.getType().equals(NotificationEnum.INVITATION)){
-						meetingInvitationPanel.setTitle("Mï¿½teinnkalling fra " + n.getAdmin());
+						meetingInvitationPanel.setTitle("Møteinnkalling fra " + n.getAdmin());
 						meetingInvitationPanel.setTitleOfMeeting(n.getTitle());
 						meetingInvitationPanel.setDescription(n.getDescription());
 						meetingInvitationPanel.setStart(n.getStart());
