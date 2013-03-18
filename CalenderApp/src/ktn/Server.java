@@ -22,7 +22,7 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.13.75";
+	private final static String SERVERIP = "78.91.61.224";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
@@ -193,10 +193,10 @@ public class Server {
 				createNotificationForAll((Appointment)obj.getObject(),false);
 				System.out.println("Confirmation sent and notifications created.");
 				return sObject;
-			case C_APPOINTMENT: // Received old and new appointment - ArrayList<Appointment> = {old,new}
+			case C_APPOINTMENT: // Received old and new appointment - ArrayList<Appointment> = {new,old}
 				System.out.println("Request for changing an appointment.");
-				// SKAL IKKE FUNCTIONEN UNDER TA I MOT TO APPOINTMENTS ? - JONSKI
-				Boolean bool = database.changeAppointment((Appointment)obj.getObject());
+				ArrayList<Appointment> apps = (ArrayList<Appointment>)obj.getObject();
+				Boolean bool = database.changeAppointment(apps.get(0),apps.get(1));
 				createNotificationForAll((Appointment)obj.getObject(),true);
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);

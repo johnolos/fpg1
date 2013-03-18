@@ -86,11 +86,12 @@ public class MyAppointmentsPanel extends JPanel {
 	Appointment ap;
 	
 	private Client client;
+	private Person user;
 	
 	/**
 	 * Create the panel.
 	 */
-	public MyAppointmentsPanel(Client client) {
+	public MyAppointmentsPanel(Client client, Person person) {
 		this.client = client;
 		
 		try{
@@ -537,6 +538,16 @@ public class MyAppointmentsPanel extends JPanel {
 		
 		dateYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));
 		alarmYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));
+		
+	}
+	
+	public void updateAppointments() {
+		appointmentsModel.removeAllElements();
+		ArrayList<Appointment> appointments = client.fetchAllAppointments(user.getUsername());
+		for(int i = 0; i < appointments.size(); i++) {
+			appointmentsModel.addElement(appointments.get(i));
+		}
+		
 		
 	}
 }
