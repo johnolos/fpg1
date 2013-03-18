@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import baseClasses.Alarm;
 import baseClasses.Appointment;
 import baseClasses.Notification;
-import baseClasses.NotificationEnum;
 import baseClasses.Person;
 import baseClasses.Room;
 
@@ -176,7 +175,9 @@ public class Database {
 				}
 				
 				//Add appointment
-				appointmentList.add(new Appointment(startTime, endTime, location, title, room, description, admin));
+				Appointment newApp = new Appointment(startTime, endTime, location, title, room, description, admin); 
+				newApp.setParticipants(getMembersOnAppointment(newApp));
+				appointmentList.add(newApp);
 			}
 			return appointmentList;
 			
@@ -231,7 +232,9 @@ public class Database {
 				}
 				
 				//Add appointment to list
-				appointmentList.add(new Appointment(startTime, endTime, location, title, room, description, admin));
+				Appointment newApp = new Appointment(startTime, endTime, location, title, room, description, admin); 
+				newApp.setParticipants(getMembersOnAppointment(newApp));
+				appointmentList.add(newApp);
 			}
 			return appointmentList;
 			
@@ -313,16 +316,41 @@ public class Database {
 	//Add a user to appointment 
 	public Boolean createPersonAppointment(String user, Appointment app){
 		try{
-			System.out.println(user + " - " + app.getTitle());
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
 						   "VALUES ('"+ getAppointmentId(app) +"','"+ getPersonId(user) +"')";
 			con.createStatement().executeUpdate(query);
+			
 			String [] keyword = {"INVITATION",user};
 			createNotification(keyword, app);
+			
 			return true;
 			
 		} catch (SQLException e) { e.printStackTrace(); }
 		return false;
+	}
+	
+	//Get list of persons on Appointment
+	public ArrayList<Person> getMembersOnAppointment(Appointment app){
+		ArrayList<Person> personList = new ArrayList<Person>();
+		try {
+			String query = 	"SELECT username, email, firstName, lastName " +
+							"FROM person " +
+							"WHERE idPerson IN (" +
+								"SELECT idPerson FROM person, person_appointment " +
+								"WHERE idPerson = person_idPerson " +
+								"AND appointment_idAppointment = '"+ getAppointmentId(app) +"') "+
+							"ORDER BY lastName ASC";
+				
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			while(res.next()){
+				personList.add( new Person(res.getString(1), res.getString(2), res.getString(3), res.getString(4)) );
+			}
+			return personList;
+			
+		} catch (SQLException e) { e.printStackTrace(); }
+		
+		return null;
 	}
 	
 	//Delete a user from appointment
@@ -433,8 +461,9 @@ public class Database {
 	
 	public boolean createNotification(String [] keyword, Appointment app){
 		try{
-			String query = "INSERT INTO notification(type,idPerson,idAppointment)" +
-					" VALUES('"+keyword[0]+"','"+getPersonId(keyword[1])+"','"+getAppointmentId(app)+"')";
+			String query = 	"INSERT INTO notification(type,idPerson,idAppointment) " +
+							"VALUES('"+keyword[0]+"','"+ getPersonId(keyword[1]) +"','"+ getAppointmentId(app) +"')";
+			
 			con.createStatement().executeUpdate(query);
 			return true;
 		}
@@ -442,9 +471,7 @@ public class Database {
 			e.printStackTrace();
 			System.out.println("ERROR while updating notification");
 		}
-		
 		return false;
-		
 	}
 
 	
@@ -456,21 +483,20 @@ public class Database {
 							"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
 			
 			ResultSet res = con.createStatement().executeQuery(query);
+			
 			while(res.next()){
-				noteList.add(new Notification(res.getString(1), res.getString(2),res.getString(3), res.getString(4),res.getString(5), res.getString(6)));
-				
-				
+				noteList.add(new Notification(res.getString(1), res.getString(2),res.getString(3), res.getString(4),res.getString(5), res.getString(6)));	
 			}
 			return noteList;
 		}
-		
 		catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("ERROR when getting notifications form user");
 		}
-		
 		return null;
 		
 	}
+	
 	//Parse String[] to int[]
 	private int[] toInt(String[] s){
 		int[] newInt = new int[s.length];
@@ -549,17 +575,7 @@ public class Database {
 		return null;
 	}
 
-	//For testing
-	public static void main(String [] args) throws Exception{
-
-		Database db = new Database();
-		
-		String[] keyword = new String[2];
-		keyword[0] = "test";
-		keyword[1] = "2013-03-14";
-		
-	}
-
+	
 	public ArrayList<Room> fetchRooms(String[] keyword) {
 		//Henter ut alle ledige rom mellom et gitt tidspunkt. 
 		// Time hh:mm Date: YYYY/MM/DD
@@ -587,4 +603,14 @@ public class Database {
 		}
 		return null;
 	}
+	
+	//For testing
+	public static void main(String[] args) throws Exception{
+		Database db = new Database();
+		
+		String[] keyword = {"test"};
+		
+		System.out.println(db.getMembersOnAppointment(db.getAppointmentsOnPerson(keyword).get(0)));
+	}
+	
 }

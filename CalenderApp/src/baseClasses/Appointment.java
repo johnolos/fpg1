@@ -68,6 +68,10 @@ public class Appointment implements Serializable {
                 return admin;
         }
         
+        public void setParticipants(ArrayList<Person> list){
+        	this.participants = list;
+        }
+        
         public ArrayList<Person> getParticipants(){
         	return participants;
         }
