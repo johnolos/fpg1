@@ -691,12 +691,4 @@ public class Database {
 		return null;
 	}
 	
-	
-	//For testing
-	public static void main(String[] args) throws Exception{
-		Database db = new Database();
-		
-		System.out.println(db.getNotification("Hans").get(0).getTitle());
-	}
-	
 }
