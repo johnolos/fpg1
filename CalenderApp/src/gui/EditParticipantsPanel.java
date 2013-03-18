@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,8 @@ import baseClasses.Person;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import ktn.Client;
+
 public class EditParticipantsPanel extends JPanel {
 	private JTextField searchField;
 
@@ -41,12 +44,16 @@ public class EditParticipantsPanel extends JPanel {
 	DefaultListModel<Person> searchResultListModel = new DefaultListModel<Person>();
 	DefaultListModel<Person> chosenListModel = new DefaultListModel<Person>();
 	
+	private Client client;
+	
 	private JFrame frame;
 	
 	/**
 	 * Create the panel.
 	 */
-	public EditParticipantsPanel(JFrame utgangspunkt, DefaultListModel<Person> utgangspunktModel) {
+	public EditParticipantsPanel(JFrame utgangspunkt, DefaultListModel<Person> utgangspunktModel, final Client client) {
+		
+		this.client = client;
 		
 		frame = new JFrame();
 		frame.setTitle("Endre deltagere");
@@ -63,6 +70,32 @@ public class EditParticipantsPanel extends JPanel {
 		
 		searchField = new JTextField();
 		searchField.setColumns(10);
+		searchField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyChar() == (KeyEvent.VK_ENTER)) {
+					updatePersons();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				/* THIS CODE FITS BETTER UNDER ENTER IS PRESSED
+				 * BIT BUGGY ELSE. PROGRAM FREEZES.
+				searchResultListModel.removeAllElements();
+				ArrayList<Person> persons = client.fetchPersons(searchField.getText());
+				for(int i = 0; i < persons.size(); i++) {
+					searchResultListModel.addElement(persons.get(i));
+				}
+				*/
+			}
+			
+		});
 		
 		JScrollPane searchResultParticipantsScrollPane = new JScrollPane();
 		
@@ -201,15 +234,20 @@ public class EditParticipantsPanel extends JPanel {
 		
 		searchResultParticipantsList = new JList<Person>();
 		searchResultParticipantsList.setModel(searchResultListModel);
-		searchResultListModel.addElement(new Person("user1", "email1", "Torkjel", "Skjetne"));
-		searchResultListModel.addElement(new Person("user2", "email2", "John-Olav", "Storvold"));
-		searchResultListModel.addElement(new Person("user3", "email3", "Bjørn Christan", "Olsen"));
-		searchResultListModel.addElement(new Person("user4", "email4", "Hans-Olav", "Hessen"));
+		updatePersons();
 		searchResultParticipantsScrollPane.setViewportView(searchResultParticipantsList);
 		searchResultParticipantsList.setCellRenderer(new PersonListRenderer());
 		setLayout(groupLayout);
-
-		
+	}
+	/**
+	 * Update searchListPersons when initialized or pressed ENTER
+	 */
+	private void updatePersons() {
+		searchResultListModel.removeAllElements();
+		ArrayList<Person> persons = client.fetchPersons(searchField.getText());
+		for(int i = 0; i < persons.size(); i++) {
+			searchResultListModel.addElement(persons.get(i));
+		}
 		
 	}
 }

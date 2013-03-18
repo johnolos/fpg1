@@ -15,14 +15,10 @@ public class Alarm implements Serializable {
 	
 	public void alarmUpdate(DateTime time){
 		this.alarm=time;
-		// Denne metoden er digg
-		this.alarm = null;
 	}
 	
 	public DateTime getAlarm(){
 		return alarm;
 	}
-	
-
 	
 }

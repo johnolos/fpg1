@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class SendObject implements Serializable {
 	
+	
 	/**
 	 * 
 	 */
@@ -13,6 +14,7 @@ public class SendObject implements Serializable {
 	private String [] keyword;
 	private boolean value;//If true, then it contains an object. 
 	
+	//Request object does not contain an object.
 	public SendObject(RequestEnum reType, String[] keyword) {
 		this.sendType = reType;
 		this.keyword = keyword;
@@ -34,8 +36,8 @@ public class SendObject implements Serializable {
 	public Object getObject() {
 		return object;
 	}
-	public boolean isObject(){
-		return this.value;
+	public boolean isRequest(){
+		return this.object == null ? true : false;
 	}
 	public String [] getKeyword(){
 		return this.keyword;

@@ -1,5 +1,6 @@
 package ktn;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +13,18 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+
+import baseClasses.Appointment;
+import baseClasses.Person;
+import baseClasses.Room;
 
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.10.150";
-	private final static int SERVERPORT = 4058;
+	private final static String SERVERIP = "192.168.10.132";
+	private final static int SERVERPORT = 4004;
+	private Database database;
 
 	public Server() {
 	}
@@ -29,6 +36,14 @@ public class Server {
 			// Printing IP:Port for the server
 			System.out.println("Waiting for connections on " + this.SERVERIP + " : " + this.SERVERPORT);
 			
+			
+			// Establishing connection to database
+			try {
+				this.database = new Database();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("ERROR while connecting to database - ktnSTYLE");
+			}
 			// A never-ending while-loop that constantly listens to the Socket
 			Socket newConnectionSocket;
 			while (true) {
@@ -53,6 +68,15 @@ public class Server {
 		ClientConnection(Socket connection) {
 			this.connection = connection;
 		}
+		private void send(SendObject obj) {
+			try {
+				this.objectOut.writeObject(obj);
+				System.out.println("sendt");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		public void run() {
 			System.out.println("Connected to client on " + this.connection.getRemoteSocketAddress());
@@ -73,16 +97,20 @@ public class Server {
 				System.out.println("Waiting for message from client");
 				
 				// While-loop to ensure continuation of reading in-coming messages
-				while (objectIn.available()>0) {
-					
+				int i = 10;
+				while (i>0) {
+					i--;
 					try {
+						//Receive object from client
 						SendObject obj =(SendObject) this.objectIn.readObject();
-						System.out.println(obj.getKeyword());
+						//Sends object to databsefunction and return result-object
+						SendObject dbObj = databaseQuery(obj); 
+						//Sends object back to client
+						send(dbObj);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					}
 					catch (SocketException e) {
-						System.out.println("Heiddfdf");
 					}
 					
 
@@ -94,43 +122,118 @@ public class Server {
 		}
 
 	}
-	void databaseQuery(SendObject obj) {
-		Database database = null;
-		try {
-			database = new Database();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("ERROR while connecting to database - ktnSTYLE");
-			
-		}
-		if(!obj.isObject()){
-			String[] keyword;
-			RequestEnum reType;
-			keyword = obj.getKeyword();
-			reType = obj.getSendType();
-			
-			
+	
+	SendObject databaseQuery(SendObject obj) {
+		String[] keyword;
+		RequestEnum reType;
+		keyword = obj.getKeyword();
+		reType = obj.getSendType();
+		// This is the object that the server sends.
+		SendObject sObject;
+		if(obj.isRequest()){
 			switch(reType) {
 			case LOGIN:
-				Boolean bol = database.login(keyword);
-				System.out.println(bol);
-				break;
-			case APPOINTMENT:
-				
-				break;
+				System.out.println("Login requested for user: " + keyword[0]);
+				Person person = database.login(keyword);
+				sObject = new SendObject(RequestEnum.PERSON, person);
+				System.out.println("Confirmation for login sent.");
+				return sObject;
 			case PERSON:
-				break;
-			case ALARM:
-				break;
+				System.out.println("Persons requested.");
+				ArrayList<Person> persons = database.getPerson(keyword);
+				sObject = new SendObject(RequestEnum.PERSON, persons);
+				System.out.println("Persons sent.");
+				return sObject;
+			case APPOINTMENT:
+				System.out.println("Appointment requested.");
+				ArrayList<Appointment> appointments;
+				
+				/*
+				 * If string is empty, then all available appointments shall be delivered.
+				 * Used inside change Appointments panel in gui.
+				 */
+				if(keyword[1] == "") {
+					appointments = database.getAppointmentsOnPerson(keyword);
+					sObject = new SendObject(RequestEnum.APPOINTMENT, appointments);
+				}
+				/*
+				 * If string is not empty, appointments a specific date is received.
+				 * This one is used to get appointments for each row in a day view
+				 * in calender.
+				 */
+				 else {
+					 appointments = database.getAppointmentsOnPerson(keyword);
+					 sObject = new SendObject(RequestEnum.APPOINTMENT, appointments);
+				}
+				System.out.println("Appointments sent.");
+				return sObject;
+			case S_PERSON:
+				System.out.println("Registration for new user requested.");
+				Boolean bool2 = database.registerUser(keyword);
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool2);
+				System.out.println("Confirmation for reqistration sent.");
+				return sObject;
 			case ROOM:
-				break;
+				System.out.println("Request for rooms.");
+				System.out.println();
+				ArrayList<Room> rooms= database.fetchRooms(keyword);
+				System.out.println("Rooms sent.");
+				sObject = new SendObject(RequestEnum.ROOM,rooms);
+				return sObject;
 			default:
 				break;
 			}
 		}
+		else{
+			switch (reType) {
+			case S_APPOINTMENT:
+				System.out.println("Requests for storing an appointment.");
+				Boolean bool3 = database.createAppointment((Appointment)obj.getObject());
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool3);
+				createNotificationForAll((Appointment)obj.getObject(),false);
+				System.out.println("Confirmation sent and notifications created.");
+				return sObject;
+			case C_APPOINTMENT: // Received old and new appointment - ArrayList<Appointment> = {old,new}
+				System.out.println("Request for changing an appointment.");
+				// SKAL IKKE FUNCTIONEN UNDER TA I MOT TO APPOINTMENTS ? - JONSKI
+				Boolean bool = database.changeAppointment((Appointment)obj.getObject());
+				createNotificationForAll((Appointment)obj.getObject(),true);
+				System.out.println("Old appointment changed and notification created.");
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
+				return sObject;
+			default:
+				break;
+			}
+		}
+		return null;
 		
 		
 	}
+	/**
+	 * Used to create notifications for all users when someone creates an appointment for them.
+	 * Input boolean alter is used to indicate if the appointment already exists or is a new one.
+	 * @param appointment
+	 * @param alter
+	 * @throws Exception 
+	 */
+	private void createNotificationForAll(Appointment appointment, boolean alter){
+		// IF AN APPOINTMENT CHANGE HAS BEEN MADE
+		if(alter) {
+			for(int i = 0; i < appointment.getParticipants().size(); i++) {
+				System.out.println("Not implemnted");
+			}
+			
+			
+			
+		// IF AN NEW APPOINTMENT HAS BEEN CREATED
+		} else {
+			for(int i = 0; i < appointment.getParticipants().size(); i++) {
+				System.out.println("Not implemented");
+			}
+		}
+	}
+	
+
 
 	// Main-function to start server
 	public static void main(String[] args) {

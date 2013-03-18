@@ -24,7 +24,7 @@ public class Database {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String CONNECTION = "jdbc:mysql://localhost:3306/mydb";
 	private final static String USER = "root";
-	private final static String PASSWORD = "lol123";
+	private final static String PASSWORD = "123";
 	
 	private java.sql.Connection con;
 	private java.sql.Statement statement;
@@ -42,7 +42,7 @@ public class Database {
 	}
 	
 	//Register a user in the database
-	public void registerUser(String[] keyword){
+	public boolean registerUser(String[] keyword){
 		try {
 			String query = "" + 
 					"INSERT INTO person(username, password, firstName, lastName, email, telefon) " +
@@ -54,32 +54,34 @@ public class Database {
 							"','"+ 		keyword[5] +"')";
 				
 			con.createStatement().executeUpdate(query);
-			
-		} catch (SQLException e) { e.printStackTrace(); }
+		} catch (SQLException e) { 
+			return false;
+		}
+		return true;
 	}
 	
 	//Confirms that a person with username and password exists
-	public boolean login(String[] keyword){
+	public Person login(String[] keyword){
 		try {
-			String query = 	"SELECT username " +
+			String query = 	"SELECT * " +
 							"FROM person " +
 							"WHERE username='"+ keyword[0] +"' " +
 							"AND password=SHA1('"+ keyword[1] +"')";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
-			
-			if(res.next()) return true;
-			else return false;
+			Person person;
+			if(res.next()){
+				return new Person(res.getString(2),res.getString(4),res.getString(5),res.getString(6));
+			}
 			
 		} catch (SQLException e) { e.printStackTrace(); }
 		
-		return false;
+		return null;
 	}
 	
 	//Find persons with search word
 	public ArrayList<Person> getPerson(String[] keyword){
 		ArrayList<Person> personList = new ArrayList<Person>();
-		
 		try {
 			String query = 	"SELECT username, email, firstName, lastName " +
 							"FROM person " +
@@ -247,7 +249,10 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	public void createAppointment(Appointment app){
+	public Boolean createAppointment(Appointment app){
+		if(app.getRoom() == null){
+			app.setRoom(new Room(0, "Ingen rom"));
+		}
 		try {
 			String query = 	"INSERT INTO appointment (title,sTime,eTime,date,description,location,admin,room_idRoom) " +
 							"VALUES ('"+ app.getTitle() + 
@@ -260,11 +265,13 @@ public class Database {
 									"', '"+ getRoomId( app.getRoom() )+ "')";
 			
 			con.createStatement().executeUpdate(query);
-			
 			//Connect person to appointment
 			createPersonAppointment(app.getAdmin(), app);
-			agreedAppointment(app.getAdmin(), app);
-		} catch (SQLException e) { e.printStackTrace(); }
+			//agreedAppointment(app.getAdmin(), app);
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace(); }
+		return false;
 		
 	}
 
@@ -292,7 +299,7 @@ public class Database {
 			String query = 	"UPDATE person_appointment "+
 							"SET hasAgreed = '1' "+
 							"WHERE person_appointment_person_idPerson ='"+ getPersonId(user) +"' "+
-							"AND person_appointment_appointment_idAppointment ='"+ getAppointmentId(app);
+							"AND person_appointment_appointment_idAppointment ='"+ getAppointmentId(app)+"'";
 			con.createStatement().executeUpdate(query);
 		}
 		catch (Exception e) { e.printStackTrace(); }
@@ -307,7 +314,7 @@ public class Database {
 			
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
-
+	
 	//Delete a user from appointment
 	public void deletePersonAppointment(String user, Appointment app){
 		try{
@@ -500,5 +507,32 @@ public class Database {
 		keyword[0] = "test";
 		keyword[1] = "2013-03-14";
 		
+	}
+
+	public ArrayList<Room> fetchRooms(String[] keyword) {
+		//Henter ut alle ledige rom mellom et gitt tidspunkt. 
+		// Time hh:mm Date: YYYY/MM/DD
+		String date = keyword[0];
+		String start = keyword[1];
+		String end = keyword[2];
+		ArrayList<Room> rooms = new ArrayList<Room>();
+		try{
+			String query = "SELECT r.capacity,r.name " +
+					"FROM room as r, appointment as a " +
+					"WHERE a.sTime  not between '"+start+"' AND '"+end+"' " +
+					"AND a.eTime not between '"+start+"' AND '"+end+"' " +
+					"AND a.date != '"+date+"' " +
+					"AND a.room_idRoom = r.idRoom " +
+					"GROUP BY r.name";
+			ResultSet res = con.createStatement().executeQuery(query);
+			while(res.next()){
+				rooms.add(new Room(Integer.parseInt(res.getString(1)), res.getString(2)));
+			}
+			return rooms;
+		}
+		catch (Exception e) {
+			System.out.println("Can't fetch rooms from database in that period");
+		}
+		return null;
 	}
 }

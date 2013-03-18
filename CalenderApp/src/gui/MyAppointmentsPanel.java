@@ -15,6 +15,7 @@ import javax.swing.JList;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JFrame;
@@ -28,6 +29,8 @@ import javax.swing.JSpinner;
 
 import org.joda.time.DateTime;
 
+import database.Database;
+
 import baseClasses.Appointment;
 import baseClasses.Person;
 import baseClasses.Room;
@@ -35,8 +38,12 @@ import baseClasses.Room;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 
+import ktn.Client;
+
 
 public class MyAppointmentsPanel extends JPanel {
+	
+	Database db;
 	
 	DateTime jodaTime = new DateTime();
 	
@@ -76,11 +83,21 @@ public class MyAppointmentsPanel extends JPanel {
 	JSpinner alarmHourSpinner;
 	JSpinner alarmMinuteSpinner;
 	
+	Appointment ap;
+	
+	private Client client;
 	
 	/**
 	 * Create the panel.
 	 */
-	public MyAppointmentsPanel() {
+	public MyAppointmentsPanel(Client client) {
+		this.client = client;
+		
+		try{
+			db = new Database();
+		} catch(Exception e){
+			//lulz
+		}
 		
 		// ----------------------------------------------------------------//
 		// Frame
@@ -387,7 +404,6 @@ public class MyAppointmentsPanel extends JPanel {
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 								.addComponent(alarmHourSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(removeAlarmButton)
-								.addComponent(alarmMinuteLabel)
 								.addComponent(alarmMinuteSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(30)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -401,7 +417,7 @@ public class MyAppointmentsPanel extends JPanel {
 		myAppointmentsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				
-				Appointment ap = myAppointmentsList.getSelectedValue();
+				ap = myAppointmentsList.getSelectedValue();
 				
 				titleField.setText(ap.getTitle());
 				dateDaySpinner.setValue(ap.getStart().getDayOfMonth());
@@ -412,17 +428,19 @@ public class MyAppointmentsPanel extends JPanel {
 				endHourSpinner.setValue(ap.getEnd().getHourOfDay());
 				endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
 				locationField.setText(ap.getLocation());
-//				roomComboBox.setSelectedItem(ap.getRoom());
+				Room room = ap.getRoom();
+				boxModel.addElement(room);
+				roomComboBox.setSelectedItem(room);
 				descriptionArea.setText(ap.getDescription());
-//				for(int i=0; i<ap.getParticipants().size(); i++){
-//					model.addElement(ap.getParticipants().get(i));
-//				}
+				for(int i=0; i<ap.getParticipants().size(); i++){
+					model.addElement(ap.getParticipants().get(i));
+				}
 				
 				
-//				if(JEG ER LEDER AV AVTALEN)
-//					setAllFieldsEnabled(true);
-//				else
-//					setAlarmFieldsEnabled(true);
+				if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
+					setAllFieldsEnabled(true);
+				else
+					setAlarmFieldsEnabled(true);
 				setButtonsEnabled(true);
 				
 			}
@@ -431,7 +449,14 @@ public class MyAppointmentsPanel extends JPanel {
 		appointmentsModel = new DefaultListModel<Appointment>();
 		myAppointmentsList.setModel(appointmentsModel);
 		myAppointmentsList.setCellRenderer(new appointmentListRenderer());
-		appointmentsModel.addElement(new Appointment(new DateTime(2014, 01, 02, 03, 00) , new DateTime(2014, 01, 02, 04, 04), "DunnoWhatThisFieldIs :(", "Videokonferanse med Steria", new Room(20, "testrom"), "WutIsDisField?", "WahtBistDeineFelt?"));
+//		appointmentsModel.addElement(new Appointment(new DateTime(2014, 01, 02, 03, 00) , new DateTime(2014, 01, 02, 04, 04), "DunnoWhatThisFieldIs :(", "Videokonferanse med Steria", new Room(20, "testrom"), "WutIsDisField?", "WahtBistDeineFelt?"));
+		
+		String user = HomeGUI.getCurrentUser().getUsername();
+		ArrayList<Appointment> appointmentsFromDatabase = this.client.fetchAllAppointments(user);
+		for(int i=0; i<appointmentsFromDatabase.size(); i++){
+			appointmentsModel.addElement(appointmentsFromDatabase.get(i));
+		}
+		
 		
 		participantsList = new JList<Person>();
 		participantsList.setBackground(UIManager.getColor("Panel.background"));
@@ -482,9 +507,9 @@ public class MyAppointmentsPanel extends JPanel {
 		cancelChangesButton.setEnabled(b);
 		
 //		//Enable "Meld avbud" eller "Avlys avtale" avhengig av om man er leder eller ikke
-//		if(JEG IKKE ER LEDER AV M�TET){
-//			declineMeetingButton.setEnabled(true);
-//			cancelMeetingButton.setEnabled(false);
+//		if(HomeGUI.currentUser.getUsername().equals(ap.getAdmin()){
+			declineMeetingButton.setEnabled(true);
+			cancelMeetingButton.setEnabled(false);
 //		}
 //		else{
 //			declineMeetingButton.setEnabled(false);

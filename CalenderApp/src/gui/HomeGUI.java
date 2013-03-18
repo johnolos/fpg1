@@ -19,11 +19,10 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
 import java.awt.Font;
-import javax.swing.JTextArea;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.SystemColor;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -33,11 +32,21 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JLayeredPane;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 
+import org.joda.time.DateTime;
+
+import sun.beans.editors.StringEditor;
+
+import baseClasses.Appointment;
 import baseClasses.Notification;
 import baseClasses.NotificationEnum;
+import baseClasses.Person;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import ktn.Client;
 
 public class HomeGUI extends JPanel {
 
@@ -45,9 +54,10 @@ public class HomeGUI extends JPanel {
 	// Fields
 	// ----------------------------------------------------------------//
 
-	String[] columnNames;
-	Object[][] data;
 	private int ukeNr = 1;
+	private int day;
+	private String startTime;
+	private String endTime;
 
 	private JFrame frame;
 
@@ -78,18 +88,28 @@ public class HomeGUI extends JPanel {
 	private ImageIcon forrigeUke;
 	private ImageIcon nesteUke;
 	private JPanel panel_1;
-	private JButton btnDsadsa;
 	private JPanel calendarPanel;
 	
-	MeetingInvitationPanel meetingInvitationPanel;
-	OKNotificationBox okNotificationBox;
-	ParticipantDeclinedPanel participantDeclinedPanel;
-	private JTable table;
+	private MeetingInvitationPanel meetingInvitationPanel;
+	private OKNotificationBox okNotificationBox;
+	private ParticipantDeclinedPanel participantDeclinedPanel;
+	static JTable table;
+	private JTable rowTable;
+	
+	private Appointment appointment;
 
 	static JLayeredPane layeredPane;
 	static ArrayList<Object> listOfFrames;
+	
+	private static Person currentUser;
+	private Client client;
 
-	public HomeGUI() {
+
+	public HomeGUI(Person user, Client client) {
+		this.currentUser = user;
+		this.client = client;
+		
+		appointment = new Appointment(new DateTime(2014, 2, 2, 13, 37), new DateTime(2014, 2, 2, 14, 38), "hei", "hallo", null, "jøde", "kristen");
 
 		// ----------------------------------------------------------------//
 		// Panels
@@ -199,7 +219,8 @@ public class HomeGUI extends JPanel {
 		
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				LoginPanel gotoLogin = new LoginPanel();
+				client.close();
+				LoginPanel gotoLogin = new LoginPanel(new Client());
 				frame.dispose();
 			}
 		});
@@ -207,7 +228,7 @@ public class HomeGUI extends JPanel {
 		showColleaguesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				ShowColleaguesPanel showColleagues = new ShowColleaguesPanel();
+				ShowColleaguesPanel showColleagues = new ShowColleaguesPanel(client);
 				
 			}
 		});
@@ -258,12 +279,12 @@ public class HomeGUI extends JPanel {
 		
 		myAppointmentsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel();
+				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client);
 			}
 		});
 		createAppointmentButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				CreateAppointmentPanel createAppointmentPanel = new CreateAppointmentPanel();
+				CreateAppointmentPanel createAppointmentPanel = new CreateAppointmentPanel(client);
 			}
 		});
 	}
@@ -278,20 +299,6 @@ public class HomeGUI extends JPanel {
 	}
 
 	public void initTable() {
-//		table.setRowHeight(100);
-		columnNames = new String[] { "First Name", "Last Name", "Sport",
-				"# of Years", "Vegetarian" };
-
-		data = new Object[][] {
-				{ "Kathy", "Smith", "Snowboarding", new Integer(5),
-						new Boolean(false) },
-				{ "John", "Doe", "Rowing", new Integer(3), new Boolean(true) },
-				{ "Sue", "Black", "Knitting", new Integer(2),
-						new Boolean(false) },
-				{ "Jane", "White", "Speed reading", new Integer(20),
-						new Boolean(true) },
-				{ "Joe", "Brown", "Pool", new Integer(10), new Boolean(false) } };
-
 	}
 
 	public void createLayout() {
@@ -340,28 +347,98 @@ public class HomeGUI extends JPanel {
 		calendarPanel.setBounds(0, 0, 1106, 554);
 		layeredPane.add(calendarPanel);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"sfsdf", "dfsdf", "dwfsdf", "dsfsdf", "dsfsdf"},
-				{"df", "h", "h", "h", null},
-				{"hh", "h", "h", "fyh", "fyh"},
-				{"hfy", "hf", "yh", "uh", null},
-			},
-			new String[] {
-				"New column", "New column", "New column", "New column", "New column"
-			}
-		));
+		JScrollPane calendarScrollPane = new JScrollPane();
+		
 		GroupLayout gl_calendarPanel = new GroupLayout(calendarPanel);
 		gl_calendarPanel.setHorizontalGroup(
 			gl_calendarPanel.createParallelGroup(Alignment.TRAILING)
-				.addComponent(table, GroupLayout.DEFAULT_SIZE, 1106, Short.MAX_VALUE)
+				.addGroup(Alignment.LEADING, gl_calendarPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 1086, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_calendarPanel.setVerticalGroup(
 			gl_calendarPanel.createParallelGroup(Alignment.TRAILING)
-				.addComponent(table, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+				.addGroup(Alignment.LEADING, gl_calendarPanel.createSequentialGroup()
+					.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+					.addContainerGap())
 		);
+		
+
+		
+		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent arg0) {
+				//table.getSelectedRow(arg0.getComponent());
+			}
+		});
+		table.setRowHeight(80);
+		
+		
+		calendarScrollPane.setViewportView(table);
+		DefaultTableModel tableModel = new DefaultTableModel(
+				new Object [][] {
+						{"08:00", "", "", "", "", "", "", ""},
+						{"09:00", "", "", "", "", "", "", ""},
+						{"10:00", "", "", "", "", "", "", ""},
+						{"11:00", "", "", "", "", "", "", ""},
+						{"12:00", "", "", "", "", "", "", ""},
+						{"13:00", "", "", "", "", "", "", ""},
+						{"14:00", "", "", "", "", "", "", ""},
+						{"15:00", "", "", "", "", "", "", ""},
+						{"16:00", "", "", "", "", "", "", ""},
+						{"17:00", "", "", "", "", "", "", ""},
+						{"18:00", "", "", "", "", "", "", ""},
+					},
+					new String[]  {
+						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"});
+		table.setModel(tableModel);
 		calendarPanel.setLayout(gl_calendarPanel);
+		
+		day = appointment.getStart().getDayOfWeek();
+		startTime = appointment.getStart().getHourOfDay() + ":" + appointment.getStart().getMinuteOfHour() + "";
+		endTime = appointment.getEnd().getHourOfDay()+ ":" + appointment.getEnd().getMinuteOfHour() + "";
+		
+		JLabel appointmentToCalendar = new JLabel(day + startTime + endTime+ "");
+		table.setValueAt("Start: "+startTime+ " End: " + endTime + "\nllllllllllllllllllllllllllllllll", 1, 1);
+		for(int i=1; i<table.getColumnCount();i++){
+			table.getColumnModel().getColumn(i).setCellRenderer(new MyRenderer());
+		}
+		table.setBackground(Color.LIGHT_GRAY);
+		table.addMouseListener(new MouseListener(){
+	
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+					System.out.println("Mouse clicked at Column: " + table.getSelectedColumn() + " and Row: " + table.getSelectedRow());
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		
 		meetingInvitationPanel = new MeetingInvitationPanel();
 		meetingInvitationPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -492,5 +569,9 @@ public class HomeGUI extends JPanel {
 		buttonPanel.add(showColleaguesButton);
 		setLayout(groupLayout);
 
+	}
+
+	public static Person getCurrentUser() {
+		return currentUser;
 	}
 }
