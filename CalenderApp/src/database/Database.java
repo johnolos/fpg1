@@ -88,8 +88,8 @@ public class Database {
 			String query = 	"SELECT username, email, firstName, lastName " +
 							"FROM person " +
 							"WHERE username LIKE '%" + keyword[0] + "%' " +
-							"OR username LIKE '%" + keyword[0] + "%' " +
-							"OR username LIKE '%" + keyword[0] + "%' " +
+							"OR firstName LIKE '%" + keyword[0] + "%' " +
+							"OR lastName LIKE '%" + keyword[0] + "%' " +
 							"ORDER BY lastName ASC";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
