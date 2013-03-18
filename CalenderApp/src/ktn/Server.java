@@ -22,7 +22,7 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.36.250";
+	private final static String SERVERIP = "78.91.10.70";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
@@ -193,6 +193,7 @@ public class Server {
 				createNotificationForAll((Appointment)obj.getObject(),false);
 				System.out.println("Confirmation sent and notifications created.");
 				return sObject;
+				
 			case C_APPOINTMENT: // Received old and new appointment - ArrayList<Appointment> = {new,old}
 				System.out.println("Request for changing an appointment.");
 				ArrayList<Appointment> apps = (ArrayList<Appointment>)obj.getObject();

@@ -497,6 +497,21 @@ public class Database {
 		
 	}
 	
+	
+	public boolean deleteNotification(String [] keyword,Appointment app){
+		try{
+			String query = "DELETE FROM notification " +
+							"WHERE idPerson = '"+getPersonId(keyword[0])+"' " +
+							"AND idAppointment = '"+getAppointmentId(app)+"'";
+			con.createStatement().executeUpdate(query);
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while deleting an notification");
+		}
+		return false;
+	}
 	//Parse String[] to int[]
 	private int[] toInt(String[] s){
 		int[] newInt = new int[s.length];
