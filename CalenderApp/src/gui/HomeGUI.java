@@ -126,6 +126,7 @@ public class HomeGUI extends JPanel {
 	private int dayEndOfWeek;
 	private String startMonth;
 
+	private ArrayList<Appointment> allMyAppointments;
 
 	public HomeGUI(Person user, Client client) {
 		
@@ -135,7 +136,7 @@ public class HomeGUI extends JPanel {
 		
 		this.currentUser = user;
 		this.client = client;
-		
+		allMyAppointments = client.fetchAllAppointments(currentUser.getUsername());
 		// ----------------------------------------------------------------//
 		// Panels
 		// ----------------------------------------------------------------//
@@ -527,6 +528,14 @@ public class HomeGUI extends JPanel {
 		calendarScrollPane.setViewportView(table);
 		DefaultTableModel tableModel = new DefaultTableModel(
 				new Object [][] {
+						{"00:00", "", "", "", "", "", "", ""},
+						{"01:00", "", "", "", "", "", "", ""},
+						{"02:00", "", "", "", "", "", "", ""},
+						{"03:00", "", "", "", "", "", "", ""},
+						{"04:00", "", "", "", "", "", "", ""},
+						{"05:00", "", "", "", "", "", "", ""},
+						{"06:00", "", "", "", "", "", "", ""},
+						{"07:00", "", "", "", "", "", "", ""},
 						{"08:00", "", "", "", "", "", "", ""},
 						{"09:00", "", "", "", "", "", "", ""},
 						{"10:00", "", "", "", "", "", "", ""},
@@ -538,6 +547,11 @@ public class HomeGUI extends JPanel {
 						{"16:00", "", "", "", "", "", "", ""},
 						{"17:00", "", "", "", "", "", "", ""},
 						{"18:00", "", "", "", "", "", "", ""},
+						{"19:00", "", "", "", "", "", "", ""},
+						{"20:00", "", "", "", "", "", "", ""},
+						{"21:00", "", "", "", "", "", "", ""},
+						{"22:00", "", "", "", "", "", "", ""},
+						{"23:00", "", "", "", "", "", "", ""}
 					},
 					new String[]  {
 						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"});
