@@ -454,17 +454,21 @@ public class Database {
 			String query = "Select type,title,admin,sTime,eTime,date " +
 							"FROM notification as n, appointment as a" +
 							"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
+			
 			ResultSet res = con.createStatement().executeQuery(query);
 			while(res.next()){
-				NotificationEnum
-				noteList.add(new Notification(res.getString(1), res.getString(2),res.getString(3), res.getString(4),res.getString(5)));
+				noteList.add(new Notification(res.getString(1), res.getString(2),res.getString(3), res.getString(4),res.getString(5), res.getString(6)));
 				
 				
 			}
+			return noteList;
 		}
+		
 		catch (Exception e) {
 			// TODO: handle exception
 		}
+		
+		return null;
 		
 	}
 	//Parse String[] to int[]

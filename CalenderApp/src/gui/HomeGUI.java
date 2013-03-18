@@ -117,31 +117,9 @@ public class HomeGUI extends JPanel {
 
 
 	public HomeGUI(Person user, Client client) {
+		
 		this.currentUser = user;
 		this.client = client;
-		
-		// ----------------------------------------------------------------//
-		// DateTime
-		// ----------------------------------------------------------------//
-		
-		date = new DateTime();
-		
-		monthStr = date.monthOfYear().getAsText();
-		year = date.getYear();
-		month = date.getMonthOfYear();
-		
-		dayOfMonth = date.getDayOfMonth();
-		dayOfWeek = date.getDayOfWeek();
-		
-		startDay = dayOfMonth - (dayOfWeek - 1);
-		endDay = dayOfMonth + (7 - dayOfWeek);
-		
-		week = date.getWeekOfWeekyear();
-		
-		yearAndDateLabel = new JLabel("" + startDay + ". " + monthStr + " - " + endDay + ". " + monthStr + " "  + year);
-		yearAndDateLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-		
 		
 		appointment = new Appointment(new DateTime(2014, 2, 2, 13, 37), new DateTime(2014, 2, 2, 14, 38), "hei", "hallo", null, "jøde", "kristen");
 
@@ -183,11 +161,17 @@ public class HomeGUI extends JPanel {
 
 		skipToWeekLabel = new JLabel("Hopp til uke:");
 		skipToYearLabel = new JLabel("Hopp til år:");
+		
 		notificationLabel = new JLabel("Notifikasjoner");
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		
 		headlineLabel = new JLabel("GRUPPE 1s KALENDERSYSTEM!!!");
 		headlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
+		
 		weekLabel = new JLabel("Uke " + week);
+		
+		yearAndDateLabel = new JLabel("" + startDay + ". " + monthStr + " - " + endDay + ". " + monthStr + " "  + year);
+		yearAndDateLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
 		// ----------------------------------------------------------------//
 		// Buttons
@@ -231,6 +215,36 @@ public class HomeGUI extends JPanel {
 
 
 	}
+	
+	
+	// ----------------------------------------------------------------//
+	// Methods
+	// ----------------------------------------------------------------//
+	
+	
+	// ----------------------------------------------------------------//
+	// DateTime
+	// ----------------------------------------------------------------//
+	
+	public void updateDateTime(){
+		
+	
+	date = new DateTime();
+	
+	monthStr = date.monthOfYear().getAsText();
+	year = date.getYear();
+	month = date.getMonthOfYear();
+	
+	dayOfMonth = date.getDayOfMonth();
+	dayOfWeek = date.getDayOfWeek();
+	
+	startDay = dayOfMonth - (dayOfWeek - 1);
+	endDay = dayOfMonth + (7 - dayOfWeek);
+	
+	week = date.getWeekOfWeekyear();
+	
+	}
+	
 	
 	public void addListeners(){
 		
