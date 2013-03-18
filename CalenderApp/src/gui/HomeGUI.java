@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionListener;
@@ -54,7 +55,12 @@ public class HomeGUI extends JPanel {
 	// Fields
 	// ----------------------------------------------------------------//
 
-	private int ukeNr = 1;
+	private int week;
+	private int year;
+	private int month;
+	private int dayOfMonth;
+	String monthStr;
+	private DateTime date;
 	private int day;
 	private String startTime;
 	private String endTime;
@@ -79,6 +85,7 @@ public class HomeGUI extends JPanel {
 	private JLabel starfighterLabel;
 	private JLabel skipToWeekLabel;
 	private JLabel weekLabel;
+	private JLabel yearAndDateLabel;
 
 	private JTextField weekTextField;
 
@@ -94,7 +101,6 @@ public class HomeGUI extends JPanel {
 	private OKNotificationBox okNotificationBox;
 	private ParticipantDeclinedPanel participantDeclinedPanel;
 	static JTable table;
-	private JTable rowTable;
 	
 	private Appointment appointment;
 
@@ -103,11 +109,39 @@ public class HomeGUI extends JPanel {
 	
 	private static Person currentUser;
 	private Client client;
+	private JLabel skipToYearLabel;
+	private JTextField skipToYearTextField;
+	private int dayOfWeek;
+	private int startDay;
+	private int endDay;
 
 
 	public HomeGUI(Person user, Client client) {
 		this.currentUser = user;
 		this.client = client;
+		
+		// ----------------------------------------------------------------//
+		// DateTime
+		// ----------------------------------------------------------------//
+		
+		date = new DateTime();
+		
+		monthStr = date.monthOfYear().getAsText();
+		year = date.getYear();
+		month = date.getMonthOfYear();
+		
+		dayOfMonth = date.getDayOfMonth();
+		dayOfWeek = date.getDayOfWeek();
+		
+		startDay = dayOfMonth - (dayOfWeek - 1);
+		endDay = dayOfMonth + (7 - dayOfWeek);
+		
+		week = date.getWeekOfWeekyear();
+		
+		yearAndDateLabel = new JLabel("" + startDay + ". " + monthStr + " - " + endDay + ". " + monthStr + " "  + year);
+		yearAndDateLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		
 		
 		appointment = new Appointment(new DateTime(2014, 2, 2, 13, 37), new DateTime(2014, 2, 2, 14, 38), "hei", "hallo", null, "jøde", "kristen");
 
@@ -148,11 +182,12 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		skipToWeekLabel = new JLabel("Hopp til uke:");
+		skipToYearLabel = new JLabel("Hopp til år:");
 		notificationLabel = new JLabel("Notifikasjoner");
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		headlineLabel = new JLabel("GRUPPE 1s KALENDERSYSTEM!!!");
 		headlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
-		weekLabel = new JLabel("Uke " + ukeNr);
+		weekLabel = new JLabel("Uke " + week);
 
 		// ----------------------------------------------------------------//
 		// Buttons
@@ -177,6 +212,11 @@ public class HomeGUI extends JPanel {
 		weekTextField = new JTextField();
 		weekTextField.setColumns(3);			
 		weekTextField.setDocument(new JTextFieldLimit(2));
+		
+		skipToYearTextField = new JTextField();
+		skipToYearTextField.setColumns(3);
+		skipToYearTextField.setDocument(new JTextFieldLimit(4));
+		
 
 
 		// ----------------------------------------------------------------//
@@ -200,15 +240,15 @@ public class HomeGUI extends JPanel {
 					int textFieldNumber = Integer.parseInt(weekTextField
 							.getText());
 					if (textFieldNumber > 0 && textFieldNumber <= 52) {
-						ukeNr = textFieldNumber;
+						week = textFieldNumber;
 						weekLabel.setText("Uke " + textFieldNumber);
 					}
 					else if(textFieldNumber < 1){
-						ukeNr = 1;
+						week = 1;
 						weekLabel.setText("Uke " + 1);
 					}
 					else if(textFieldNumber > 52){
-						ukeNr = 52;
+						week = 52;
 						weekLabel.setText("Uke " + 52);
 					}
 				}
@@ -235,25 +275,59 @@ public class HomeGUI extends JPanel {
 		
 		nextWeekButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ukeNr += 1;
-				if (ukeNr == 53)
-					ukeNr = 1;
-				weekLabel.setText("Uke " + ukeNr);
+				week += 1;
+				if (week == 53)
+					week = 1;
+				weekLabel.setText("Uke " + week);
 			}
 		});
 		
 		lastWeekButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				ukeNr -= 1;
-				if (ukeNr < 0) {
-					ukeNr = ukeNr + 52;
+				week -= 1;
+				if (week < 0) {
+					week = week + 52;
 				}
 				
-				if (ukeNr == 0)
-					ukeNr = 52;
-				weekLabel.setText("Uke " + ukeNr);
-
+				if (week == 0)
+					week = 52;
+				weekLabel.setText("Uke " + week);
+			}
+		});
+		
+		skipToYearTextField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					
+					year =  Integer.parseInt(skipToYearTextField.getText());
+					date = new DateTime(year + "-" + month + "-" + dayOfMonth);
+					monthStr = date.monthOfYear().getAsText();
+					month = date.getMonthOfYear();
+					
+					
+					
+					dayOfMonth = date.getDayOfMonth();
+					dayOfWeek = date.getDayOfWeek();
+					
+					startDay = dayOfMonth - (dayOfWeek - 1);
+					endDay = dayOfMonth + (7 - dayOfWeek);
+					
+					week = date.getWeekOfWeekyear();
+					
+					yearAndDateLabel.setText("" + startDay + ". " + monthStr + " - " + endDay + ". " + monthStr + " "  + year);
+				
+			}
+		});
+		
+		myAppointmentsButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client);
+			}
+		});
+		createAppointmentButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				CreateAppointmentPanel createAppointmentPanel = new CreateAppointmentPanel(client);
 			}
 		});
 		
@@ -270,6 +344,8 @@ public class HomeGUI extends JPanel {
 		weekPanel.add(lastWeekButton);
 		weekPanel.add(weekLabel);
 		weekPanel.add(nextWeekButton);
+		weekPanel.add(skipToYearLabel);
+		weekPanel.add(skipToYearTextField);
 
 		notificationPanel.add(logoutButton);
 
@@ -277,16 +353,6 @@ public class HomeGUI extends JPanel {
 		buttonPanel.add(myAppointmentsButton);
 		buttonPanel.add(createAppointmentButton);
 		
-		myAppointmentsButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client);
-			}
-		});
-		createAppointmentButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				CreateAppointmentPanel createAppointmentPanel = new CreateAppointmentPanel(client);
-			}
-		});
 	}
 	
 	public void setColors(){
@@ -399,7 +465,6 @@ public class HomeGUI extends JPanel {
 		startTime = appointment.getStart().getHourOfDay() + ":" + appointment.getStart().getMinuteOfHour() + "";
 		endTime = appointment.getEnd().getHourOfDay()+ ":" + appointment.getEnd().getMinuteOfHour() + "";
 		
-		JLabel appointmentToCalendar = new JLabel(day + startTime + endTime+ "");
 		table.setValueAt("Start: "+startTime+ " End: " + endTime + "\nllllllllllllllllllllllllllllllll", 1, 1);
 		for(int i=1; i<table.getColumnCount();i++){
 			table.getColumnModel().getColumn(i).setCellRenderer(new MyRenderer());
@@ -552,19 +617,22 @@ public class HomeGUI extends JPanel {
 		notificationPanel.setLayout(gl_notificationPanel);
 
 		GroupLayout gl_panel1 = new GroupLayout(headlinePanel);
-		gl_panel1.setHorizontalGroup(gl_panel1.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_panel1.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(headlineLabel, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGap(384)));
-		gl_panel1.setVerticalGroup(gl_panel1.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_panel1.createSequentialGroup()
+		gl_panel1.setHorizontalGroup(
+			gl_panel1.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel1.createSequentialGroup()
+					.addComponent(headlineLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGap(336)
+					.addComponent(yearAndDateLabel)
+					.addGap(479))
+		);
+		gl_panel1.setVerticalGroup(
+			gl_panel1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel1.createSequentialGroup()
+					.addGroup(gl_panel1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(headlineLabel)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE,
-								Short.MAX_VALUE)));
+						.addComponent(yearAndDateLabel))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
 		headlinePanel.setLayout(gl_panel1);
 		buttonPanel.add(showColleaguesButton);
 		setLayout(groupLayout);
