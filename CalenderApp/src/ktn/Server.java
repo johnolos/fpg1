@@ -16,13 +16,14 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import baseClasses.Appointment;
+import baseClasses.Notification;
 import baseClasses.Person;
 import baseClasses.Room;
 
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.10.70";
+	private final static String SERVERIP = "78.91.61.224";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
