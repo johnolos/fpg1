@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.13.75";
+	private final static String SERVERIP = "78.91.5.165";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
@@ -304,7 +304,7 @@ public class Client {
 	}
 	
 	public boolean sendAccept(String user, Appointment app) {
-		
+		return false;
 	}
 
 	/**
