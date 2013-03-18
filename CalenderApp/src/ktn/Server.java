@@ -22,7 +22,7 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.13.75 ";
+	private final static String SERVERIP = "78.91.10.70";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
@@ -176,7 +176,7 @@ public class Server {
 			case ROOM:
 				System.out.println("Request for rooms.");
 				System.out.println();
-				ArrayList<Room> rooms= database.fetchRooms(keyword);
+				ArrayList<Room> rooms= database.getRoomOnTime(keyword);
 				System.out.println("Rooms sent.");
 				sObject = new SendObject(RequestEnum.ROOM,rooms);
 				return sObject;
@@ -200,6 +200,12 @@ public class Server {
 				createNotificationForAll((Appointment)obj.getObject(),true);
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
+				return sObject;
+			case S_PERSON_APPOINTMENT:
+				System.out.println("Request for inviting people");
+				System.out.println(keyword[0] + " : "+ (Appointment)obj.getObject());
+				Boolean bool4 = database.createPersonAppointment(keyword[0],(Appointment)obj.getObject());
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool4);
 				return sObject;
 			default:
 				break;

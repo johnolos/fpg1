@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import baseClasses.Alarm;
 import baseClasses.Appointment;
+import baseClasses.NotificationEnum;
 import baseClasses.Person;
 import baseClasses.Room;
 
@@ -104,6 +105,7 @@ public class Database {
 	
 	//Get a list for what room is free on date at time
 	public ArrayList<Room> getRoomOnTime(String[] keyword){
+		System.out.println(keyword[0] + "  "+ keyword[1] + " " + keyword[2]);
 		ArrayList<Room> roomList = new ArrayList<Room>();
 		
 		try {
@@ -113,8 +115,8 @@ public class Database {
 								"SELECT idRoom FROM room, appointment " +
 								"WHERE idRoom=room_idRoom " +
 								"AND date='" + keyword[0] + "' " +
-								"AND sTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME) " +
-								"AND eTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME)) " +
+								"AND (sTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME) " +
+								"OR eTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME))) " +
 							"ORDER BY capacity ASC";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
@@ -267,7 +269,7 @@ public class Database {
 			con.createStatement().executeUpdate(query);
 			//Connect person to appointment
 			createPersonAppointment(app.getAdmin(), app);
-			//agreedAppointment(app.getAdmin(), app);
+			agreedAppointment(app.getAdmin(), app);
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace(); }
@@ -300,21 +302,26 @@ public class Database {
 		try{
 			String query = 	"UPDATE person_appointment "+
 							"SET hasAgreed = '1' "+
-							"WHERE person_appointment_person_idPerson ='"+ getPersonId(user) +"' "+
-							"AND person_appointment_appointment_idAppointment ='"+ getAppointmentId(app)+"'";
+							"WHERE person_idPerson ='"+ getPersonId(user) +"' "+
+							"AND appointment_idAppointment ='"+ getAppointmentId(app)+"'";
 			con.createStatement().executeUpdate(query);
 		}
 		catch (Exception e) { e.printStackTrace(); }
 	}
 
 	//Add a user to appointment 
-	public void createPersonAppointment(String user, Appointment app){
+	public Boolean createPersonAppointment(String user, Appointment app){
 		try{
+			System.out.println(user + " - " + app.getTitle());
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
 						   "VALUES ('"+ getAppointmentId(app) +"','"+ getPersonId(user) +"')";
 			con.createStatement().executeUpdate(query);
+			String [] keyword = {"INVITATION",user};
+			createNotification(keyword, app);
+			return true;
 			
 		} catch (SQLException e) { e.printStackTrace(); }
+		return false;
 	}
 	
 	//Delete a user from appointment
@@ -422,6 +429,23 @@ public class Database {
 		return null;
 	}
 	
+	
+	public boolean createNotification(String [] keyword, Appointment app){
+		System.out.println(keyword[0] + " " + keyword[1]);
+		try{
+			String query = "INSERT INTO notification(type,idPerson,idAppointment)" +
+					" VALUES('"+keyword[0]+"','"+getPersonId(keyword[1])+"','"+getAppointmentId(app)+"'";
+			con.createStatement().executeUpdate(query);
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while updating notification");
+		}
+		
+		return false;
+		
+	}
 	//Parse String[] to int[]
 	private int[] toInt(String[] s){
 		int[] newInt = new int[s.length];
@@ -530,6 +554,7 @@ public class Database {
 			while(res.next()){
 				rooms.add(new Room(Integer.parseInt(res.getString(1)), res.getString(2)));
 			}
+			System.out.println(rooms.get(0).getName());
 			return rooms;
 		}
 		catch (Exception e) {

@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.13.75 ";
+	private final static String SERVERIP = "78.91.10.70";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
@@ -329,5 +329,20 @@ public class Client {
 	}
 	public static void main(String[] args) throws InterruptedException {
 		new Client().connect();
+	}
+
+	public Boolean createPersonAppointment(Person person, Appointment app) {
+		String [] keyword = {person.getUsername()};
+		// Creates requestObject
+		System.out.println(keyword[0]);
+		SendObject reqObj = new SendObject(RequestEnum.S_PERSON_APPOINTMENT, keyword);
+		reqObj.setObject(app);
+		//Sends object to server
+		this.send(reqObj);
+		//Return object from server
+		SendObject receivedObj = receive();
+		//Return to GUI if the appointment is registered
+		return (Boolean)receivedObj.getObject();
+		
 	}
 }
