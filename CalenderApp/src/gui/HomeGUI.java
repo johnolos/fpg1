@@ -589,7 +589,7 @@ public class HomeGUI extends JPanel {
 				if(list.getValueIsAdjusting() == false && list.getSelectedIndex() != -1){
 					n =  list.getSelectedValue();
 					if(n.getType().equals(NotificationEnum.INVITATION)){
-						meetingInvitationPanel.setTitle("Møteinnkalling fra " + n.getTitle());
+						meetingInvitationPanel.setTitle("Møteinnkalling fra " + n.getAdmin());
 						meetingInvitationPanel.setTitleOfMeeting(n.getTitle());
 						meetingInvitationPanel.setDescription(n.getDescription());
 						meetingInvitationPanel.setStart(n.getStart());

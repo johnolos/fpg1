@@ -2,6 +2,8 @@ package baseClasses;
 
 import java.io.Serializable;
 
+import org.joda.time.format.DateTimeFormatter;
+
 public class Notification implements Serializable {
 
 	private Appointment appointment;
@@ -31,9 +33,9 @@ public class Notification implements Serializable {
 	}
 	
 	public Notification(NotificationEnum type, Appointment appointment){
+		this.appointment = appointment;
 		this.type = type;
 		setup(this.type);
-		this.appointment = appointment;
 	}
 	
 	void setup(NotificationEnum type) {
@@ -44,13 +46,19 @@ public class Notification implements Serializable {
 			break;
 		case DECLINED:
 			listMessage = "Avlyst";
+			title = appointment.getTitle();
 			meetingName = appointment.getTitle();
 			timeOfMeeting = appointment.getStart().toString();
 			break;
 		case INVITATION:
 			listMessage = "Invitasjon";
+			admin = appointment.getAdmin();
+			title = appointment.getTitle();
 			location = appointment.getLocation();
 			description = appointment.getDescription();
+			start = appointment.getStart().toLocalTime().toString();
+			end = appointment.getEnd().toLocalTime().toString();
+			date = appointment.getStart().toLocalDate().toString();
 			break;
 		default:
 			listMessage = "Ny melding";
@@ -84,6 +92,10 @@ public class Notification implements Serializable {
 
 	public String getDeclinedParticipant() {
 		return declinedParticipant;
+	}
+	
+	public String getAdmin(){
+		return admin;
 	}
 
 	public String getLocation() {
