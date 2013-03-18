@@ -322,7 +322,7 @@ public class Database {
 						   "VALUES ('"+ getAppointmentId(app) +"','"+ getPersonId(user) +"')";
 			con.createStatement().executeUpdate(query);
 			
-			String [] keyword = {"INVITATION",user};
+			String [] keyword = {"INVITATION",user, app.getAdmin()};
 			createNotification(keyword, app);
 			
 			return true;
