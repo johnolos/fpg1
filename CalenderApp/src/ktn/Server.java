@@ -16,6 +16,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import baseClasses.Appointment;
+import baseClasses.Notification;
 import baseClasses.Person;
 import baseClasses.Room;
 

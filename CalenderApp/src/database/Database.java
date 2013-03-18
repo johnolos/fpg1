@@ -481,10 +481,10 @@ public class Database {
 			String query = "Select type,title,admin,sTime,eTime,date " +
 							"FROM notification as n, appointment as a " +
 							"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
-			System.out.println(query);
 			ResultSet res = con.createStatement().executeQuery(query);
 			
 			while(res.next()){
+				System.out.println(res);
 				noteList.add(new Notification(res.getString(1), res.getString(2),res.getString(3), res.getString(4),res.getString(5), res.getString(6)));	
 			}
 			return noteList;
@@ -502,7 +502,8 @@ public class Database {
 		try{
 			String query = "DELETE FROM notification " +
 							"WHERE idPerson = '"+getPersonId(keyword[0])+"' " +
-							"AND idAppointment = '"+getAppointmentId(app)+"'";
+							"AND idAppointment = '"+getAppointmentId(app)+"' " +
+							"AND fromPerson = '"+keyword[1]+"'";
 			con.createStatement().executeUpdate(query);
 			return true;
 		}
