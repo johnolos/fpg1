@@ -18,8 +18,8 @@ public class NotificationListRenderer implements ListCellRenderer {
 		Notification n = (Notification) arg1;
         JLabel label;
 
-        
         label = new JLabel(n.getListMessage());
+        System.out.println(n.getListMessage());
         if (arg3) {
             label.setForeground(Color.BLUE);
         }

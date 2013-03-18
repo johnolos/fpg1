@@ -1,6 +1,8 @@
 package baseClasses;
 
-public class Notification {
+import java.io.Serializable;
+
+public class Notification implements Serializable {
 
 	private Appointment appointment;
 	
@@ -28,27 +30,30 @@ public class Notification {
 		setup(type);
 	}
 	
-	public Notification(String type, String title, String admin, String start, String end, String date){
+	public Notification(String type, String title, String admin, String start, String end, String date, Appointment appointment){
 		setEnum(type);
 		this.title = title;
 		this.admin = admin;
 		this.start = start;
 		this.end = end;
 		this.date = date;
-		//setup(type);
+		setup(this.type);
+		this.appointment = appointment;
 	}
 	
 	void setup(NotificationEnum type) {
 		
 		switch(type) {
 		case OKBOX:
-			
+			listMessage = "okbox";
 			break;
 		case DECLINED:
-			
+			listMessage = "Avlyst";
 			break;
 		case INVITATION:
-			
+			listMessage = "Invitasjon";
+			location = appointment.getLocation();
+			description = appointment.getDescription();
 			break;
 		default:
 			listMessage = "Ny melding";
