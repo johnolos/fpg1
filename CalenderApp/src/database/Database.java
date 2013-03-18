@@ -26,7 +26,7 @@ public class Database {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String CONNECTION = "jdbc:mysql://localhost:3306/mydb";
 	private final static String USER = "root";
-	private final static String PASSWORD = "lol123";
+	private final static String PASSWORD = "123";
 	
 	private java.sql.Connection con;
 	private java.sql.Statement statement;
