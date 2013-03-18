@@ -363,6 +363,11 @@ public class Database {
 			
 			con.createStatement().executeUpdate(query);
 			
+			if(user != app.getAdmin()){
+				deleteNotification(new String[] {user,app.getAdmin()}, app);
+				createNotification(new String[] {"DECLINED",user,app.getAdmin()}, app);
+			}
+			
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
@@ -460,10 +465,10 @@ public class Database {
 	}
 	
 	
-	public boolean createNotification(String [] keyword, Appointment app){
+	public boolean createNotification(String[] keyword, Appointment app){
 		try{
-			String query = 	"INSERT INTO notification(type,idPerson,idAppointment) " +
-							"VALUES('"+keyword[0]+"','"+ getPersonId(keyword[1]) +"','"+ getAppointmentId(app) +"')";
+			String query = 	"INSERT INTO notification(type,idPerson,idAppointment, fromPerson) " +
+							"VALUES('"+keyword[0]+"','"+ getPersonId(keyword[1]) +"','"+ getAppointmentId(app) +"','"+ keyword[2]+ "')";
 			
 			con.createStatement().executeUpdate(query);
 			return true;
@@ -479,28 +484,32 @@ public class Database {
 	public ArrayList<Notification> getNotification(String user){
 		ArrayList<Notification> noteList = new ArrayList<Notification>();
 		try{
-			String query = "Select type, a.idAppointment " +
+			String query = "Select type, a.idAppointment, fromPerson " +
 							"FROM notification as n, appointment as a " +
 							"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
 			ResultSet res = con.createStatement().executeQuery(query);
 			
 			while(res.next()){
-				Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
-				noteList.add(new Notification(getEnum(res.getString(1)), app));	
+				if(res.getString(1) == "DECLINED"){
+					Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
+					app.setAdmin(res.getString(3));
+					noteList.add(new Notification(getEnum(res.getString(1)), app));
+				}
+				else{
+					Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
+					noteList.add(new Notification(getEnum(res.getString(1)), app));
+				}
 			}
 			return noteList;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("ERROR when getting notifications form user");
+			System.out.println("ERROR when getting notifications from user");
 		}
 		return null;
-		
 	}
 	
-	
-	
-	
+	//Delete notification 
 	public boolean deleteNotification(String [] keyword,Appointment app){
 		try{
 			String query = "DELETE FROM notification " +

@@ -81,6 +81,11 @@ public class Appointment implements Serializable {
 			this.room = room2;
 			
 		}
+
+
+		public void setAdmin(String admin) {
+			this.admin = admin;
+		}
        
  
 }
