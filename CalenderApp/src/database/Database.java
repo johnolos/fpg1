@@ -275,7 +275,7 @@ public class Database {
 		
 	}
 
-	public void changeAppointment(Appointment app){
+	public Boolean changeAppointment(Appointment app){
 		try {
 			String query =  "UPDATE appointment " +
 							"SET title ='"+ app.getTitle() +
@@ -289,8 +289,10 @@ public class Database {
 							"WHERE idAppointment='"+ getAppointmentId(app) +"'";
 			
 			con.createStatement().executeUpdate(query);
+			return true;
 		}
 		catch (Exception e) { e.printStackTrace(); }
+		return false;
 	}
 
 	//Set hasAgreed to 1 for user on appointment
