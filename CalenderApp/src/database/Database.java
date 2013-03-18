@@ -479,7 +479,7 @@ public class Database {
 	public ArrayList<Notification> getNotification(String user){
 		ArrayList<Notification> noteList = new ArrayList<Notification>();
 		try{
-			String query = "Select type, idAppointment " +
+			String query = "Select type, a.idAppointment " +
 							"FROM notification as n, appointment as a " +
 							"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
 			ResultSet res = con.createStatement().executeQuery(query);
