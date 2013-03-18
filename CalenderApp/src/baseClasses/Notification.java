@@ -44,6 +44,8 @@ public class Notification implements Serializable {
 			break;
 		case DECLINED:
 			listMessage = "Avlyst";
+			meetingName = appointment.getTitle();
+			timeOfMeeting = appointment.getStart().toString();
 			break;
 		case INVITATION:
 			listMessage = "Invitasjon";
