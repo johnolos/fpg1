@@ -16,13 +16,14 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import baseClasses.Appointment;
+import baseClasses.Notification;
 import baseClasses.Person;
 import baseClasses.Room;
 
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.10.70";
+	private final static String SERVERIP = "78.91.61.224";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
@@ -179,6 +180,12 @@ public class Server {
 				ArrayList<Room> rooms= database.getRoomOnTime(keyword);
 				System.out.println("Rooms sent.");
 				sObject = new SendObject(RequestEnum.ROOM,rooms);
+				return sObject;
+			case NOTIFICATION:
+				System.out.println("Requst for notification for " + keyword[0]);
+				ArrayList<Notification> not = database.getNotification(keyword[0]);
+				System.out.println("Notifications sent.");
+				sObject = new SendObject(RequestEnum.NOTIFICATION, not);
 				return sObject;
 			default:
 				break;

@@ -479,9 +479,9 @@ public class Database {
 		ArrayList<Notification> noteList = new ArrayList<Notification>();
 		try{
 			String query = "Select type,title,admin,sTime,eTime,date " +
-							"FROM notification as n, appointment as a" +
+							"FROM notification as n, appointment as a " +
 							"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
-			
+			System.out.println(query);
 			ResultSet res = con.createStatement().executeQuery(query);
 			
 			while(res.next()){
@@ -624,9 +624,7 @@ public class Database {
 	public static void main(String[] args) throws Exception{
 		Database db = new Database();
 		
-		String[] keyword = {"test"};
-		
-		System.out.println(db.getMembersOnAppointment(db.getAppointmentsOnPerson(keyword).get(0)));
+		System.out.println(db.getNotification("Hans").get(0).getTitle());
 	}
 	
 }
