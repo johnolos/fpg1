@@ -651,6 +651,9 @@ public class HomeGUI extends JPanel {
 	
 	private void updateNotification() {
 		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());
+		if(notifications == null) {
+			return;
+		}
 		for(int i = 0; i < notifications.size(); i++) {
 			this.notificationModel.addElement(notifications.get(i));
 		}
