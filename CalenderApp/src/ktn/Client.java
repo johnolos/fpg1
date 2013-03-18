@@ -302,6 +302,10 @@ public class Client {
 		Boolean bol = (Boolean)receivedObj.getObject();
 		return bol.booleanValue();	
 	}
+	
+	public boolean sendAccept(String user, Appointment app) {
+		
+	}
 
 	/**
 	 * Internal function to start client

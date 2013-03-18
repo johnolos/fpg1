@@ -91,7 +91,7 @@ public class MyAppointmentsPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public MyAppointmentsPanel(Client client, Person person) {
+	public MyAppointmentsPanel(final Client client, Person person) {
 		this.client = client;
 		
 		try{
@@ -151,7 +151,20 @@ public class MyAppointmentsPanel extends JPanel {
 		editParticipantsButton.setEnabled(false);
 		
 		saveChangesButton = new JButton("Lagre endringer");
-		saveChangesButton.setEnabled(false);
+		saveChangesButton.setEnabled(true);
+		saveChangesButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				boolean change = client.changeAppointment(myAppointmentsList.getSelectedValue(), 
+						new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)startHourSpinner.getValue(),(int)startMinuteSpinner.getValue()),
+								new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)endHourSpinner.getValue(),(int)endMinuteSpinner.getValue()), 
+								locationField.getText(), titleField.getText(), (Room)roomComboBox.getSelectedItem(), descriptionArea.getText(),myAppointmentsList.getSelectedValue().getAdmin()));
+				
+				if(change) {
+					System.out.println("I did the impossible thing.");
+				}
+			}
+		});
 		
 		cancelChangesButton = new JButton("Avbryt");
 		cancelChangesButton.addActionListener(new ActionListener() {
@@ -430,10 +443,12 @@ public class MyAppointmentsPanel extends JPanel {
 				endHourSpinner.setValue(ap.getEnd().getHourOfDay());
 				endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
 				locationField.setText(ap.getLocation());
+				boxModel.removeAllElements();
 				Room room = ap.getRoom();
 				boxModel.addElement(room);
 				roomComboBox.setSelectedItem(room);
 				descriptionArea.setText(ap.getDescription());
+				model.removeAllElements();
 				for(int i=0; i<ap.getParticipants().size(); i++){
 					model.addElement(ap.getParticipants().get(i));
 				}
