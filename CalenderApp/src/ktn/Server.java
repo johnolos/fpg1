@@ -22,7 +22,7 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.13.75 ";
+	private final static String SERVERIP = "78.91.10.70";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
@@ -176,7 +176,7 @@ public class Server {
 			case ROOM:
 				System.out.println("Request for rooms.");
 				System.out.println();
-				ArrayList<Room> rooms= database.fetchRooms(keyword);
+				ArrayList<Room> rooms= database.getRoomOnTime(keyword);
 				System.out.println("Rooms sent.");
 				sObject = new SendObject(RequestEnum.ROOM,rooms);
 				return sObject;

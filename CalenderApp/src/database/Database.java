@@ -530,6 +530,7 @@ public class Database {
 			while(res.next()){
 				rooms.add(new Room(Integer.parseInt(res.getString(1)), res.getString(2)));
 			}
+			System.out.println(rooms.get(0).getName());
 			return rooms;
 		}
 		catch (Exception e) {
