@@ -277,18 +277,18 @@ public class Database {
 		
 	}
 
-	public Boolean changeAppointment(Appointment app){
+	public Boolean changeAppointment(Appointment newApp, Appointment oldApp){
 		try {
 			String query =  "UPDATE appointment " +
-							"SET title ='"+ app.getTitle() +
-							"', sTime ='"+ app.getStart().toLocalTime().toString() +
-							"', eTime ='"+ app.getEnd().toLocalTime().toString() +
-							"', date ='"+ app.getStart().toLocalDate().toString() +
-							"', description ='"+ app.getDescription() +
-							"', location ='"+ app.getLocation() +
-							"', admin ='"+ app.getAdmin() +
-							"', room_idRoom ='"+ getRoomId(app.getRoom()) + "' " +
-							"WHERE idAppointment='"+ getAppointmentId(app) +"'";
+							"SET title ='"+ newApp.getTitle() +
+							"', sTime ='"+ newApp.getStart().toLocalTime().toString() +
+							"', eTime ='"+ newApp.getEnd().toLocalTime().toString() +
+							"', date ='"+ newApp.getStart().toLocalDate().toString() +
+							"', description ='"+ newApp.getDescription() +
+							"', location ='"+ newApp.getLocation() +
+							"', admin ='"+ newApp.getAdmin() +
+							"', room_idRoom ='"+ getRoomId(newApp.getRoom()) + "' " +
+							"WHERE idAppointment='"+ getAppointmentId(oldApp) +"'";
 			
 			con.createStatement().executeUpdate(query);
 			return true;

@@ -28,8 +28,8 @@ public class Notification {
 		setup(type);
 	}
 	
-	public Notification(NotificationEnum type, String title, String admin, String start, String end, String date){
-		this.type = type;
+	public Notification(String type, String title, String admin, String start, String end, String date){
+		setEnum(type);
 		this.title = title;
 		this.admin = admin;
 		this.start = start;
@@ -99,4 +99,13 @@ public class Notification {
 	public Appointment getAppointment(){
 		return appointment;
 	}
+	
+	public void setEnum(String type){
+		switch(type){
+		case "DECLINED": this.type = NotificationEnum.DECLINED;break;
+		case "INVITATION": this.type = NotificationEnum.INVITATION;break;
+		case "OKBOX": this.type = NotificationEnum.OKBOX;break;
+		}
+	}
+	
 }
