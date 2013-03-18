@@ -165,7 +165,7 @@ public class CreateAppointmentPanel extends JPanel {
 		JButton saveButton = new JButton("Lagre");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Appointment app = new Appointment(new DateTime((Integer) dateYearSpinner.getValue(), (Integer) dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)startHourSpinner.getValue(), (Integer)startMinuteSpinner.getValue()), new DateTime((Integer)dateYearSpinner.getValue(), (Integer)dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)endHourSpinner.getValue(), (Integer)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), new Room(40, "S5"), descriptionArea.getText(), HomeGUI.getCurrentUser().getUsername());
+				Appointment app = new Appointment(new DateTime((Integer) dateYearSpinner.getValue(), (Integer) dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)startHourSpinner.getValue(), (Integer)startMinuteSpinner.getValue()), new DateTime((Integer)dateYearSpinner.getValue(), (Integer)dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)endHourSpinner.getValue(), (Integer)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), (Room) roomBox.getSelectedItem(), descriptionArea.getText(), HomeGUI.getCurrentUser().getUsername());
 				if(client.createAppointment(app)){
 					HomeGUI.table.setValueAt(formatNumber((Integer)startHourSpinner.getValue()) + ":" + formatNumber((Integer)startMinuteSpinner.getValue()) + " - " + formatNumber((Integer)endHourSpinner.getValue()) + ":" + formatNumber((Integer)endMinuteSpinner.getValue()) + "\n" + titleField.getText(), 2, 2);
 					frmOpprettAvtale.dispose();
@@ -351,9 +351,9 @@ public class CreateAppointmentPanel extends JPanel {
 	private void updateRooms() {
 		// hh:mm - YYYY-MM-DD
 		this.boxModel.removeAllElements();
-		ArrayList<Room> rooms = client.fetchRooms(String.valueOf((Integer)dateYearSpinner.getValue())+ "/" + String.valueOf((Integer)dateMonthSpinner.getValue()) + "/" +String.valueOf((Integer)dateDaySpinner.getValue()),
+		ArrayList<Room> rooms = client.fetchRooms(String.valueOf((Integer)dateYearSpinner.getValue())+ "-" + String.valueOf((Integer)dateMonthSpinner.getValue()) + "-" +String.valueOf((Integer)dateDaySpinner.getValue()),
 				String.valueOf((Integer)startHourSpinner.getValue()) + ":" + String.valueOf((Integer)startMinuteSpinner.getValue()),
-				String.valueOf((Integer)endHourSpinner.getValue()) + ":" + String.valueOf((Integer)endHourSpinner.getValue()));
+				String.valueOf((Integer)endHourSpinner.getValue()) + ":" + String.valueOf((Integer)endMinuteSpinner.getValue()));
 
 		for(int i = 0; i < rooms.size(); i++) {
 			boxModel.addElement(rooms.get(i));

@@ -104,6 +104,7 @@ public class Database {
 	
 	//Get a list for what room is free on date at time
 	public ArrayList<Room> getRoomOnTime(String[] keyword){
+		System.out.println(keyword[0] + "  "+ keyword[1] + " " + keyword[2]);
 		ArrayList<Room> roomList = new ArrayList<Room>();
 		
 		try {
@@ -113,8 +114,8 @@ public class Database {
 								"SELECT idRoom FROM room, appointment " +
 								"WHERE idRoom=room_idRoom " +
 								"AND date='" + keyword[0] + "' " +
-								"AND sTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME) " +
-								"AND eTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME)) " +
+								"AND (sTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME) " +
+								"OR eTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME))) " +
 							"ORDER BY capacity ASC";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
