@@ -205,7 +205,7 @@ public class Server {
 				System.out.println("Request for changing an appointment.");
 				ArrayList<Appointment> apps = (ArrayList<Appointment>)obj.getObject();
 				Boolean bool = database.changeAppointment(apps.get(0),apps.get(1));
-				createNotificationForAll((Appointment)obj.getObject(),true);
+				createNotificationForAll(apps.get(1),true);
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
