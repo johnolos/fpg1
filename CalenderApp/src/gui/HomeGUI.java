@@ -578,7 +578,7 @@ public class HomeGUI extends JPanel {
 		);
 		
 		this.notificationModel = new DefaultListModel<Notification>();
-		list = new JList();
+		list = new JList<Notification>();
 		list.setModel(this.notificationModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(new ListSelectionListener(){
@@ -650,9 +650,14 @@ public class HomeGUI extends JPanel {
 	}
 	
 	private void updateNotification() {
-		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());
+		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());		System.out.println(notifications.get(0));
+		if(notifications == null) {
+			return;
+		}
+		System.out.println(notifications.get(0).getTitle());
 		for(int i = 0; i < notifications.size(); i++) {
 			this.notificationModel.addElement(notifications.get(i));
+			System.out.println(notifications.get(i).getListMessage());
 		}
 	}
 
