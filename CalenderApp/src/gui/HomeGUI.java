@@ -60,7 +60,7 @@ public class HomeGUI extends JPanel {
 	private int year;
 	private int month;
 	private int dayOfMonth;
-	String monthStr;
+	private String monthStr;
 	private DateTime date;
 	private int day;
 	private String startTime;
@@ -116,9 +116,16 @@ public class HomeGUI extends JPanel {
 	private int startDay;
 	private int endDay;
 	private DefaultListModel<Notification> notificationModel;
+	private int endMonth;
+	private String monthString;
+	private DateTime endMonthDate;
+	private String endMonthString;
 
 
 	public HomeGUI(Person user, Client client) {
+		
+		yearAndDateLabel = new JLabel();
+		createDateTime();
 		
 		this.currentUser = user;
 		this.client = client;
@@ -228,24 +235,78 @@ public class HomeGUI extends JPanel {
 	// DateTime
 	// ----------------------------------------------------------------//
 	
-	public void updateDateTime(){
+	public void adjustMonth(){
+		boolean adjustMonth = false;
+		// Husk leap year
+
+		if (month < 8) {
+			if (month == 2) {
+				if (endDay > 28) {
+					endDay = endDay - 28;
+					adjustMonth = true;
+				}
+			} else if (month % 2 == 0) {
+				if (endDay > 30) {
+					endDay = endDay - 30;
+					adjustMonth = true;
+				}
+			} else if (month % 2 == 1) {
+				if (endDay > 31) {
+					endDay = endDay - 31;
+					adjustMonth = true;
+				}
+			}
+			
+			if (adjustMonth) {
+				endMonth += 1;
+
+			}
+	
+		} 
 		
-	
-	date = new DateTime();
-	
-	monthStr = date.monthOfYear().getAsText();
-	year = date.getYear();
-	month = date.getMonthOfYear();
-	
-	dayOfMonth = date.getDayOfMonth();
-	dayOfWeek = date.getDayOfWeek();
-	
-	startDay = dayOfMonth - (dayOfWeek - 1);
-	endDay = dayOfMonth + (7 - dayOfWeek);
-	
-	week = date.getWeekOfWeekyear();
-	
+		else {
+			if (month % 2 == 0) {
+				if (endDay > 31) {
+					endDay = endDay - 31;
+					adjustMonth = true;
+				}
+			}
+			else if (month % 2 == 1) {
+				if (endDay > 30) {
+					endDay = endDay - 30;
+					adjustMonth = true;
+				}
+			}
+		}
+			
+			if (adjustMonth) {
+				endMonth += 1;
+			}
+			if (endMonth == 13){
+				endMonth = 1;
+		}
 	}
+	
+	public void createDateTime() {
+
+		date = new DateTime(2014, 5, 13, 0, 0, 0, 0);
+
+		year = date.getYear();
+		month = date.getMonthOfYear();
+		endMonth = month;
+		dayOfMonth = date.getDayOfMonth();
+		dayOfWeek = date.getDayOfWeek();
+		week = date.getWeekOfWeekyear();
+		startDay = dayOfMonth - (dayOfWeek - 1);
+		endDay = dayOfMonth + (7 - dayOfWeek);
+		monthString = date.monthOfYear().getAsText();
+
+		adjustMonth();
+		
+		endMonthDate = new DateTime(year, endMonth, endDay, 0, 0, 0, 0);
+		endMonthString = endMonthDate.monthOfYear().getAsText();
+	}
+	
 	
 	
 	public void addListeners(){
@@ -295,6 +356,26 @@ public class HomeGUI extends JPanel {
 				if (week == 53)
 					week = 1;
 				weekLabel.setText("Uke " + week);
+				
+				year = date.getYear();
+				month = date.getMonthOfYear();
+				endMonth = month;
+				dayOfMonth = date.getDayOfMonth();
+				dayOfWeek = date.getDayOfWeek();
+				week = date.getWeekOfWeekyear();
+				startDay = dayOfMonth - (dayOfWeek - 1);
+				endDay = dayOfMonth + (7 - dayOfWeek);
+				monthString = date.monthOfYear().getAsText();
+
+				
+				adjustMonth();
+				
+				endMonthDate = new DateTime(year, endMonth, endDay, 0, 0, 0, 0);
+				endMonthString = endMonthDate.monthOfYear().getAsText();
+				System.out.println(endMonthDate);
+				
+				yearAndDateLabel.setText("" + startDay + ". " + monthString + " - " + endDay + ". " + endMonthString + " " + year);
+				System.out.println(yearAndDateLabel);
 			}
 		});
 		
