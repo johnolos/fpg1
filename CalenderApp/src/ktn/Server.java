@@ -22,7 +22,7 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.13.75";
+	private final static String SERVERIP = "78.91.36.250";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
@@ -71,7 +71,7 @@ public class Server {
 		private void send(SendObject obj) {
 			try {
 				this.objectOut.writeObject(obj);
-				System.out.println("sendt");
+				System.out.println("Sendt");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -203,8 +203,8 @@ public class Server {
 				return sObject;
 			case S_PERSON_APPOINTMENT:
 				System.out.println("Request for inviting people");
-				System.out.println(keyword[0] + " : "+ (Appointment)obj.getObject());
 				Boolean bool4 = database.createPersonAppointment(keyword[0],(Appointment)obj.getObject());
+				System.out.println("::Notification created");
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool4);
 				return sObject;
 			default:

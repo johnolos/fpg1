@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.13.75";
+	private final static String SERVERIP = "78.91.36.250";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
@@ -75,6 +75,7 @@ public class Client {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		System.out.println("Login object received from server: " + receivedObject);
 		return (Person)receivedObject.getObject();	
 	}
 	
@@ -98,7 +99,7 @@ public class Client {
 	private void send(SendObject obj) {
 		try {
 			this.objectOutput.writeObject(obj);
-			System.out.println("sendt");
+			System.out.println("Sendt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -205,14 +206,14 @@ public class Client {
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		
-		/*
+		
 		if(!checkObject(RequestEnum.ROOM, obj)) {
 			try {
 				throw new IOException("Request failed. Wrong object received from server");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}*/
+		}
 		ArrayList<Room> rooms = (ArrayList<Room>)obj.getObject();
 		return rooms;
 	}
@@ -343,6 +344,5 @@ public class Client {
 		SendObject receivedObj = receive();
 		//Return to GUI if the appointment is registered
 		return (Boolean)receivedObj.getObject();
-		
 	}
 }
