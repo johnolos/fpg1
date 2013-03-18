@@ -30,13 +30,8 @@ public class Notification implements Serializable {
 		setup(type);
 	}
 	
-	public Notification(String type, String title, String admin, String start, String end, String date, Appointment appointment){
-		setEnum(type);
-		this.title = title;
-		this.admin = admin;
-		this.start = start;
-		this.end = end;
-		this.date = date;
+	public Notification(NotificationEnum type, Appointment appointment){
+		this.type = type;
 		setup(this.type);
 		this.appointment = appointment;
 	}
@@ -103,14 +98,6 @@ public class Notification implements Serializable {
 	
 	public Appointment getAppointment(){
 		return appointment;
-	}
-	
-	public void setEnum(String type){
-		switch(type){
-		case "DECLINED": this.type = NotificationEnum.DECLINED;break;
-		case "INVITATION": this.type = NotificationEnum.INVITATION;break;
-		case "OKBOX": this.type = NotificationEnum.OKBOX;break;
-		}
 	}
 	
 }

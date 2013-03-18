@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import baseClasses.Alarm;
 import baseClasses.Appointment;
 import baseClasses.Notification;
+import baseClasses.NotificationEnum;
 import baseClasses.Person;
 import baseClasses.Room;
 
@@ -478,14 +479,14 @@ public class Database {
 	public ArrayList<Notification> getNotification(String user){
 		ArrayList<Notification> noteList = new ArrayList<Notification>();
 		try{
-			String query = "Select type,title,admin,sTime,eTime,date " +
+			String query = "Select type, idAppointment " +
 							"FROM notification as n, appointment as a " +
 							"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
 			ResultSet res = con.createStatement().executeQuery(query);
 			
 			while(res.next()){
-				System.out.println(res);
-				noteList.add(new Notification(res.getString(1), res.getString(2),res.getString(3), res.getString(4),res.getString(5), res.getString(6)));	
+				Appointment app = getAppointment(Integer.parseInt(res.getString(0)));
+				noteList.add(new Notification(getEnum(res.getString(1)), app));	
 			}
 			return noteList;
 		}
@@ -495,6 +496,55 @@ public class Database {
 		}
 		return null;
 		
+	}
+	
+	//Get a list of Appointment from user with date
+	private Appointment getAppointment(int idAppointment){
+		try {
+			String query = 	"SELECT * " +
+							"FROM appointment " +
+							"WHERE idAppointment ='"+ idAppointment +"'";
+						
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			//Add all appointments
+			if(res.next()){
+						
+				//Get all values from ResultSet
+				String 	title = res.getString(2);
+				int[] 	localTimeStart = toInt(res.getString(3).split(":"));
+				int[] 	localTimeEnd = toInt(res.getString(4).split(":"));
+				int[] 	localDate = toInt(res.getString(5).split("-"));
+				String 	description = res.getString(6);
+				String 	location = res.getString(7);
+				String 	admin = res.getString(8);
+				int 	idRoom = Integer.parseInt(res.getString(9));
+						
+						
+				//Create time and date objects and combine them to DateTime
+				LocalTime start = new LocalTime(localTimeStart[0], localTimeStart[1]);
+				LocalTime end = new LocalTime(localTimeEnd[0], localTimeEnd[1]);
+				LocalDate date = new LocalDate(localDate[0], localDate[1], localDate[2]);
+				
+				DateTime startTime = date.toDateTime(start);
+				DateTime endTime = date.toDateTime(end);
+				
+				//Get Room object from idRoom
+				Room room = new Room(0,null);
+				//There may be no room
+				if(idRoom != 0){
+					String[] r = getRoom(idRoom);
+					room = new Room(Integer.parseInt(r[0]), r[1]);
+				}
+				
+				return new Appointment(startTime, endTime, location, title, room, description, admin); 
+			}
+		} catch (SQLException e) { 
+			e.printStackTrace();
+			System.out.println("ERROR: Find appointment on ID");
+			}
+		
+		return null;
 	}
 	
 	
@@ -591,6 +641,15 @@ public class Database {
 		
 		return null;
 	}
+	
+	public NotificationEnum getEnum(String type){
+		switch(type){
+		case "DECLINED": return NotificationEnum.DECLINED;
+		case "INVITATION": return NotificationEnum.INVITATION;
+		case "OKBOX": return NotificationEnum.OKBOX;
+		default: return null;
+		}
+	}
 
 	
 	public ArrayList<Room> fetchRooms(String[] keyword) {
@@ -620,6 +679,7 @@ public class Database {
 		}
 		return null;
 	}
+	
 	
 	//For testing
 	public static void main(String[] args) throws Exception{
