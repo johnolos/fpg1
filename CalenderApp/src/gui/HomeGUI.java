@@ -322,7 +322,7 @@ public class HomeGUI extends JPanel {
 		
 		myAppointmentsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client);
+				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client, currentUser);
 			}
 		});
 		createAppointmentButton.addActionListener(new ActionListener(){
