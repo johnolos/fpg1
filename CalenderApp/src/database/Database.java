@@ -498,54 +498,7 @@ public class Database {
 		
 	}
 	
-	//Get a list of Appointment from user with date
-	private Appointment getAppointment(int idAppointment){
-		try {
-			String query = 	"SELECT * " +
-							"FROM appointment " +
-							"WHERE idAppointment ='"+ idAppointment +"'";
-						
-			ResultSet res = con.createStatement().executeQuery(query);
-			
-			//Add all appointments
-			if(res.next()){
-						
-				//Get all values from ResultSet
-				String 	title = res.getString(2);
-				int[] 	localTimeStart = toInt(res.getString(3).split(":"));
-				int[] 	localTimeEnd = toInt(res.getString(4).split(":"));
-				int[] 	localDate = toInt(res.getString(5).split("-"));
-				String 	description = res.getString(6);
-				String 	location = res.getString(7);
-				String 	admin = res.getString(8);
-				int 	idRoom = Integer.parseInt(res.getString(9));
-						
-						
-				//Create time and date objects and combine them to DateTime
-				LocalTime start = new LocalTime(localTimeStart[0], localTimeStart[1]);
-				LocalTime end = new LocalTime(localTimeEnd[0], localTimeEnd[1]);
-				LocalDate date = new LocalDate(localDate[0], localDate[1], localDate[2]);
-				
-				DateTime startTime = date.toDateTime(start);
-				DateTime endTime = date.toDateTime(end);
-				
-				//Get Room object from idRoom
-				Room room = new Room(0,null);
-				//There may be no room
-				if(idRoom != 0){
-					String[] r = getRoom(idRoom);
-					room = new Room(Integer.parseInt(r[0]), r[1]);
-				}
-				
-				return new Appointment(startTime, endTime, location, title, room, description, admin); 
-			}
-		} catch (SQLException e) { 
-			e.printStackTrace();
-			System.out.println("ERROR: Find appointment on ID");
-			}
-		
-		return null;
-	}
+	
 	
 	
 	public boolean deleteNotification(String [] keyword,Appointment app){
@@ -589,6 +542,54 @@ public class Database {
 			if(res.next()) return res.getString(1);
 		}
 		catch (Exception e) { e.printStackTrace(); }
+		return null;
+	}
+	
+	//Get a list of Appointment from user with date
+	private Appointment getAppointment(int idAppointment){
+		try {
+			String query = 	"SELECT * " +
+							"FROM appointment " +
+							"WHERE idAppointment ='"+ idAppointment +"'";
+							
+			ResultSet res = con.createStatement().executeQuery(query);
+				
+			//Add all appointments
+			if(res.next()){
+							
+				//Get all values from ResultSet
+				String 	title = res.getString(2);
+				int[] 	localTimeStart = toInt(res.getString(3).split(":"));
+				int[] 	localTimeEnd = toInt(res.getString(4).split(":"));
+				int[] 	localDate = toInt(res.getString(5).split("-"));
+				String 	description = res.getString(6);
+				String 	location = res.getString(7);
+				String 	admin = res.getString(8);
+				int 	idRoom = Integer.parseInt(res.getString(9));
+												
+				//Create time and date objects and combine them to DateTime
+				LocalTime start = new LocalTime(localTimeStart[0], localTimeStart[1]);
+				LocalTime end = new LocalTime(localTimeEnd[0], localTimeEnd[1]);
+				LocalDate date = new LocalDate(localDate[0], localDate[1], localDate[2]);
+					
+				DateTime startTime = date.toDateTime(start);
+				DateTime endTime = date.toDateTime(end);
+					
+				//Get Room object from idRoom
+				Room room = new Room(0,null);
+				//There may be no room
+				if(idRoom != 0){
+					String[] r = getRoom(idRoom);
+					room = new Room(Integer.parseInt(r[0]), r[1]);
+				}
+				
+				return new Appointment(startTime, endTime, location, title, room, description, admin); 
+			}
+		} catch (SQLException e) { 
+			e.printStackTrace();
+			System.out.println("ERROR: Find appointment on ID");
+		}
+		
 		return null;
 	}
 	
