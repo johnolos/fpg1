@@ -10,6 +10,7 @@ public class Notification {
 	//Fields for all 3 boxes (and the only fields for OKBOX)
 	private String description;
 	private String title;
+	private String admin;
 	
 	//Fields for DECLINED
 	private String meetingName;
@@ -27,10 +28,10 @@ public class Notification {
 		setup(type);
 	}
 	
-	public Notification(NotificationEnum type, String title, String description, String start, String end, String date){
+	public Notification(NotificationEnum type, String title, String admin, String start, String end, String date){
 		this.type = type;
 		this.title = title;
-		this.description = description;
+		this.admin = admin;
 		this.start = start;
 		this.end = end;
 		this.date = date;
