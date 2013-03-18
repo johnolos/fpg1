@@ -8,47 +8,46 @@ public class Notification {
 	private String listMessage;
 	
 	//Fields for all 3 boxes (and the only fields for OKBOX)
-	public String description;
-	public String title;
+	private String description;
+	private String title;
 	
 	//Fields for DECLINED
-	public String meetingName;
-	public String timeOfMeeting;
-	public String declinedParticipant;
+	private String meetingName;
+	private String timeOfMeeting;
+	private String declinedParticipant;
 	
 	//Fields for INVITATION
-	public String location;
-	public String start;
-	public String end;
+	private String location;
+	private String start;
+	private String end;
+	private String date;
 	
 	public Notification(NotificationEnum type){
 		this.type = type;
 		setup(type);
 	}
 	
+	public Notification(NotificationEnum type, String title, String description, String start, String end, String date){
+		this.type = type;
+		this.title = title;
+		this.description = description;
+		this.start = start;
+		this.end = end;
+		this.date = date;
+		//setup(type);
+	}
+	
 	void setup(NotificationEnum type) {
 		
 		switch(type) {
 		case OKBOX:
-			listMessage = "Ny melding";
-			title = "OKTITTEEEL";
-			description = "OKDESCRIPTIIOOOONNNN";
+			
 			break;
 		case DECLINED:
-			listMessage = "Deltager avslått";
-			title = "DECLINEDTITTEEELLL";
-			description = "DECLINEDDESCRIPTIIOOONNN";
-			meetingName = "DECINEDMEETINGNAME";
-			timeOfMeeting = "DECLIENDTIMEOFMEETING";
-			declinedParticipant = "DECLINEDDECPARTICIANT";
+			
 			break;
 		case INVITATION:
-			listMessage = "Møteinvitasjon";
-			title = "invtitle";
-			description = "invdesc";
-			location = "invloc";
-			start = "invstart";
-			end = "invend";
+			
 			break;
 		default:
 			listMessage = "Ny melding";
