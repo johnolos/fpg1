@@ -268,7 +268,7 @@ public class Database {
 			con.createStatement().executeUpdate(query);
 			//Connect person to appointment
 			createPersonAppointment(app.getAdmin(), app);
-			//agreedAppointment(app.getAdmin(), app);
+			agreedAppointment(app.getAdmin(), app);
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace(); }
@@ -301,21 +301,24 @@ public class Database {
 		try{
 			String query = 	"UPDATE person_appointment "+
 							"SET hasAgreed = '1' "+
-							"WHERE person_appointment_person_idPerson ='"+ getPersonId(user) +"' "+
-							"AND person_appointment_appointment_idAppointment ='"+ getAppointmentId(app)+"'";
+							"WHERE person_idPerson ='"+ getPersonId(user) +"' "+
+							"AND appointment_idAppointment ='"+ getAppointmentId(app)+"'";
 			con.createStatement().executeUpdate(query);
 		}
 		catch (Exception e) { e.printStackTrace(); }
 	}
 
 	//Add a user to appointment 
-	public void createPersonAppointment(String user, Appointment app){
+	public Boolean createPersonAppointment(String user, Appointment app){
 		try{
+			System.out.println(user + " - " + app.getTitle());
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
 						   "VALUES ('"+ getAppointmentId(app) +"','"+ getPersonId(user) +"')";
 			con.createStatement().executeUpdate(query);
+			return true;
 			
 		} catch (SQLException e) { e.printStackTrace(); }
+		return false;
 	}
 	
 	//Delete a user from appointment

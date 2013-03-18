@@ -42,4 +42,8 @@ public class SendObject implements Serializable {
 	public String [] getKeyword(){
 		return this.keyword;
 	}
+	public void setObject(Object object){
+		this.object = object;
+		this.value = true;
+	}
 }

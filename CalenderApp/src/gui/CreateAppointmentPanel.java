@@ -167,6 +167,9 @@ public class CreateAppointmentPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				Appointment app = new Appointment(new DateTime((Integer) dateYearSpinner.getValue(), (Integer) dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)startHourSpinner.getValue(), (Integer)startMinuteSpinner.getValue()), new DateTime((Integer)dateYearSpinner.getValue(), (Integer)dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)endHourSpinner.getValue(), (Integer)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), (Room) roomBox.getSelectedItem(), descriptionArea.getText(), HomeGUI.getCurrentUser().getUsername());
 				if(client.createAppointment(app)){
+					while(model.size()>0){
+						client.createPersonAppointment(model.remove(0),app);
+					}
 					HomeGUI.table.setValueAt(formatNumber((Integer)startHourSpinner.getValue()) + ":" + formatNumber((Integer)startMinuteSpinner.getValue()) + " - " + formatNumber((Integer)endHourSpinner.getValue()) + ":" + formatNumber((Integer)endMinuteSpinner.getValue()) + "\n" + titleField.getText(), 2, 2);
 					frmOpprettAvtale.dispose();
 				}

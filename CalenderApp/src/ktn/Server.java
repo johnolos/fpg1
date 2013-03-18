@@ -201,6 +201,12 @@ public class Server {
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
+			case S_PERSON_APPOINTMENT:
+				System.out.println("Request for inviting people");
+				System.out.println(keyword[0] + " : "+ (Appointment)obj.getObject());
+				Boolean bool4 = database.createPersonAppointment(keyword[0],(Appointment)obj.getObject());
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool4);
+				return sObject;
 			default:
 				break;
 			}
