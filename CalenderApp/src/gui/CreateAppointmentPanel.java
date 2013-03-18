@@ -55,7 +55,7 @@ public class CreateAppointmentPanel extends JPanel {
 	DefaultComboBoxModel<Room> boxModel;
 	
 	JList<Person> list;
-	static DefaultListModel<Person> model;
+	static DefaultListModel<Person> model = new DefaultListModel<Person>();;
 	JTextPane descriptionArea;
 	
 	JSpinner dateDaySpinner;
@@ -146,8 +146,6 @@ public class CreateAppointmentPanel extends JPanel {
 			
 			}
 		});
-		
-		model = new DefaultListModel<Person>();
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);

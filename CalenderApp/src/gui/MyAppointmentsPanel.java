@@ -66,8 +66,8 @@ public class MyAppointmentsPanel extends JPanel {
 	JButton cancelMeetingButton;
 	private JScrollPane scrollPane;
 	private JList<Appointment> myAppointmentsList;
-	private DefaultListModel<Appointment> appointmentsModel;
-	DefaultListModel<Person> model;
+	DefaultListModel<Appointment> appointmentsModel;
+	static DefaultListModel<Person> model = new DefaultListModel<Person>();
 	private JLabel alarmLabel;
 
 	JSpinner startHourSpinner;
@@ -149,6 +149,14 @@ public class MyAppointmentsPanel extends JPanel {
 		
 		editParticipantsButton = new JButton("Edit");
 		editParticipantsButton.setEnabled(false);
+		editParticipantsButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				EditParticipantsPanel editParticipanstPanel = new EditParticipantsPanel(frame, model, HomeGUI.getClient());
+			}
+			
+		});
 		
 		saveChangesButton = new JButton("Lagre endringer");
 		saveChangesButton.setEnabled(true);
@@ -541,6 +549,7 @@ public class MyAppointmentsPanel extends JPanel {
 		if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin())){
 			declineMeetingButton.setEnabled(true);
 			cancelMeetingButton.setEnabled(true);
+			editParticipantsButton.setEnabled(true);
 		}
 		else{
 			declineMeetingButton.setEnabled(true);

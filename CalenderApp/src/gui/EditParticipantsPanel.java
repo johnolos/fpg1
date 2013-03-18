@@ -105,8 +105,10 @@ public class EditParticipantsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				CreateAppointmentPanel.model.removeAllElements();
+				MyAppointmentsPanel.model.removeAllElements();
 				for(int i=0; i<chosenListModel.getSize(); i++){
 					CreateAppointmentPanel.model.addElement(chosenListModel.get(i));
+					MyAppointmentsPanel.model.addElement(chosenListModel.get(i));
 				}
 				frame.dispose();
 			}
