@@ -1,6 +1,7 @@
 package gui;
 
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -114,6 +115,7 @@ public class HomeGUI extends JPanel {
 	private int dayOfWeek;
 	private int startDay;
 	private int endDay;
+	private DefaultListModel<Notification> notificationModel;
 
 
 	public HomeGUI(Person user, Client client) {
@@ -575,17 +577,9 @@ public class HomeGUI extends JPanel {
 					.addContainerGap())
 		);
 		
+		this.notificationModel = new DefaultListModel<Notification>();
 		list = new JList();
-		list.setModel(new AbstractListModel<Notification>() {
-			Notification[] values = new Notification[] {new Notification(NotificationEnum.INVITATION), new Notification(NotificationEnum.DECLINED), new Notification(NotificationEnum.DECLINED), new Notification(NotificationEnum.OKBOX), new Notification(NotificationEnum.INVITATION)};
-			
-			public int getSize() {
-				return values.length;
-			}
-			public Notification getElementAt(int index) {
-				return values[index];
-			}
-		});
+		list.setModel(this.notificationModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(new ListSelectionListener(){
 			public void valueChanged(ListSelectionEvent e){
@@ -650,7 +644,16 @@ public class HomeGUI extends JPanel {
 		headlinePanel.setLayout(gl_panel1);
 		buttonPanel.add(showColleaguesButton);
 		setLayout(groupLayout);
+		
+		updateNotification();
 
+	}
+	
+	private void updateNotification() {
+		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());
+		for(int i = 0; i < notifications.size(); i++) {
+			this.notificationModel.addElement(notifications.get(i));
+		}
 	}
 
 	public static Person getCurrentUser() {
