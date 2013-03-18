@@ -104,7 +104,6 @@ public class ShowColleaguesPanel extends JPanel {
 					}
 
 				}
-				searchResultColleaguesList.setSelectionInterval(0, 0);
 
 			}
 		});
@@ -133,8 +132,6 @@ public class ShowColleaguesPanel extends JPanel {
 					}
 
 				}
-
-				shownColleaguesList.setSelectionInterval(0, 0);
 
 			}
 
@@ -295,17 +292,6 @@ public class ShowColleaguesPanel extends JPanel {
 
 		searchResultColleaguesList = new JList();
 		searchResultColleaguesList.setModel(searchResultListModel);
-		/*
-		searchResultListModel.addElement(new Person("user1", "email1",
-				"Torkjel", "Skjetne"));
-		searchResultListModel.addElement(new Person("user2", "email2",
-				"John-Olav", "Storvold"));
-		searchResultListModel.addElement(new Person("user3", "email3",
-				"Bjørn Christan", "Olsen"));
-		searchResultListModel.addElement(new Person("user4", "email4",
-				"Hans-Olav", "Hessen"));
-		searchResultColleaguesList.setSelectionInterval(0, 0);
-		*/
 		searchResultColleaguesList.setCellRenderer(new PersonListRenderer());
 		scrollPane.setViewportView(searchResultColleaguesList);
 		
@@ -333,7 +319,8 @@ public class ShowColleaguesPanel extends JPanel {
 		searchResultListModel.removeAllElements();
 		ArrayList<Person> persons = client.fetchPersons(searchField.getText());
 		for(int i = 0; i < persons.size(); i++) {
-			searchResultListModel.addElement(persons.get(i));
+			if(!persons.get(i).getUsername().equals(HomeGUI.getCurrentUser().getUsername()))
+				searchResultListModel.addElement(persons.get(i));
 		}
 	}
 }

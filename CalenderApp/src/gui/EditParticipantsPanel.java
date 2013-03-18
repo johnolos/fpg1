@@ -245,9 +245,15 @@ public class EditParticipantsPanel extends JPanel {
 	private void updatePersons() {
 		searchResultListModel.removeAllElements();
 		ArrayList<Person> persons = client.fetchPersons(searchField.getText());
+		boolean add;
 		for(int i = 0; i < persons.size(); i++) {
-			searchResultListModel.addElement(persons.get(i));
+			add = true;
+			for(int j=0; j<chosenListModel.getSize(); j++){
+				if(persons.get(i).getUsername().equals(chosenListModel.get(j).getUsername()))
+					add = false;
+			}
+			if(add)
+				searchResultListModel.addElement(persons.get(i));
 		}
-		
 	}
 }

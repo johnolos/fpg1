@@ -1,6 +1,7 @@
 package gui;
 
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -101,7 +102,7 @@ public class HomeGUI extends JPanel {
 	private MeetingInvitationPanel meetingInvitationPanel;
 	private OKNotificationBox okNotificationBox;
 	private ParticipantDeclinedPanel participantDeclinedPanel;
-	static JTable table;
+	static MyJTable table;
 	
 	private Appointment appointment;
 
@@ -109,7 +110,7 @@ public class HomeGUI extends JPanel {
 	static ArrayList<Object> listOfFrames;
 	
 	private static Person currentUser;
-	private Client client;
+	private static Client client;
 	private JLabel skipToYearLabel;
 	private JTextField skipToYearTextField;
 	private int dayOfWeek;
@@ -120,7 +121,7 @@ public class HomeGUI extends JPanel {
 	private String monthString;
 	private DateTime endMonthDate;
 	private String endMonthString;
-
+	
 
 	public HomeGUI(Person user, Client client) {
 		
@@ -410,7 +411,7 @@ public class HomeGUI extends JPanel {
 		
 		myAppointmentsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client, currentUser);
+				MyAppointmentsPanel myAppointmentsPanel = new MyAppointmentsPanel(client, currentUser, null);
 			}
 		});
 		createAppointmentButton.addActionListener(new ActionListener(){
@@ -520,12 +521,7 @@ public class HomeGUI extends JPanel {
 		
 
 		
-		table = new JTable();
-		table.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent arg0) {
-				//table.getSelectedRow(arg0.getComponent());
-			}
-		});
+		table = new MyJTable();
 		table.setRowHeight(80);
 		
 		
@@ -550,7 +546,7 @@ public class HomeGUI extends JPanel {
 		calendarPanel.setLayout(gl_calendarPanel);
 		
 		for(int i=1; i<table.getColumnCount();i++){
-			table.getColumnModel().getColumn(i).setCellRenderer(new MyRenderer());
+			table.getColumnModel().getColumn(i).setCellRenderer(new TableRenderer());
 		}
 		table.setBackground(Color.LIGHT_GRAY);
 		table.addMouseListener(new MouseListener(){
@@ -718,10 +714,12 @@ public class HomeGUI extends JPanel {
 	
 	private void updateNotification() {
 		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());
-		if(notifications.isEmpty()) {
+		if(notifications == null){
 			return;
 		}
-		System.out.println(notifications.get(0).getTitle());
+		if(notifications.isEmpty()){
+			return;
+		}
 		for(int i = 0; i < notifications.size(); i++) {
 			this.notificationModel.addElement(notifications.get(i));
 			System.out.println(notifications.get(i).getListMessage());
@@ -731,4 +729,34 @@ public class HomeGUI extends JPanel {
 	public static Person getCurrentUser() {
 		return currentUser;
 	}
+	
+	public static void updateRowHeights() {
+	    try
+	    {
+	        for (int row = 0; row < table.getRowCount(); row++)
+	        {
+	            int rowHeight = table.getRowHeight();
+
+	            for (int column = 0; column < table.getColumnCount(); column++)
+	            {
+	                Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+	                rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+	            }
+
+	            table.setRowHeight(row, rowHeight);
+	        }
+	    }
+	    catch(ClassCastException e) {}
+	}
+	
+	class MyJTable extends JTable {
+		public TableCellEditor getCellEditor(int row, int column) {
+		     return new CalendarCellEditor();
+		}
+	}
+	
+	public static Client getClient(){
+		return client;
+	}
+	
 }

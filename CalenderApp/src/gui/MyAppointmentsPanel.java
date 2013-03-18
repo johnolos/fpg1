@@ -91,7 +91,7 @@ public class MyAppointmentsPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public MyAppointmentsPanel(final Client client, Person person) {
+	public MyAppointmentsPanel(final Client client, Person person, Appointment selectApp) {
 		this.client = client;
 		
 		try{
@@ -486,6 +486,21 @@ public class MyAppointmentsPanel extends JPanel {
 		
 		restrictSpinners();
 		
+		int appIsInList = -1;
+		Appointment compareApp;
+		if(selectApp != null){
+			for(int i=0; i<appointmentsModel.getSize(); i++){
+				compareApp = appointmentsModel.get(i);
+				//Two appointments cannot have the same room if they start at the same time
+				if( compareApp.getRoom().getName().equals(selectApp.getRoom().getName()) &&
+					compareApp.getStart().equals(selectApp.getStart())){
+					appIsInList = i;
+					break;
+				}
+			}
+			if(appIsInList != -1)
+				myAppointmentsList.setSelectedIndex(appIsInList);
+		}
 		
 	}
 	
@@ -523,15 +538,14 @@ public class MyAppointmentsPanel extends JPanel {
 		saveChangesButton.setEnabled(b);
 		cancelChangesButton.setEnabled(b);
 		
-//		//Enable "Meld avbud" eller "Avlys avtale" avhengig av om man er leder eller ikke
-//		if(HomeGUI.currentUser.getUsername().equals(ap.getAdmin()){
+		if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin())){
+			declineMeetingButton.setEnabled(true);
+			cancelMeetingButton.setEnabled(true);
+		}
+		else{
 			declineMeetingButton.setEnabled(true);
 			cancelMeetingButton.setEnabled(false);
-//		}
-//		else{
-//			declineMeetingButton.setEnabled(false);
-//			cancelMeetingButton.setEnabled(true);
-//		}
+		}
 		
 //		if(AVTALEN HAS ALARM)
 			removeAlarmButton.setEnabled(b);
@@ -553,7 +567,6 @@ public class MyAppointmentsPanel extends JPanel {
 		
 		dateYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));
 		alarmYearSpinner.setModel(new SpinnerNumberModel(jodaTime.getYear(), jodaTime.getYear(), jodaTime.getYear()+20, 1));
-		
 	}
 	
 	public void updateAppointments() {
@@ -561,8 +574,11 @@ public class MyAppointmentsPanel extends JPanel {
 		ArrayList<Appointment> appointments = client.fetchAllAppointments(user.getUsername());
 		for(int i = 0; i < appointments.size(); i++) {
 			appointmentsModel.addElement(appointments.get(i));
-		}
-		
-		
+			
+		}	
+	}
+	
+	public JList getMyAppointmentsList(){
+		return this.myAppointmentsList;
 	}
 }

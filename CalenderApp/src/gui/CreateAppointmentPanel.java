@@ -170,7 +170,24 @@ public class CreateAppointmentPanel extends JPanel {
 					while(model.size()>0){
 						client.createPersonAppointment(model.remove(0),app);
 					}
-					HomeGUI.table.setValueAt(formatNumber((Integer)startHourSpinner.getValue()) + ":" + formatNumber((Integer)startMinuteSpinner.getValue()) + " - " + formatNumber((Integer)endHourSpinner.getValue()) + ":" + formatNumber((Integer)endMinuteSpinner.getValue()) + "\n" + titleField.getText(), 2, 2);
+					//---------------------------------
+					ArrayList<Appointment> appList = new ArrayList<Appointment>();
+					ArrayList<Appointment> currentlyInWantedCell = null;
+					//ENDRE LOKASJONEN HER
+					Object listBeforeConverted = HomeGUI.table.getValueAt(1, 1);
+					if(listBeforeConverted != null) {
+						if(listBeforeConverted instanceof ArrayList){
+							currentlyInWantedCell = (ArrayList)listBeforeConverted;
+					
+						for(int i=0; i<currentlyInWantedCell.size(); i++){
+							appList.add(currentlyInWantedCell.get(i));
+						}
+						}
+					}
+					appList.add(app);
+					//ENDRE LOKASJONEN HER
+					HomeGUI.table.setValueAt(appList, 1, 1);
+//					HomeGUI.updateRowHeights();
 					frmOpprettAvtale.dispose();
 				}
 			}
