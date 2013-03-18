@@ -123,7 +123,7 @@ public class HomeGUI extends JPanel {
 		this.currentUser = user;
 		this.client = client;
 		
-		appointment = new Appointment(new DateTime(2014, 2, 2, 13, 37), new DateTime(2014, 2, 2, 14, 38), "hei", "hallo", null, "jøde", "kristen");
+		appointment = new Appointment(new DateTime(2014, 2, 2, 13, 37), new DateTime(2014, 2, 2, 14, 38), "hei", "hallo", null, "jï¿½de", "kristen");
 
 		// ----------------------------------------------------------------//
 		// Panels
@@ -162,7 +162,7 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		skipToWeekLabel = new JLabel("Hopp til uke:");
-		skipToYearLabel = new JLabel("Hopp til år:");
+		skipToYearLabel = new JLabel("Hopp til ï¿½r:");
 		
 		notificationLabel = new JLabel("Notifikasjoner");
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -473,7 +473,7 @@ public class HomeGUI extends JPanel {
 						{"18:00", "", "", "", "", "", "", ""},
 					},
 					new String[]  {
-						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"});
+						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lï¿½rdag", "Sï¿½ndag"});
 		table.setModel(tableModel);
 		calendarPanel.setLayout(gl_calendarPanel);
 		
@@ -589,7 +589,7 @@ public class HomeGUI extends JPanel {
 				if(list.getValueIsAdjusting() == false && list.getSelectedIndex() != -1){
 					n =  list.getSelectedValue();
 					if(n.getType().equals(NotificationEnum.INVITATION)){
-						meetingInvitationPanel.setTitle("Møteinnkalling fra " + n.getAdmin());
+						meetingInvitationPanel.setTitle("Mï¿½teinnkalling fra " + n.getAdmin());
 						meetingInvitationPanel.setTitleOfMeeting(n.getTitle());
 						meetingInvitationPanel.setDescription(n.getDescription());
 						meetingInvitationPanel.setStart(n.getStart());
@@ -651,7 +651,7 @@ public class HomeGUI extends JPanel {
 	
 	private void updateNotification() {
 		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());		System.out.println(notifications.get(0));
-		if(notifications == null) {
+		if(notifications.isEmpty()) {
 			return;
 		}
 		System.out.println(notifications.get(0).getTitle());
