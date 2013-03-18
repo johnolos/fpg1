@@ -485,8 +485,8 @@ public class Database {
 			ResultSet res = con.createStatement().executeQuery(query);
 			
 			while(res.next()){
-				Appointment app = getAppointment(Integer.parseInt(res.getString(0)));
-				noteList.add(new Notification(getEnum(res.getString(1)), app));	
+				Appointment app = getAppointment(Integer.parseInt(res.getString(1)));
+				noteList.add(new Notification(getEnum(res.getString(2)), app));	
 			}
 			return noteList;
 		}
