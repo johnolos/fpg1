@@ -22,7 +22,7 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.10.70";
+	private final static String SERVERIP = "78.91.13.75";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
