@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import baseClasses.Alarm;
 import baseClasses.Appointment;
+import baseClasses.NotificationEnum;
 import baseClasses.Person;
 import baseClasses.Room;
 
@@ -315,6 +316,8 @@ public class Database {
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
 						   "VALUES ('"+ getAppointmentId(app) +"','"+ getPersonId(user) +"')";
 			con.createStatement().executeUpdate(query);
+			String [] keyword = {"INVITATION",user};
+			createNotification(keyword, app);
 			return true;
 			
 		} catch (SQLException e) { e.printStackTrace(); }
@@ -426,6 +429,23 @@ public class Database {
 		return null;
 	}
 	
+	
+	public boolean createNotification(String [] keyword, Appointment app){
+		System.out.println(keyword[0] + " " + keyword[1]);
+		try{
+			String query = "INSERT INTO notification(type,idPerson,idAppointment)" +
+					" VALUES('"+keyword[0]+"','"+getPersonId(keyword[1])+"','"+getAppointmentId(app)+"'";
+			con.createStatement().executeUpdate(query);
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("ERROR while updating notification");
+		}
+		
+		return false;
+		
+	}
 	//Parse String[] to int[]
 	private int[] toInt(String[] s){
 		int[] newInt = new int[s.length];
