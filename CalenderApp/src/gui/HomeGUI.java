@@ -320,7 +320,6 @@ public class HomeGUI extends JPanel {
 		startMonth = startOfWeek.monthOfYear().getAsText();
 		endMonth = endOfWeek.monthOfYear().getAsText();
 		year = endOfWeek.getYear();
-		System.out.println("" + startOfWeek + endOfWeek);
 		yearAndDateLabel.setText("" + dayStartOfWeek + ". " + startMonth + " - " + dayEndOfWeek + ". " + endMonth + " "  + year);
 		
 		
@@ -331,11 +330,27 @@ public class HomeGUI extends JPanel {
 	
 	public void addListeners(){
 		
-		weekTextField.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					int textFieldNumber = Integer.parseInt(weekTextField
-							.getText());
+		weekTextField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				if(weekTextField.getText() == "") {
+					return;
+				}
+				int textFieldNumber = Integer.parseInt(weekTextField.getText());
+				if(textFieldNumber < 1 && textFieldNumber > 52) {
+					return;
+				}
+				
+				//
+				//
+				//
+				//HER SKAL VI GJØRE OM SLIK AT VI HELLER SØKER OPP EN DATO - DET ER LETTERE OG FINERE.
+				//
+				//
+				//
+				updateMonthString();
+				
+					
+				
 					if (textFieldNumber > 0 && textFieldNumber <= 52) {
 						week = textFieldNumber;
 						weekLabel.setText("Uke " + textFieldNumber);
@@ -350,9 +365,7 @@ public class HomeGUI extends JPanel {
 					}
 				}
 
-			}
-
-		});
+			});
 		
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
