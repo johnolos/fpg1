@@ -81,13 +81,12 @@ public class Database {
 		ArrayList<Person> personList = new ArrayList<Person>();
 		
 		try {
-			String query = "" +
-					"SELECT username, email, firstName, lastName " +
-					"FROM person " +
-					"WHERE username LIKE '%" + keyword[0] + "%' " +
-					"OR username LIKE '%" + keyword[0] + "%' " +
-					"OR username LIKE '%" + keyword[0] + "%' " +
-					"ORDER BY lastName ASC";
+			String query = 	"SELECT username, email, firstName, lastName " +
+							"FROM person " +
+							"WHERE username LIKE '%" + keyword[0] + "%' " +
+							"OR username LIKE '%" + keyword[0] + "%' " +
+							"OR username LIKE '%" + keyword[0] + "%' " +
+							"ORDER BY lastName ASC";
 				
 			ResultSet res = con.createStatement().executeQuery(query);
 			
@@ -95,6 +94,33 @@ public class Database {
 				personList.add( new Person(res.getString(1), res.getString(2), res.getString(3), res.getString(4)) );
 			}
 			return personList;
+			
+		} catch (SQLException e) { e.printStackTrace(); }
+		
+		return null;
+	}
+	
+	//Get a list for what room is free on date at time
+	public ArrayList<Room> getRoomOnTime(String[] keyword){
+		ArrayList<Room> roomList = new ArrayList<Room>();
+		
+		try {
+			String query = 	"SELECT capacity, name " +
+							"FROM room " +
+							"WHERE idRoom NOT IN( " +
+								"SELECT idRoom FROM room, appointment " +
+								"WHERE idRoom=room_idRoom " +
+								"AND date='" + keyword[0] + "' " +
+								"AND sTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME) " +
+								"AND eTime BETWEEN CAST('" + keyword[1] +"' AS TIME) AND CAST('"+ keyword[2] +"' AS TIME)) " +
+							"ORDER BY capacity ASC";
+				
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			while(res.next()){
+				roomList.add( new Room(Integer.parseInt(res.getString(1)), res.getString(2)) );
+			}
+			return roomList;
 			
 		} catch (SQLException e) { e.printStackTrace(); }
 		
