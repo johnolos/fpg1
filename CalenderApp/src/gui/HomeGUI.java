@@ -65,6 +65,7 @@ public class HomeGUI extends JPanel {
 	private int day;
 	private String startTime;
 	private String endTime;
+	private DateTime endOfWeek, startOfWeek;
 
 	private JFrame frame;
 
@@ -116,14 +117,19 @@ public class HomeGUI extends JPanel {
 	private int startDay;
 	private int endDay;
 	private DefaultListModel<Notification> notificationModel;
-	private int endMonth;
+	private String endMonth;
 	private String monthString;
 	private DateTime endMonthDate;
 	private String endMonthString;
+	private int dayStartOfWeek;
+	private int dayEndOfWeek;
+	private String startMonth;
 
 
 	public HomeGUI(Person user, Client client) {
 		
+		
+		yearAndDateLabel = new JLabel("");
 		createDateTime();
 		
 		this.currentUser = user;
@@ -176,7 +182,6 @@ public class HomeGUI extends JPanel {
 		
 		weekLabel = new JLabel("Uke " + week);
 		
-		yearAndDateLabel = new JLabel("" + startDay + ". " + monthString + " - " + endDay + ". " + endMonthString + " "  + year);
 		yearAndDateLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
 		// ----------------------------------------------------------------//
@@ -232,9 +237,10 @@ public class HomeGUI extends JPanel {
 	// DateTime
 	// ----------------------------------------------------------------//
 	
+	/*
 	public void adjustMonth(){
 		boolean adjustMonth = false;
-		// Husk leap year
+		 //Husk leap year
 
 		if (month < 8) {
 			if (month == 2) {
@@ -284,36 +290,40 @@ public class HomeGUI extends JPanel {
 				year += 1;
 		}
 	}
-	
+	*/
 	public void createDateTime() {
 
-		date = new DateTime(2014, 1, 2, 0, 0, 0, 0);
+		date = new DateTime();
 
 		year = date.getYear();
 		month = date.getMonthOfYear();
-		endMonth = month;
 		week = date.getWeekOfWeekyear();
 		dayOfMonth = date.getDayOfMonth();
 		dayOfWeek = date.getDayOfWeek();
-		startDay = dayOfMonth - (dayOfWeek - 1);
-		if (startDay < 1 && week == 1){
-			startDay += 31;
-			monthString = endMonth + 11 + "";
-			monthString = "desember";
-			
-		}
 		
-		else {
-			monthString = date.monthOfYear().getAsText();
-		}
+		startOfWeek = new DateTime(year,month,(dayOfMonth - (dayOfWeek - 1)),0,0,0);
+		endOfWeek = startOfWeek.plusDays(6);
 		
-		endDay = dayOfMonth + (7 - dayOfWeek);
+		
+		updateMonthString();
 
-		adjustMonth();
+
+	}
+	
+	private void updateMonthString() {
 		
-		endMonthDate = new DateTime(year, endMonth, endDay, 0, 0, 0, 0);
-		endMonthString = endMonthDate.monthOfYear().getAsText();
-		System.out.println(endMonthString);
+		//få tak i startdag og sluttdag
+		
+		dayStartOfWeek = startOfWeek.getDayOfMonth();
+		dayEndOfWeek = endOfWeek.getDayOfMonth();
+		startMonth = startOfWeek.monthOfYear().getAsText();
+		endMonth = endOfWeek.monthOfYear().getAsText();
+		year = endOfWeek.getYear();
+		System.out.println("" + startOfWeek + endOfWeek);
+		yearAndDateLabel.setText("" + dayStartOfWeek + ". " + startMonth + " - " + dayEndOfWeek + ". " + endMonth + " "  + year);
+		
+		
+		
 	}
 	
 	
@@ -365,26 +375,10 @@ public class HomeGUI extends JPanel {
 				if (week == 53)
 					week = 1;
 				weekLabel.setText("Uke " + week);
+				startOfWeek = startOfWeek.plusDays(7);
+				endOfWeek = startOfWeek.plusDays(6);
 				
-//				year = date.getYear();
-//				month = date.getMonthOfYear();
-//				endMonth = month;
-//				dayOfMonth = date.getDayOfMonth();
-//				dayOfWeek = date.getDayOfWeek();
-//				week = date.getWeekOfWeekyear();
-//				startDay = dayOfMonth - (dayOfWeek - 1);
-//				endDay = dayOfMonth + (7 - dayOfWeek);
-//				monthString = date.monthOfYear().getAsText();
-//
-//				
-//				adjustMonth();
-//				
-//				endMonthDate = new DateTime(year, endMonth, endDay, 0, 0, 0, 0);
-//				endMonthString = endMonthDate.monthOfYear().getAsText();
-//				System.out.println(endMonthDate);
-//				
-//				yearAndDateLabel.setText("" + startDay + ". " + monthString + " - " + endDay + ". " + endMonthString + " " + year);
-//				System.out.println(yearAndDateLabel);
+				updateMonthString();
 			}
 		});
 		
@@ -395,11 +389,16 @@ public class HomeGUI extends JPanel {
 				if (week < 0) {
 					week = week + 52;
 				}
-				
 				if (week == 0)
 					week = 52;
 				weekLabel.setText("Uke " + week);
+				startOfWeek = startOfWeek.minusDays(7);
+				endOfWeek = startOfWeek.plusDays(6);
+				
+				updateMonthString();
+				
 			}
+			
 		});
 		
 		skipToYearTextField.addActionListener(new ActionListener() {
