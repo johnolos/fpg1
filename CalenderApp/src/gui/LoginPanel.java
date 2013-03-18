@@ -185,7 +185,7 @@ public class LoginPanel extends JPanel {
 				}
 				String[] keyword = {nameTextField.getText(), pass};
 				Person person = client.login(keyword);
-				System.out.println(person.getFirstName());
+
 				if(person != null){
 					frame.dispose();
 					HomeGUI gotoHome = new HomeGUI(person,client);
