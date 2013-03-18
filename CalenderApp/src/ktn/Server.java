@@ -180,6 +180,12 @@ public class Server {
 				System.out.println("Rooms sent.");
 				sObject = new SendObject(RequestEnum.ROOM,rooms);
 				return sObject;
+			case NOTIFICATION:
+				System.out.println("Requst for notification for " + keyword[0]);
+				ArrayList<Notification> not = database.getNotification(keyword[0]);
+				System.out.println("Notifications sent.");
+				sObject = new SendObject(RequestEnum.NOTIFICATION, not);
+				return sObject;
 			default:
 				break;
 			}
