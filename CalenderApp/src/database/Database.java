@@ -105,6 +105,11 @@ public class Database {
 	}
 	
 	//Get a list for what room is free on date at time
+	/**
+	 * 
+	 * @param keyword date,startTime,endTime
+	 * @return ArrayList<Room>
+	 */
 	public ArrayList<Room> getRoomOnTime(String[] keyword){
 		System.out.println(keyword[0] + "  "+ keyword[1] + " " + keyword[2]);
 		ArrayList<Room> roomList = new ArrayList<Room>();
@@ -125,6 +130,10 @@ public class Database {
 			while(res.next()){
 				roomList.add( new Room(Integer.parseInt(res.getString(1)), res.getString(2)) );
 			}
+			
+			if(!roomList.contains(new Room(0, "Ingen rom")))
+				roomList.add(0, new Room(0, "Ingen"));
+			
 			return roomList;
 			
 		} catch (SQLException e) { e.printStackTrace(); }
