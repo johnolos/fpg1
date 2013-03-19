@@ -518,7 +518,7 @@ public class HomeGUI extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
-					System.out.println("Mouse clicked at Column: " + table.getSelectedColumn() + " and Row: " + table.getSelectedRow());
+					
 				
 			}
 

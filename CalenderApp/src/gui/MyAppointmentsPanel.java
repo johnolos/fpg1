@@ -194,9 +194,31 @@ public class MyAppointmentsPanel extends JPanel {
 		
 		declineMeetingButton = new JButton("Meld avbud");
 		declineMeetingButton.setEnabled(false);
+		declineMeetingButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(client.sendDecline(HomeGUI.getCurrentUser().getUsername(), myAppointmentsList.getSelectedValue()));
+					appointmentsModel.removeAllElements();
+					updateAppointmentList();
+			}
+			
+		});
 		
 		cancelMeetingButton = new JButton("Avlys m\u00F8te");
 		cancelMeetingButton.setEnabled(false);
+		cancelMeetingButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(client.sendDecline(HomeGUI.getCurrentUser().getUsername(), myAppointmentsList.getSelectedValue())){
+					appointmentsModel.removeAllElements();
+					updateAppointmentList();
+				}
+					
+			}
+			
+		});
 		
 		descriptionArea = new JTextArea();
 		descriptionArea.setEnabled(false);
@@ -490,10 +512,7 @@ public class MyAppointmentsPanel extends JPanel {
 //		appointmentsModel.addElement(new Appointment(new DateTime(2014, 01, 02, 03, 00) , new DateTime(2014, 01, 02, 04, 04), "DunnoWhatThisFieldIs :(", "Videokonferanse med Steria", new Room(20, "testrom"), "WutIsDisField?", "WahtBistDeineFelt?"));
 		
 		String user = HomeGUI.getCurrentUser().getUsername();
-		ArrayList<Appointment> appointmentsFromDatabase = this.client.fetchAllAppointments(user);
-		for(int i=0; i<appointmentsFromDatabase.size(); i++){
-			appointmentsModel.addElement(appointmentsFromDatabase.get(i));
-		}
+		updateAppointmentList();
 		
 		
 		participantsList = new JList<Person>();
@@ -602,5 +621,12 @@ public class MyAppointmentsPanel extends JPanel {
 	
 	public JList getMyAppointmentsList(){
 		return this.myAppointmentsList;
+	}
+	
+	private void updateAppointmentList(){
+		ArrayList<Appointment> list = client.fetchAllAppointments(HomeGUI.getCurrentUser().getUsername());
+		for(int i=0; i<list.size(); i++){
+			appointmentsModel.addElement(list.get(i));
+		}
 	}
 }
