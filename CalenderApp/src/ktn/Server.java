@@ -237,17 +237,22 @@ public class Server {
 	 */
 	private void createNotificationForAll(Appointment appointment, boolean alter){
 		// IF AN APPOINTMENT CHANGE HAS BEEN MADE
+		String admin = appointment.getAdmin();
 		if(alter) {
-			for(int i = 0; i < appointment.getParticipants().size(); i++) {
-				System.out.println("Not implemnted");
+			for(Person person : appointment.getParticipants()) {
+				String[] keyword = {"INVITATION",person.getUsername(),admin};
+				database.deleteNotification(new String[] {person.getUsername(),admin}, appointment);
+				database.createNotification(keyword, appointment);
 			}
 			
 			
 			
 		// IF AN NEW APPOINTMENT HAS BEEN CREATED
 		} else {
-			for(int i = 0; i < appointment.getParticipants().size(); i++) {
-				System.out.println("Not implemented");
+			for(Person person : appointment.getParticipants()) {
+				String[] keyword = {"INVITATION",person.getUsername(),admin};
+				database.createPersonAppointment(person.getUsername(), appointment);
+				database.createNotification(keyword, appointment);
 			}
 		}
 	}
