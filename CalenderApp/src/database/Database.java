@@ -154,7 +154,11 @@ public class Database {
 		return null;
 	}
 	
-	//Get  a list with all appointments from user
+	/**
+	 * Get  a list with all appointments from user
+	 * @param keyword username
+	 * @return ArrayList<Appointment>
+	 */
 	public ArrayList<Appointment> getAppointmentsOnPerson(String[] keyword){
 		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
 		
@@ -209,7 +213,11 @@ public class Database {
 		return null;
 	}
 	
-	//Get a list of Appointment from user with date
+	/**
+	 * Get a list of Appointment from user with date
+	 * @param keyword username, date
+	 * @return ArrayList<Appointment>
+	 */
 	public ArrayList<Appointment> getAppointmentsOnDate(String[] keyword){
 		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
 		
