@@ -178,7 +178,7 @@ public class MyAppointmentsPanel extends JPanel {
 						}
 							
 					}
-					System.out.println("I did the impossible thing.");
+					
 				}
 			}
 		});
@@ -579,7 +579,7 @@ public class MyAppointmentsPanel extends JPanel {
 		cancelChangesButton.setEnabled(b);
 		
 		if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin())){
-			declineMeetingButton.setEnabled(true);
+			declineMeetingButton.setEnabled(false);
 			cancelMeetingButton.setEnabled(true);
 			editParticipantsButton.setEnabled(true);
 		}
