@@ -90,7 +90,7 @@ public class HomeGUI extends JPanel {
 	private JLabel weekLabel;
 	private JLabel yearAndDateLabel;
 
-	private JTextField weekTextField;
+	private JTextField skipToWeekTextField;
 
 	static JList<Notification> list;
 	
@@ -206,9 +206,9 @@ public class HomeGUI extends JPanel {
 		// TextFields
 		// ----------------------------------------------------------------//
 
-		weekTextField = new JTextField();
-		weekTextField.setColumns(3);			
-		weekTextField.setDocument(new JTextFieldLimit(2));
+		skipToWeekTextField = new JTextField();
+		skipToWeekTextField.setColumns(3);			
+		skipToWeekTextField.setDocument(new JTextFieldLimit(2));
 		
 		skipToYearTextField = new JTextField();
 		skipToYearTextField.setColumns(3);
@@ -239,60 +239,6 @@ public class HomeGUI extends JPanel {
 	// DateTime
 	// ----------------------------------------------------------------//
 	
-	/*
-	public void adjustMonth(){
-		boolean adjustMonth = false;
-		 //Husk leap year
-
-		if (month < 8) {
-			if (month == 2) {
-				if (endDay > 28) {
-					endDay = endDay - 28;
-					adjustMonth = true;
-				}
-			} else if (month % 2 == 0) {
-				if (endDay > 30) {
-					endDay = endDay - 30;
-					adjustMonth = true;
-				}
-			} else if (month % 2 == 1) {
-				if (endDay > 31) {
-					endDay = endDay - 31;
-					adjustMonth = true;
-				}
-			}
-			
-			if (adjustMonth) {
-				endMonth += 1;
-
-			}
-	
-		} 
-		
-		else {
-			if (month % 2 == 0) {
-				if (endDay > 31) {
-					endDay = endDay - 31;
-					adjustMonth = true;
-				}
-			}
-			else if (month % 2 == 1) {
-				if (endDay > 30) {
-					endDay = endDay - 30;
-					adjustMonth = true;
-				}
-			}
-		}
-			
-			if (adjustMonth) {
-				endMonth += 1;
-			}
-			if (endMonth == 13){
-				endMonth = 1;
-				year += 1;
-		}
-	}
-	*/
 	public void createDateTime() {
 
 		date = new DateTime();
@@ -331,42 +277,38 @@ public class HomeGUI extends JPanel {
 	
 	public void addListeners(){
 		
-		weekTextField.addActionListener(new ActionListener() {
+		skipToWeekTextField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				if(weekTextField.getText() == "") {
+				if(skipToWeekTextField.getText() == "") {
 					return;
 				}
-				int textFieldNumber = Integer.parseInt(weekTextField.getText());
-				if(textFieldNumber < 1 && textFieldNumber > 52) {
-					return;
+				int weekTextFieldNumber = Integer.parseInt(skipToWeekTextField.getText());
+				if(weekTextFieldNumber >= 1 && weekTextFieldNumber <= 52) {
+					int differenceWeeks = weekTextFieldNumber-startOfWeek.getWeekOfWeekyear();
+					startOfWeek = startOfWeek.plusWeeks(differenceWeeks);
+					endOfWeek = endOfWeek.plusWeeks(differenceWeeks);
+					week = weekTextFieldNumber;
+					weekLabel.setText("Uke " + weekTextFieldNumber);
 				}
 				
-				//
-				//
-				//
-				//HER SKAL VI GJØRE OM SLIK AT VI HELLER SØKER OPP EN DATO - DET ER LETTERE OG FINERE.
-				//
-				//
-				//
 				updateMonthString();
-				
-					
-				
-					if (textFieldNumber > 0 && textFieldNumber <= 52) {
-						week = textFieldNumber;
-						weekLabel.setText("Uke " + textFieldNumber);
-					}
-					else if(textFieldNumber < 1){
-						week = 1;
-						weekLabel.setText("Uke " + 1);
-					}
-					else if(textFieldNumber > 52){
-						week = 52;
-						weekLabel.setText("Uke " + 52);
-					}
 				}
 
 			});
+		
+		skipToYearTextField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(skipToYearTextField.getText() == "") {
+					return;
+				}
+				int yearTextFieldNumber = Integer.parseInt(skipToYearTextField.getText());
+				int differenceYears = Integer.parseInt(skipToYearTextField.getText()) - (int)startOfWeek.getYear();
+				startOfWeek = startOfWeek.plusWeeks(52 * differenceYears);
+				endOfWeek = startOfWeek.plusDays(6);
+				System.out.println("" + startOfWeek + endOfWeek);
+				updateMonthString();
+			}
+		});
 		
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -416,11 +358,7 @@ public class HomeGUI extends JPanel {
 			
 		});
 		
-		skipToYearTextField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-	
-			}
-		});
+
 		
 		myAppointmentsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -442,7 +380,7 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		weekPanel.add(skipToWeekLabel);
-		weekPanel.add(weekTextField);
+		weekPanel.add(skipToWeekTextField);
 		weekPanel.add(lastWeekButton);
 		weekPanel.add(weekLabel);
 		weekPanel.add(nextWeekButton);
