@@ -1,7 +1,6 @@
 package database;
 
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,9 +11,6 @@ import baseClasses.Notification;
 import baseClasses.NotificationEnum;
 import baseClasses.Person;
 import baseClasses.Room;
-
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -29,14 +25,12 @@ public class Database {
 	private final static String PASSWORD = "123";
 	
 	private java.sql.Connection con;
-	private java.sql.Statement statement;
 	
 	
 	public Database() throws Exception{
 		try{
 			Class.forName(DRIVER);
 			con = DriverManager.getConnection(CONNECTION, USER, PASSWORD);
-			statement = con.createStatement();
 		}
 		catch(Exception e){
 			System.out.println("Connection error " + e.getMessage());	
