@@ -208,6 +208,7 @@ public class Server {
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
 			case S_PERSON_APPOINTMENT:
+				
 				System.out.println("Request for inviting people");
 				Boolean bool4 = database.createPersonAppointment(keyword[0],(Appointment)obj.getObject());
 				System.out.println("::Notification created");
