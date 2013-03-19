@@ -209,12 +209,6 @@ public class Server {
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
-			case S_PERSON_APPOINTMENT:
-				System.out.println("Request for inviting people");
-				bool = database.createPersonAppointment(keyword[0],(Appointment)obj.getObject());
-				System.out.println("::Notification created");
-				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
-				return sObject;
 			case ACCEPT:
 				System.out.println("Answer on a notifiction received.");
 				bool = database.agreedAppointment(keyword[0], (Appointment)obj.getObject(), obj.getBoolean());

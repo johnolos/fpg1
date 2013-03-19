@@ -327,19 +327,20 @@ public class Client {
 		return (Boolean)receivedObj.getObject();
 	}
 	
-	
-	public Boolean createPersonAppointment(Person person, Appointment app) {
-		String [] keyword = {person.getUsername()};
-		// Creates requestObject
-		SendObject reqObj = new SendObject(RequestEnum.S_PERSON_APPOINTMENT, keyword);
-		reqObj.setObject(app);
-		//Sends object to server
-		this.send(reqObj);
-		//Return object from server
-		SendObject receivedObj = receive();
-		//Return to GUI if the appointment is registered
-		return (Boolean)receivedObj.getObject();
-	}
+//	
+//	public Boolean createPersonAppointment(Person person, Appointment app) {
+//		String [] keyword = {person.getUsername()};
+//		// Creates requestObject
+//		SendObject reqObj = new SendObject(RequestEnum.S_PERSON_APPOINTMENT, keyword);
+//		reqObj.setObject(app);
+//		//Sends object to server
+//		this.send(reqObj);
+//		//Return object from server
+//		SendObject receivedObj = receive();
+//		//Return to GUI if the appointment is registered
+//		return (Boolean)receivedObj.getObject();
+//	}
+//	
 	
 	/**
 	 * Internal function to start client
