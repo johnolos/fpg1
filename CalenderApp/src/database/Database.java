@@ -43,8 +43,12 @@ public class Database {
 		}
 	}
 	
-	//Register a user in the database
-	public boolean registerUser(String[] keyword){
+	/**
+	 * Register a user in the database
+	 * @param keyword username, password, firstName, lastName, email, telephone
+	 * @return Boolean
+	 */
+	public Boolean registerUser(String[] keyword){
 		try {
 			String query = "" + 
 					"INSERT INTO person(username, password, firstName, lastName, email, telefon) " +
@@ -62,7 +66,11 @@ public class Database {
 		return true;
 	}
 	
-	//Confirms that a person with username and password exists
+	/**
+	 * Confirms that a person with username and password exists
+	 * @param keyword username, password
+	 * @return Person
+	 */
 	public Person login(String[] keyword){
 		try {
 			String query = 	"SELECT * " +
@@ -81,7 +89,11 @@ public class Database {
 		return null;
 	}
 	
-	//Find persons with search word
+	/**
+	 * Find persons with search word
+	 * @param keyword search word
+	 * @return ArrayList<Person>
+	 */
 	public ArrayList<Person> getPerson(String[] keyword){
 		ArrayList<Person> personList = new ArrayList<Person>();
 		try {
@@ -142,7 +154,11 @@ public class Database {
 		return null;
 	}
 	
-	//Get  a list with all appointments from user
+	/**
+	 * Get  a list with all appointments from user
+	 * @param keyword username
+	 * @return ArrayList<Appointment>
+	 */
 	public ArrayList<Appointment> getAppointmentsOnPerson(String[] keyword){
 		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
 		
@@ -197,7 +213,11 @@ public class Database {
 		return null;
 	}
 	
-	//Get a list of Appointment from user with date
+	/**
+	 * Get a list of Appointment from user with date
+	 * @param keyword username, date
+	 * @return ArrayList<Appointment>
+	 */
 	public ArrayList<Appointment> getAppointmentsOnDate(String[] keyword){
 		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
 		
@@ -254,7 +274,11 @@ public class Database {
 		return null;
 	}
 	
-	//Delete given appointment from database
+	/**
+	 * Delete given appointment from database
+	 * @param username
+	 * @param appointment
+	 */
 	public void deleteAppointment(String username, Appointment app){
 		try {
 			String query = 	"DELETE FROM appointment " +
@@ -266,6 +290,11 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
+	/**
+	 * Create an appointment
+	 * @param appointment
+	 * @return Boolean
+	 */
 	public Boolean createAppointment(Appointment app){
 		if(app.getRoom() == null){
 			app.setRoom(new Room(0, "Ingen rom"));
@@ -292,6 +321,12 @@ public class Database {
 		
 	}
 
+	/**
+	 * Change appointment to new values
+	 * @param newApp
+	 * @param oldApp
+	 * @return Boolean
+	 */
 	public Boolean changeAppointment(Appointment newApp, Appointment oldApp){
 		try {
 			String query =  "UPDATE appointment " +
@@ -312,7 +347,12 @@ public class Database {
 		return false;
 	}
 
-	//Set hasAgreed to 1 for user on appointment
+	/**
+	 * Set user has agreed to an appointment
+	 * @param user
+	 * @param app
+	 * @return Boolean
+	 */
 	public Boolean agreedAppointment(String user, Appointment app){
 		try{
 			String query = 	"UPDATE person_appointment "+
@@ -327,7 +367,12 @@ public class Database {
 		return false;
 	}
 
-	//Add a user to appointment 
+	/**
+	 * Add a user to appointment
+	 * @param user
+	 * @param app
+	 * @return Boolean
+	 */
 	public Boolean createPersonAppointment(String user, Appointment app){
 		try{
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
@@ -343,7 +388,11 @@ public class Database {
 		return false;
 	}
 	
-	//Get list of persons on Appointment
+	/**
+	 * Get a list of persons with an appointment
+	 * @param app
+	 * @return ArrayList<Person>
+	 */
 	public ArrayList<Person> getMembersOnAppointment(Appointment app){
 		ArrayList<Person> personList = new ArrayList<Person>();
 		try {
@@ -367,7 +416,12 @@ public class Database {
 		return null;
 	}
 	
-	//Delete a user from appointment
+	/**
+	 * Delete a user from an appointment
+	 * @param user
+	 * @param appointment
+	 * @return Boolean
+	 */
 	public Boolean deletePersonAppointment(String user, Appointment app){
 		try{
 			String query = 	"DELETE FROM person_appointment "+
@@ -386,7 +440,12 @@ public class Database {
 		return false;
 	}
 	
-	//Add alarm with user and appointment
+	/**
+	 * Add alarm with user and appointment
+	 * @param user
+	 * @param appointment
+	 * @param alarm
+	 */
 	public void addAlarm(String user, Appointment app, Alarm alarm){
 		try{
 			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
@@ -400,7 +459,12 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	//Changes alarm with user and appointment
+	/**
+	 * Changes alarm with user and appointment
+	 * @param user
+	 * @param appointment
+	 * @param alarm
+	 */
 	public void changeAlarm(String user, Appointment app, Alarm alarm){
 		try{
 			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
@@ -414,7 +478,11 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	//Delete alarm from user with time
+	/**
+	 * Delete alarm from user with time
+	 * @param user
+	 * @param alarm
+	 */
 	public void deleteAlarm(String user, Alarm alarm){
 		try{
 			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
@@ -427,7 +495,12 @@ public class Database {
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	//Get alarm on an appointment
+	/**
+	 * Get alarm on an appointment
+	 * @param user
+	 * @param appointment
+	 * @return Alarm
+	 */
 	public Alarm getAlarmOnAppointment(String user,Appointment app){
 		try{
 			String query = 	"SELECT time " +
@@ -450,7 +523,11 @@ public class Database {
 		return null;
 	}
 	
-	//Get list of alarm with date
+	/**
+	 * Get list of alarm with date
+	 * @param keyword username, time
+	 * @return ArrayList<Alarm>
+	 */
 	public ArrayList<Alarm> getAlarmOnDate(String[] keyword){
 		ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
 		
@@ -479,8 +556,13 @@ public class Database {
 		return null;
 	}
 	
-	
-	public boolean createNotification(String[] keyword, Appointment app){
+	/**
+	 * Create a Notification to a person with appointment and type
+	 * @param keyword type, toUser, fromUser
+	 * @param appointment
+	 * @return Boolean
+	 */
+	public Boolean createNotification(String[] keyword, Appointment app){
 		try{
 			String query = 	"INSERT INTO notification(type,idPerson,idAppointment, fromPerson) " +
 							"VALUES('"+keyword[0]+"','"+ getPersonId(keyword[1]) +"','"+ getAppointmentId(app) +"','"+ keyword[2]+ "')";
@@ -524,8 +606,13 @@ public class Database {
 		return null;
 	}
 	
-	//Delete notification 
-	public boolean deleteNotification(String [] keyword,Appointment app){
+	/**
+	 * Delete notification 
+	 * @param keyword toUser, fromUser
+	 * @param app
+	 * @return Boolean
+	 */
+	public Boolean deleteNotification(String [] keyword,Appointment app){
 		try{
 			String query = "DELETE FROM notification " +
 							"WHERE idPerson = '"+getPersonId(keyword[0])+"' " +
@@ -541,7 +628,11 @@ public class Database {
 		return false;
 	}
 	
-	//Parse String[] to int[]
+	/**
+	 * Get integer array from string array
+	 * @param s
+	 * @return int[]
+	 */
 	private int[] toInt(String[] s){
 		int[] newInt = new int[s.length];
 		for(int i=0; i<s.length;i++)
@@ -549,27 +640,12 @@ public class Database {
 		
 		return newInt;	
 	}
-	
-	//Return idAppointment from appointment
-	private String getAppointmentId(Appointment app){
-		try{
-			String query = 	"SELECT idAppointment " +
-							"FROM appointment " +
-							"WHERE title='" + app.getTitle() + "' " +
-							"AND sTime='" + app.getStart().toLocalTime().toString() + "' " +
-							"AND eTime='" + app.getEnd().toLocalTime().toString() + "' " +
-							"AND date='" + app.getStart().toLocalDate().toString() + "' " +
-							"AND description='" + app.getDescription() + "' " +
-							"AND admin = '" + app.getAdmin() + "'";
-			ResultSet res = con.createStatement().executeQuery(query);
-			
-			if(res.next()) return res.getString(1);
-		}
-		catch (Exception e) { e.printStackTrace(); }
-		return null;
-	}
-	
-	//Get a list of Appointment from user with date
+		
+	/**
+	 * Get appointment from id
+	 * @param idAppointment
+	 * @return Appointment
+	 */
 	private Appointment getAppointment(int idAppointment){
 		try {
 			String query = 	"SELECT * " +
@@ -617,7 +693,34 @@ public class Database {
 		return null;
 	}
 	
-	//Return idPerson from a user
+	/**
+	 * Get id from appointment
+	 * @param app
+	 * @return String
+	 */
+	private String getAppointmentId(Appointment app){
+		try{
+			String query = 	"SELECT idAppointment " +
+							"FROM appointment " +
+							"WHERE title='" + app.getTitle() + "' " +
+							"AND sTime='" + app.getStart().toLocalTime().toString() + "' " +
+							"AND eTime='" + app.getEnd().toLocalTime().toString() + "' " +
+							"AND date='" + app.getStart().toLocalDate().toString() + "' " +
+							"AND description='" + app.getDescription() + "' " +
+							"AND admin = '" + app.getAdmin() + "'";
+			ResultSet res = con.createStatement().executeQuery(query);
+			
+			if(res.next()) return res.getString(1);
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return null;
+	}
+	
+	/**
+	 * Get id from user
+	 * @param user
+	 * @return String
+	 */
 	private String getPersonId(String user){
 		try{
 			String query = 	"SELECT idPerson " +
@@ -631,7 +734,11 @@ public class Database {
 		return null;
 	}
 	
-	//Return idRoom from a Room
+	/**
+	 * Get id from room
+	 * @param room
+	 * @return String
+	 */
 	private String getRoomId(Room room) {
 		if(room == null){
 			return "1";
@@ -648,7 +755,11 @@ public class Database {
 		return null;
 	}
 	
-	//Return String[] with information from given room
+	/**
+	 * Get room from id
+	 * @param idRoom
+	 * @return String[] capacity, name
+	 */
 	private String[] getRoom(int idRoom){
 		try {
 			String query = 	"SELECT capacity, name " +
@@ -667,7 +778,12 @@ public class Database {
 		return null;
 	}
 	
-	public NotificationEnum getEnum(String type){
+	/**
+	 * Get enum from string
+	 * @param type
+	 * @return NotificationEnum
+	 */
+	private NotificationEnum getEnum(String type){
 		switch(type){
 		case "DECLINED": return NotificationEnum.DECLINED;
 		case "INVITATION": return NotificationEnum.INVITATION;
