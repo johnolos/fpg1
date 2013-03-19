@@ -125,8 +125,20 @@ public class HomeGUI extends JPanel {
 	private int dayStartOfWeek;
 	private int dayEndOfWeek;
 	private String startMonth;
+	
+	private String[] columnNames;
 
 	private ArrayList<Appointment> allMyAppointments;
+	
+	private DefaultTableModel tableModel;
+	private Object[][] initialTableContents;
+	private JLabel mondayLabel;
+	private JLabel tuesdayLabel;
+	private JLabel wednesdayLabel;
+	private JLabel thursdayLabel;
+	private JLabel fridayLabel;
+	private JLabel saturdayLabel;
+	private JLabel sundayLabel;
 
 	public HomeGUI(Person user, Client client) {
 		
@@ -179,12 +191,12 @@ public class HomeGUI extends JPanel {
 		notificationLabel = new JLabel("Notifikasjoner");
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		headlineLabel = new JLabel("GRUPPE 1s KALENDERSYSTEM!!!");
-		headlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
+		headlineLabel = new JLabel("Angelei Kalendersystem");
+		headlineLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 25));
 		
 		weekLabel = new JLabel("Uke " + week);
 		
-		yearAndDateLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		yearAndDateLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
 
 		// ----------------------------------------------------------------//
 		// Buttons
@@ -221,7 +233,6 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		addStuffToPanels();
-		initTable();
 		createLayout();
 		setColors();
 		addListeners();
@@ -270,7 +281,6 @@ public class HomeGUI extends JPanel {
 		yearAndDateLabel.setText("" + dayStartOfWeek + ". " + startMonth + " - " + dayEndOfWeek + ". " + endMonth + " "  + year);
 		
 		
-		
 	}
 	
 	
@@ -292,6 +302,9 @@ public class HomeGUI extends JPanel {
 				}
 				
 				updateMonthString();
+				updateDateLabels();
+//				updateColumnIdentifiers();
+				
 				}
 
 			});
@@ -305,8 +318,9 @@ public class HomeGUI extends JPanel {
 				int differenceYears = Integer.parseInt(skipToYearTextField.getText()) - (int)startOfWeek.getYear();
 				startOfWeek = startOfWeek.plusWeeks(52 * differenceYears);
 				endOfWeek = startOfWeek.plusDays(6);
-				System.out.println("" + startOfWeek + endOfWeek);
 				updateMonthString();
+				updateDateLabels();
+//				updateColumnIdentifiers();
 			}
 		});
 		
@@ -336,6 +350,8 @@ public class HomeGUI extends JPanel {
 				endOfWeek = startOfWeek.plusDays(6);
 				
 				updateMonthString();
+				updateDateLabels();
+//				updateColumnIdentifiers();
 			}
 		});
 		
@@ -353,6 +369,8 @@ public class HomeGUI extends JPanel {
 				endOfWeek = startOfWeek.plusDays(6);
 				
 				updateMonthString();
+				updateDateLabels();
+//				updateColumnIdentifiers();
 				
 			}
 			
@@ -373,19 +391,126 @@ public class HomeGUI extends JPanel {
 		
 	}
 	
+	public void updateDateLabels(){
+		
+		mondayLabel.setText("" + dayStartOfWeek + "." + startMonth);
+		
+		tuesdayLabel.setText("" + (dayStartOfWeek+1) + "." + startMonth);
+		
+		wednesdayLabel.setText("" + (dayStartOfWeek+2) + "." + startMonth);
+		
+		thursdayLabel.setText("" + (dayStartOfWeek+3) + "." + startMonth);
+		
+		fridayLabel.setText("" + (dayStartOfWeek+4) + "." + startMonth);
+
+		saturdayLabel.setText("" + (dayStartOfWeek+5) + "." + startMonth);
+
+		sundayLabel.setText("" + (dayStartOfWeek+6) + "." + startMonth);
+	
+		
+	}
+	
 	public void addStuffToPanels(){
 		
-		// ----------------------------------------------------------------//
-		// AddStuffToPanels
-		// ----------------------------------------------------------------//
+		
+		
+		mondayLabel = new JLabel("mondayLabel");
+		mondayLabel.setText("" + dayStartOfWeek + "." + startMonth);
+		
+		tuesdayLabel = new JLabel("tuesdayLabel");
+		tuesdayLabel.setText("" + (dayStartOfWeek+1) + "." + startMonth);
+		
+		wednesdayLabel = new JLabel("wednesdayLabel");
+		wednesdayLabel.setText("" + (dayStartOfWeek+2) + "." + startMonth);
+		
+		thursdayLabel = new JLabel("thursdayLabel");
+		thursdayLabel.setText("" + (dayStartOfWeek+3) + "." + startMonth);
+		
+		fridayLabel = new JLabel("fridayLabel");
+		fridayLabel.setText("" + (dayStartOfWeek+4) + "." + startMonth);
 
-		weekPanel.add(skipToWeekLabel);
-		weekPanel.add(skipToWeekTextField);
-		weekPanel.add(lastWeekButton);
-		weekPanel.add(weekLabel);
-		weekPanel.add(nextWeekButton);
-		weekPanel.add(skipToYearLabel);
-		weekPanel.add(skipToYearTextField);
+		saturdayLabel = new JLabel("saturdayLabel");
+		saturdayLabel.setText("" + (dayStartOfWeek+5) + "." + startMonth);
+
+		sundayLabel = new JLabel("sundayLabel");
+		sundayLabel.setText("" + (dayStartOfWeek+6) + "." + startMonth);
+	
+
+		GroupLayout gl_weekPanel = new GroupLayout(weekPanel);
+		gl_weekPanel.setHorizontalGroup(
+			gl_weekPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_weekPanel.createSequentialGroup()
+					.addGap(157)
+					.addComponent(mondayLabel)
+					.addGap(68)
+					.addComponent(tuesdayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+					.addGap(1)
+					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_weekPanel.createSequentialGroup()
+							.addComponent(skipToWeekLabel)
+							.addPreferredGap(ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+							.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(skipToYearLabel)
+							.addPreferredGap(ComponentPlacement.RELATED))
+						.addGroup(gl_weekPanel.createSequentialGroup()
+							.addGap(64)
+							.addComponent(wednesdayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+							.addGap(38)))
+					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_weekPanel.createSequentialGroup()
+							.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(73)
+							.addComponent(lastWeekButton)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(weekLabel))
+						.addGroup(gl_weekPanel.createSequentialGroup()
+							.addGap(10)
+							.addComponent(thursdayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+							.addGap(65)
+							.addComponent(fridayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+					.addGroup(gl_weekPanel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(Alignment.LEADING, gl_weekPanel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(nextWeekButton))
+						.addGroup(Alignment.LEADING, gl_weekPanel.createSequentialGroup()
+							.addGap(35)
+							.addComponent(saturdayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+							.addGap(81)
+							.addComponent(sundayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(237, Short.MAX_VALUE))
+		);
+		gl_weekPanel.setVerticalGroup(
+			gl_weekPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_weekPanel.createSequentialGroup()
+					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_weekPanel.createSequentialGroup()
+							.addGap(5)
+							.addGroup(gl_weekPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(skipToWeekLabel)
+								.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(skipToYearLabel)
+								.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(weekLabel)))
+						.addComponent(nextWeekButton)
+						.addComponent(lastWeekButton))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(tuesdayLabel)
+						.addGroup(gl_weekPanel.createParallelGroup(Alignment.BASELINE)
+							.addComponent(wednesdayLabel)
+							.addComponent(thursdayLabel)
+							.addComponent(saturdayLabel)
+							.addComponent(sundayLabel))
+						.addComponent(fridayLabel))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_weekPanel.createSequentialGroup()
+					.addContainerGap(31, Short.MAX_VALUE)
+					.addComponent(mondayLabel)
+					.addContainerGap())
+		);
+		weekPanel.setLayout(gl_weekPanel);
 
 		notificationPanel.add(logoutButton);
 
@@ -404,8 +529,6 @@ public class HomeGUI extends JPanel {
 		notificationPanel.setBackground(UIManager.getColor("Panel.background"));
 	}
 
-	public void initTable() {
-	}
 
 	public void createLayout() {
 		
@@ -417,18 +540,15 @@ public class HomeGUI extends JPanel {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(headlinePanel, GroupLayout.DEFAULT_SIZE, 1244, Short.MAX_VALUE)
+						.addComponent(headlinePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(notificationPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-								.addComponent(buttonPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+								.addComponent(buttonPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+								.addComponent(notificationPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(18)
-									.addComponent(weekPanel, GroupLayout.DEFAULT_SIZE, 1106, Short.MAX_VALUE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 1118, Short.MAX_VALUE)))))
+								.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 1244, Short.MAX_VALUE)
+								.addComponent(weekPanel, GroupLayout.DEFAULT_SIZE, 1244, Short.MAX_VALUE))))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -441,32 +561,32 @@ public class HomeGUI extends JPanel {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(buttonPanel, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(notificationPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(notificationPanel, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(weekPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)))
-					.addGap(96))
+							.addComponent(weekPanel, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 626, Short.MAX_VALUE)))
+					.addGap(11))
 		);
 		
 		calendarPanel = new JPanel();
-		calendarPanel.setBounds(0, 0, 1106, 554);
+		calendarPanel.setBounds(0, 11, 1106, 588);
 		layeredPane.add(calendarPanel);
 		
 		JScrollPane calendarScrollPane = new JScrollPane();
 		
 		GroupLayout gl_calendarPanel = new GroupLayout(calendarPanel);
 		gl_calendarPanel.setHorizontalGroup(
-			gl_calendarPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_calendarPanel.createSequentialGroup()
+			gl_calendarPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_calendarPanel.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 1086, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		gl_calendarPanel.setVerticalGroup(
 			gl_calendarPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_calendarPanel.createSequentialGroup()
-					.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+				.addGroup(gl_calendarPanel.createSequentialGroup()
+					.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		
@@ -477,37 +597,39 @@ public class HomeGUI extends JPanel {
 		
 		
 		calendarScrollPane.setViewportView(table);
-		DefaultTableModel tableModel = new DefaultTableModel(
-				new Object [][] {
-						{"00:00", "", "", "", "", "", "", ""},
-						{"01:00", "", "", "", "", "", "", ""},
-						{"02:00", "", "", "", "", "", "", ""},
-						{"03:00", "", "", "", "", "", "", ""},
-						{"04:00", "", "", "", "", "", "", ""},
-						{"05:00", "", "", "", "", "", "", ""},
-						{"06:00", "", "", "", "", "", "", ""},
-						{"07:00", "", "", "", "", "", "", ""},
-						{"08:00", "", "", "", "", "", "", ""},
-						{"09:00", "", "", "", "", "", "", ""},
-						{"10:00", "", "", "", "", "", "", ""},
-						{"11:00", "", "", "", "", "", "", ""},
-						{"12:00", "", "", "", "", "", "", ""},
-						{"13:00", "", "", "", "", "", "", ""},
-						{"14:00", "", "", "", "", "", "", ""},
-						{"15:00", "", "", "", "", "", "", ""},
-						{"16:00", "", "", "", "", "", "", ""},
-						{"17:00", "", "", "", "", "", "", ""},
-						{"18:00", "", "", "", "", "", "", ""},
-						{"19:00", "", "", "", "", "", "", ""},
-						{"20:00", "", "", "", "", "", "", ""},
-						{"21:00", "", "", "", "", "", "", ""},
-						{"22:00", "", "", "", "", "", "", ""},
-						{"23:00", "", "", "", "", "", "", ""}
-					},
-					new String[]  {
+		initialTableContents = new Object [][] {
+				{"00:00", "", "", "", "", "", "", ""},
+				{"01:00", "", "", "", "", "", "", ""},
+				{"02:00", "", "", "", "", "", "", ""},
+				{"03:00", "", "", "", "", "", "", ""},
+				{"04:00", "", "", "", "", "", "", ""},
+				{"05:00", "", "", "", "", "", "", ""},
+				{"06:00", "", "", "", "", "", "", ""},
+				{"07:00", "", "", "", "", "", "", ""},
+				{"08:00", "", "", "", "", "", "", ""},
+				{"09:00", "", "", "", "", "", "", ""},
+				{"10:00", "", "", "", "", "", "", ""},
+				{"11:00", "", "", "", "", "", "", ""},
+				{"12:00", "", "", "", "", "", "", ""},
+				{"13:00", "", "", "", "", "", "", ""},
+				{"14:00", "", "", "", "", "", "", ""},
+				{"15:00", "", "", "", "", "", "", ""},
+				{"16:00", "", "", "", "", "", "", ""},
+				{"17:00", "", "", "", "", "", "", ""},
+				{"18:00", "", "", "", "", "", "", ""},
+				{"19:00", "", "", "", "", "", "", ""},
+				{"20:00", "", "", "", "", "", "", ""},
+				{"21:00", "", "", "", "", "", "", ""},
+				{"22:00", "", "", "", "", "", "", ""},
+				{"23:00", "", "", "", "", "", "", ""}
+		};
+		tableModel = new DefaultTableModel(
+				initialTableContents,
+					columnNames = new String[]  {
 						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"});
 		table.setModel(tableModel);
 		calendarPanel.setLayout(gl_calendarPanel);
+		
 		
 		for(int i=1; i<table.getColumnCount();i++){
 			table.getColumnModel().getColumn(i).setCellRenderer(new TableRenderer());
@@ -565,9 +687,6 @@ public class HomeGUI extends JPanel {
 		panel_1 = new JPanel();
 		panel_1.setBounds(31, 99, 106, 64);
 		
-
-		weekPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
 		JScrollPane scrollPane = new JScrollPane();
 
 		GroupLayout gl_notificationPanel = new GroupLayout(notificationPanel);
@@ -580,14 +699,16 @@ public class HomeGUI extends JPanel {
 							.addComponent(notificationLabel))
 						.addGroup(gl_notificationPanel.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(starfighterLabel, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
-						.addGroup(gl_notificationPanel.createSequentialGroup()
-							.addGap(29)
-							.addComponent(logoutButton))
-						.addGroup(gl_notificationPanel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)))
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)))
 					.addContainerGap())
+				.addGroup(Alignment.LEADING, gl_notificationPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(starfighterLabel, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+					.addGap(8))
+				.addGroup(gl_notificationPanel.createSequentialGroup()
+					.addGap(28)
+					.addComponent(logoutButton)
+					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		gl_notificationPanel.setVerticalGroup(
 			gl_notificationPanel.createParallelGroup(Alignment.LEADING)
@@ -596,11 +717,11 @@ public class HomeGUI extends JPanel {
 					.addComponent(notificationLabel)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
+					.addGap(40)
 					.addComponent(starfighterLabel, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGap(30)
 					.addComponent(logoutButton)
-					.addContainerGap())
+					.addContainerGap(48, Short.MAX_VALUE))
 		);
 		
 		this.notificationModel = new DefaultListModel<Notification>();
@@ -656,9 +777,9 @@ public class HomeGUI extends JPanel {
 			gl_panel1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel1.createSequentialGroup()
 					.addComponent(headlineLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(336)
-					.addComponent(yearAndDateLabel)
-					.addGap(479))
+					.addGap(142)
+					.addComponent(yearAndDateLabel, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE)
+					.addGap(496))
 		);
 		gl_panel1.setVerticalGroup(
 			gl_panel1.createParallelGroup(Alignment.LEADING)
@@ -720,7 +841,7 @@ public class HomeGUI extends JPanel {
 	}
 	
 	public static Client getClient(){
+
 		return client;
 	}
-	
 }
