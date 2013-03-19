@@ -217,11 +217,7 @@ public class Server {
 				return sObject;
 			case ACCEPT:
 				System.out.println("Answer on a notifiction received.");
-				if(obj.getBoolean()){
-					bool = database.agreedAppointment(keyword[0], (Appointment)obj.getObject());
-				} else {
-					bool = database.deletePersonAppointment(keyword[0], (Appointment)obj.getObject());
-				}
+				bool = database.agreedAppointment(keyword[0], (Appointment)obj.getObject(), obj.getBoolean());
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
 			default:
