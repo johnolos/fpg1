@@ -566,7 +566,7 @@ public class Database {
 			if(res.next()) return res.getString(1);
 		}
 		catch (Exception e) { e.printStackTrace(); }
-		return null;
+		return "1";
 	}
 	
 	/**
