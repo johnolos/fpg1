@@ -418,7 +418,14 @@ public class HomeGUI extends JPanel {
 		
 		skipToYearTextField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-	
+				if(skipToYearTextField.getText() == "") {
+					return;
+				}
+				int differenceYears = Integer.parseInt(skipToYearTextField.getText()) - (int)startOfWeek.getYear();
+				System.out.println(differenceYears);
+				startOfWeek = startOfWeek.plusYears(differenceYears);
+				endOfWeek = endOfWeek.plusYears(differenceYears);
+				updateMonthString();
 			}
 		});
 		
