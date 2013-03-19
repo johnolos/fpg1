@@ -803,7 +803,8 @@ public class HomeGUI extends JPanel {
 		for(int i = 0; i < notifications.size(); i++) {
 			this.notificationModel.addElement(notifications.get(i));
 		}
-		this.list.repaint();
+		this.list.setModel(notificationModel); // Leste på stackoverflow at dette skulle gjøres
+		this.list.repaint(); // Vet ikke om denne gjør noe.
 	}
 
 	public static Person getCurrentUser() {
