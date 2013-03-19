@@ -23,7 +23,7 @@ import baseClasses.Room;
 import database.Database;
 
 public class Server {
-	private final static String SERVERIP = "78.91.5.165";
+	private final static String SERVERIP = "78.91.61.224";
 	private final static int SERVERPORT = 4004;
 	private Database database;
 
@@ -72,7 +72,6 @@ public class Server {
 		private void send(SendObject obj) {
 			try {
 				this.objectOut.writeObject(obj);
-				System.out.println("Sendt");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
