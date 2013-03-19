@@ -280,6 +280,7 @@ public class HomeGUI extends JPanel {
 		year = endOfWeek.getYear();
 		yearAndDateLabel.setText("" + dayStartOfWeek + ". " + startMonth + " - " + dayEndOfWeek + ". " + endMonth + " "  + year);
 		
+		insertAppointmentsIntoTable();
 		
 	}
 	
