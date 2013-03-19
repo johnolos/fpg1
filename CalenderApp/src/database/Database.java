@@ -131,8 +131,10 @@ public class Database {
 				roomList.add( new Room(Integer.parseInt(res.getString(1)), res.getString(2)) );
 			}
 			
-			if(!roomList.contains(new Room(0, "Ingen rom")))
-				roomList.add(0, new Room(0, "Ingen"));
+			if(!roomList.isEmpty())
+				roomList.add(new Room(0, "Ingen rom"));
+			else if(!roomList.get(0).getName().equals("Ingen rom"))
+				roomList.add(new Room(0, "Ingen rom"));
 			
 			return roomList;
 			
@@ -312,7 +314,7 @@ public class Database {
 	}
 
 	//Set hasAgreed to 1 for user on appointment
-	public void agreedAppointment(String user, Appointment app){
+	public Boolean agreedAppointment(String user, Appointment app){
 		try{
 			String query = 	"UPDATE person_appointment "+
 							"SET hasAgreed = '1' "+
@@ -320,8 +322,10 @@ public class Database {
 							"AND appointment_idAppointment ='"+ getAppointmentId(app)+"'";
 			con.createStatement().executeUpdate(query);
 			deleteNotification(new String[] {user,app.getAdmin()}, app);
+			return true;
 		}
 		catch (Exception e) { e.printStackTrace(); }
+		return false;
 	}
 
 	//Add a user to appointment 
@@ -365,7 +369,7 @@ public class Database {
 	}
 	
 	//Delete a user from appointment
-	public void deletePersonAppointment(String user, Appointment app){
+	public Boolean deletePersonAppointment(String user, Appointment app){
 		try{
 			String query = 	"DELETE FROM person_appointment "+
 							"WHERE appointment_idAppointment='"+ getAppointmentId(app) +"' "+
@@ -377,8 +381,10 @@ public class Database {
 				deleteNotification(new String[] {user,app.getAdmin()}, app);
 				createNotification(new String[] {"DECLINED",user,app.getAdmin()}, app);
 			}
+			return true;
 			
 		} catch (SQLException e) { e.printStackTrace(); }
+		return false;
 	}
 	
 	//Add alarm with user and appointment
