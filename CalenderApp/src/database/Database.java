@@ -274,7 +274,11 @@ public class Database {
 		return null;
 	}
 	
-	//Delete given appointment from database
+	/**
+	 * Delete given appointment from database
+	 * @param username
+	 * @param appointment
+	 */
 	public void deleteAppointment(String username, Appointment app){
 		try {
 			String query = 	"DELETE FROM appointment " +
@@ -286,6 +290,11 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
+	/**
+	 * Create an appointment
+	 * @param appointment
+	 * @return Boolean
+	 */
 	public Boolean createAppointment(Appointment app){
 		if(app.getRoom() == null){
 			app.setRoom(new Room(0, "Ingen rom"));
@@ -312,6 +321,12 @@ public class Database {
 		
 	}
 
+	/**
+	 * Change appointment to new values
+	 * @param newApp
+	 * @param oldApp
+	 * @return Boolean
+	 */
 	public Boolean changeAppointment(Appointment newApp, Appointment oldApp){
 		try {
 			String query =  "UPDATE appointment " +
@@ -332,7 +347,12 @@ public class Database {
 		return false;
 	}
 
-	//Set hasAgreed to 1 for user on appointment
+	/**
+	 * Set user has agreed to an appointment
+	 * @param user
+	 * @param appointment
+	 * @return Boolean
+	 */
 	public Boolean agreedAppointment(String user, Appointment app){
 		try{
 			String query = 	"UPDATE person_appointment "+
@@ -347,7 +367,12 @@ public class Database {
 		return false;
 	}
 
-	//Add a user to appointment 
+	/**
+	 * Add a user to appointment
+	 * @param user
+	 * @param appointment
+	 * @return Boolean
+	 */
 	public Boolean createPersonAppointment(String user, Appointment app){
 		try{
 			String query = "INSERT INTO person_appointment (appointment_idAppointment,person_idPerson) " +
@@ -363,7 +388,11 @@ public class Database {
 		return false;
 	}
 	
-	//Get list of persons on Appointment
+	/**
+	 * Get a list of persons with an appointment
+	 * @param appointment
+	 * @return ArrayList<Person>
+	 */
 	public ArrayList<Person> getMembersOnAppointment(Appointment app){
 		ArrayList<Person> personList = new ArrayList<Person>();
 		try {
@@ -387,7 +416,12 @@ public class Database {
 		return null;
 	}
 	
-	//Delete a user from appointment
+	/**
+	 * Delete a user from an appointment
+	 * @param user
+	 * @param appointment
+	 * @return Boolean
+	 */
 	public Boolean deletePersonAppointment(String user, Appointment app){
 		try{
 			String query = 	"DELETE FROM person_appointment "+
@@ -406,7 +440,12 @@ public class Database {
 		return false;
 	}
 	
-	//Add alarm with user and appointment
+	/**
+	 * Add alarm with user and appointment
+	 * @param user
+	 * @param appointment
+	 * @param alarm
+	 */
 	public void addAlarm(String user, Appointment app, Alarm alarm){
 		try{
 			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
@@ -420,7 +459,12 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	//Changes alarm with user and appointment
+	/**
+	 * Changes alarm with user and appointment
+	 * @param user
+	 * @param appointment
+	 * @param alarm
+	 */
 	public void changeAlarm(String user, Appointment app, Alarm alarm){
 		try{
 			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
@@ -434,7 +478,11 @@ public class Database {
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	//Delete alarm from user with time
+	/**
+	 * Delete alarm from user with time
+	 * @param user
+	 * @param alarm
+	 */
 	public void deleteAlarm(String user, Alarm alarm){
 		try{
 			String time = alarm.getAlarm().toLocalDate().toString() +" "+ alarm.getAlarm().toLocalTime().toString();
@@ -447,7 +495,12 @@ public class Database {
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
-	//Get alarm on an appointment
+	/**
+	 * Get alarm on an appointment
+	 * @param user
+	 * @param appointment
+	 * @return Alarm
+	 */
 	public Alarm getAlarmOnAppointment(String user,Appointment app){
 		try{
 			String query = 	"SELECT time " +
@@ -470,7 +523,11 @@ public class Database {
 		return null;
 	}
 	
-	//Get list of alarm with date
+	/**
+	 * Get list of alarm with date
+	 * @param keyword username, time
+	 * @return ArrayList<Alarm>
+	 */
 	public ArrayList<Alarm> getAlarmOnDate(String[] keyword){
 		ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
 		
@@ -499,8 +556,13 @@ public class Database {
 		return null;
 	}
 	
-	
-	public boolean createNotification(String[] keyword, Appointment app){
+	/**
+	 * Create a Notification to a person with appointment and type
+	 * @param keyword type, toUser, fromUser
+	 * @param appointment
+	 * @return Boolean
+	 */
+	public Boolean createNotification(String[] keyword, Appointment app){
 		try{
 			String query = 	"INSERT INTO notification(type,idPerson,idAppointment, fromPerson) " +
 							"VALUES('"+keyword[0]+"','"+ getPersonId(keyword[1]) +"','"+ getAppointmentId(app) +"','"+ keyword[2]+ "')";
