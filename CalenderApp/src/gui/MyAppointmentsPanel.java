@@ -163,12 +163,21 @@ public class MyAppointmentsPanel extends JPanel {
 		saveChangesButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				boolean change = client.changeAppointment(myAppointmentsList.getSelectedValue(), 
-						new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)startHourSpinner.getValue(),(int)startMinuteSpinner.getValue()),
-								new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)endHourSpinner.getValue(),(int)endMinuteSpinner.getValue()), 
-								locationField.getText(), titleField.getText(), (Room)roomComboBox.getSelectedItem(), descriptionArea.getText(),myAppointmentsList.getSelectedValue().getAdmin()));
-				
+				Appointment newAppointment = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)startHourSpinner.getValue(),(int)startMinuteSpinner.getValue()),
+						new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)endHourSpinner.getValue(),(int)endMinuteSpinner.getValue()), 
+						locationField.getText(), titleField.getText(), (Room)roomComboBox.getSelectedItem(), descriptionArea.getText(),myAppointmentsList.getSelectedValue().getAdmin());
+				boolean change = client.changeAppointment(myAppointmentsList.getSelectedValue(), newAppointment);
+				ArrayList<Appointment> appointmentsListFromDb;
 				if(change) {
+					appointmentsModel.removeAllElements();
+					appointmentsListFromDb = client.fetchAllAppointments(HomeGUI.getCurrentUser().getUsername());
+					for(int i=0; i<appointmentsListFromDb.size(); i++){
+						appointmentsModel.addElement(appointmentsListFromDb.get(i));
+						if(appointmentsListFromDb.get(i).getRoom().getName().equals(newAppointment.getRoom().getName()) && appointmentsListFromDb.get(i).getStart().equals(newAppointment.getStart())){
+							myAppointmentsList.setSelectedIndex(i);
+						}
+							
+					}
 					System.out.println("I did the impossible thing.");
 				}
 			}
@@ -440,33 +449,37 @@ public class MyAppointmentsPanel extends JPanel {
 		myAppointmentsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				
-				ap = myAppointmentsList.getSelectedValue();
-				
-				titleField.setText(ap.getTitle());
-				dateDaySpinner.setValue(ap.getStart().getDayOfMonth());
-				dateMonthSpinner.setValue(ap.getStart().getMonthOfYear());
-				dateYearSpinner.setValue(ap.getStart().getYear());
-				startHourSpinner.setValue(ap.getStart().getHourOfDay());
-				startMinuteSpinner.setValue(ap.getStart().getMinuteOfHour());
-				endHourSpinner.setValue(ap.getEnd().getHourOfDay());
-				endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
-				locationField.setText(ap.getLocation());
-				boxModel.removeAllElements();
-				Room room = ap.getRoom();
-				boxModel.addElement(room);
-				roomComboBox.setSelectedItem(room);
-				descriptionArea.setText(ap.getDescription());
-				model.removeAllElements();
-				for(int i=0; i<ap.getParticipants().size(); i++){
-					model.addElement(ap.getParticipants().get(i));
+				if(e.getValueIsAdjusting()){
+					if(myAppointmentsList.getSelectedIndex() != -1){
+						ap = myAppointmentsList.getSelectedValue();
+						
+						titleField.setText(ap.getTitle());
+						dateDaySpinner.setValue(ap.getStart().getDayOfMonth());
+						dateMonthSpinner.setValue(ap.getStart().getMonthOfYear());
+						dateYearSpinner.setValue(ap.getStart().getYear());
+						startHourSpinner.setValue(ap.getStart().getHourOfDay());
+						startMinuteSpinner.setValue(ap.getStart().getMinuteOfHour());
+						endHourSpinner.setValue(ap.getEnd().getHourOfDay());
+						endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
+						locationField.setText(ap.getLocation());
+						boxModel.removeAllElements();
+						Room room = ap.getRoom();
+						boxModel.addElement(room);
+						roomComboBox.setSelectedItem(room);
+						descriptionArea.setText(ap.getDescription());
+						model.removeAllElements();
+						for(int i=0; i<ap.getParticipants().size(); i++){
+							model.addElement(ap.getParticipants().get(i));
+						}
+						
+						
+						if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
+							setAllFieldsEnabled(true);
+						else
+							setAlarmFieldsEnabled(true);
+						setButtonsEnabled(true);
+					}
 				}
-				
-				
-				if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
-					setAllFieldsEnabled(true);
-				else
-					setAlarmFieldsEnabled(true);
-				setButtonsEnabled(true);
 				
 			}
 		});
