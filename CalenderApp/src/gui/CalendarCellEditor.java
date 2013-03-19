@@ -25,7 +25,6 @@ class CalendarCellEditor extends AbstractCellEditor implements TableCellEditor {
 		        	Appointment app = (Appointment)list.getSelectedValue();
 		        	//Skal åpne Mine Avtaler med denne avtalen valgt
 		        	MyAppointmentsPanel myAppointmentPanel = new MyAppointmentsPanel(HomeGUI.getClient(), HomeGUI.getCurrentUser(), app);
-		        	System.out.println("Tittelen er: " + app.getTitle());
 	        	} else {
 	        		list.clearSelection();
 	        		first = false;
@@ -44,7 +43,7 @@ class CalendarCellEditor extends AbstractCellEditor implements TableCellEditor {
     	
     	ArrayList<Appointment> arrayList;
     	
-        if (value != "") {
+        if (!(value instanceof String)) {
         	arrayList = (ArrayList<Appointment>)value;
             list = new JList<Object>();
             list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

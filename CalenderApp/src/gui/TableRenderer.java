@@ -35,7 +35,4 @@ public class TableRenderer extends DefaultTableCellRenderer implements TableCell
 		}
 		return list;
 	}
-	//SETT LISTA HER SOM CalendarCellEditor!!
-	
-	//
 }
