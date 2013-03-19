@@ -621,6 +621,7 @@ public class HomeGUI extends JPanel {
 						meetingInvitationPanel.setStart(n.getStart());
 						meetingInvitationPanel.setEnd(n.getEnd());
 						meetingInvitationPanel.setLocation(n.getLocation());
+						meetingInvitationPanel.setNotification(n);
 						layeredPane.moveToFront(meetingInvitationPanel);
 						layeredPane.moveToBack(okNotificationBox);
 						layeredPane.moveToBack(participantDeclinedPanel);
