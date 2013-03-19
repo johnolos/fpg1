@@ -163,31 +163,33 @@ public class CreateAppointmentPanel extends JPanel {
 		JButton saveButton = new JButton("Lagre");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				int column;
+				int row;
 				Appointment app = new Appointment(new DateTime((Integer) dateYearSpinner.getValue(), (Integer) dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)startHourSpinner.getValue(), (Integer)startMinuteSpinner.getValue()), new DateTime((Integer)dateYearSpinner.getValue(), (Integer)dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)endHourSpinner.getValue(), (Integer)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), (Room) roomBox.getSelectedItem(), descriptionArea.getText(), HomeGUI.getCurrentUser().getUsername());
-				ArrayList<Person> selectedPeople = new ArrayList<Person>();
-				for(int i = 0; i < model.getSize(); i++) {
-					selectedPeople.add(model.get(i));
-				}
-				app.setParticipants(selectedPeople);
 				if(client.createAppointment(app)){
+					while(model.size()>0){
+						client.createAppointment(app);
+					}
 					//---------------------------------
 					ArrayList<Appointment> appList = new ArrayList<Appointment>();
 					ArrayList<Appointment> currentlyInWantedCell = null;
-					//ENDRE LOKASJONEN HER
-					Object listBeforeConverted = HomeGUI.table.getValueAt(1, 1);
-					if(listBeforeConverted != null) {
-						if(listBeforeConverted instanceof ArrayList){
-							currentlyInWantedCell = (ArrayList)listBeforeConverted;
-					
-						for(int i=0; i<currentlyInWantedCell.size(); i++){
-							appList.add(currentlyInWantedCell.get(i));
+					if(app.getStart().isBefore(HomeGUI.getEndOfWeek()) && app.getStart().isAfter(HomeGUI.getStartOfWeek())){
+						column = app.getStart().getDayOfWeek();
+						row = app.getStart().getHourOfDay();
+						Object listBeforeConverted = HomeGUI.table.getValueAt(row, column);
+						if(listBeforeConverted != null) {
+							if(listBeforeConverted instanceof ArrayList){
+								currentlyInWantedCell = (ArrayList)listBeforeConverted;
+						
+							for(int i=0; i<currentlyInWantedCell.size(); i++){
+								appList.add(currentlyInWantedCell.get(i));
+							}
+							}
 						}
-						}
+						appList.add(app);
+						HomeGUI.table.setValueAt(appList, row, column);
+	//					HomeGUI.updateRowHeights();
 					}
-					appList.add(app);
-					//ENDRE LOKASJONEN HER
-					HomeGUI.table.setValueAt(appList, 1, 1);
-//					HomeGUI.updateRowHeights();
 					frmOpprettAvtale.dispose();
 				}
 			}

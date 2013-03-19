@@ -66,7 +66,7 @@ public class HomeGUI extends JPanel {
 	private int day;
 	private String startTime;
 	private String endTime;
-	private DateTime endOfWeek, startOfWeek;
+	private static DateTime endOfWeek, startOfWeek;
 
 	private JFrame frame;
 
@@ -128,7 +128,7 @@ public class HomeGUI extends JPanel {
 	
 	private String[] columnNames;
 
-	private ArrayList<Appointment> allMyAppointments;
+	private static ArrayList<Appointment> allMyAppointments;
 	
 	private DefaultTableModel tableModel;
 	private Object[][] initialTableContents;
@@ -775,11 +775,12 @@ public class HomeGUI extends JPanel {
 		GroupLayout gl_panel1 = new GroupLayout(headlinePanel);
 		gl_panel1.setHorizontalGroup(
 			gl_panel1.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel1.createSequentialGroup()
-					.addComponent(headlineLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(142)
-					.addComponent(yearAndDateLabel, GroupLayout.PREFERRED_SIZE, 432, GroupLayout.PREFERRED_SIZE)
-					.addGap(496))
+				.addGroup(Alignment.LEADING, gl_panel1.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(headlineLabel, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(yearAndDateLabel, GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_panel1.setVerticalGroup(
 			gl_panel1.createParallelGroup(Alignment.LEADING)
@@ -843,5 +844,62 @@ public class HomeGUI extends JPanel {
 	public static Client getClient(){
 
 		return client;
+	}
+	
+	public static void insertAppointmentsIntoTable(){
+		if(table != null) {
+			for(int i=1; i<table.getColumnCount(); i++){
+				for(int j=0; j<table.getRowCount(); j++){
+					table.setValueAt("", j, i);
+				}
+			}
+		}
+		int row;
+		int column;
+		Appointment app;
+		if(allMyAppointments != null){
+			for(int i=0; i<allMyAppointments.size(); i++){
+				app = allMyAppointments.get(i);
+				if(app.getStart().isBefore(endOfWeek) && app.getStart().isAfter(startOfWeek)){
+					column = app.getStart().getDayOfWeek();
+					row = app.getStart().getHourOfDay();
+					/*
+					 * Sjekk gjennom lista med avtaler (allMyAppointments)
+					 * Hvis avtalens start-dato er mellom startDay og endDay:
+					 * Break hvis start-dato er forbi endDay
+					 * column = appointment.getDayOfWeek()
+					 * row = start-time
+					 * table.setValueAt(row, column);
+					 * */
+					ArrayList<Appointment> appList = new ArrayList<Appointment>();
+					ArrayList<Appointment> currentlyInWantedCell = null;
+					Object listBeforeConverted = table.getValueAt(row, column);
+					if(listBeforeConverted != null) {
+						if(listBeforeConverted instanceof ArrayList){
+							currentlyInWantedCell = (ArrayList)listBeforeConverted;
+					
+						for(int j=0; j<currentlyInWantedCell.size(); j++){
+							if(app.getStart().getWeekOfWeekyear() == currentlyInWantedCell.get(j).getStart().getWeekOfWeekyear())
+								appList.add(currentlyInWantedCell.get(j));
+							else
+								currentlyInWantedCell.clear();
+						}
+						}
+					}
+					appList.add(app); //Denne legger den til i lista...
+					table.setValueAt(appList, row, column);
+				}
+				else if(app.getStart().isAfter(endOfWeek))
+					break;
+			}
+		}
+	}
+	
+	public static DateTime getStartOfWeek(){
+		return startOfWeek;
+	}
+	
+	public static DateTime getEndOfWeek(){
+		return endOfWeek;
 	}
 }

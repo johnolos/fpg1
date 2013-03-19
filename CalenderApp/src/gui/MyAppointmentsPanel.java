@@ -178,6 +178,7 @@ public class MyAppointmentsPanel extends JPanel {
 						}
 							
 					}
+					HomeGUI.insertAppointmentsIntoTable();
 					
 				}
 			}
@@ -201,6 +202,7 @@ public class MyAppointmentsPanel extends JPanel {
 				if(client.sendDecline(HomeGUI.getCurrentUser().getUsername(), myAppointmentsList.getSelectedValue()));
 					appointmentsModel.removeAllElements();
 					updateAppointmentList();
+					HomeGUI.insertAppointmentsIntoTable();
 			}
 			
 		});
@@ -214,6 +216,7 @@ public class MyAppointmentsPanel extends JPanel {
 				if(client.sendDecline(HomeGUI.getCurrentUser().getUsername(), myAppointmentsList.getSelectedValue())){
 					appointmentsModel.removeAllElements();
 					updateAppointmentList();
+					HomeGUI.insertAppointmentsIntoTable();
 				}
 					
 			}
@@ -473,33 +476,7 @@ public class MyAppointmentsPanel extends JPanel {
 				
 				if(e.getValueIsAdjusting()){
 					if(myAppointmentsList.getSelectedIndex() != -1){
-						ap = myAppointmentsList.getSelectedValue();
-						
-						titleField.setText(ap.getTitle());
-						dateDaySpinner.setValue(ap.getStart().getDayOfMonth());
-						dateMonthSpinner.setValue(ap.getStart().getMonthOfYear());
-						dateYearSpinner.setValue(ap.getStart().getYear());
-						startHourSpinner.setValue(ap.getStart().getHourOfDay());
-						startMinuteSpinner.setValue(ap.getStart().getMinuteOfHour());
-						endHourSpinner.setValue(ap.getEnd().getHourOfDay());
-						endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
-						locationField.setText(ap.getLocation());
-						boxModel.removeAllElements();
-						Room room = ap.getRoom();
-						boxModel.addElement(room);
-						roomComboBox.setSelectedItem(room);
-						descriptionArea.setText(ap.getDescription());
-						model.removeAllElements();
-						for(int i=0; i<ap.getParticipants().size(); i++){
-							model.addElement(ap.getParticipants().get(i));
-						}
-						
-						
-						if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
-							setAllFieldsEnabled(true);
-						else
-							setAlarmFieldsEnabled(true);
-						setButtonsEnabled(true);
+						selectFromList();
 					}
 				}
 				
@@ -539,7 +516,7 @@ public class MyAppointmentsPanel extends JPanel {
 				}
 			}
 			if(appIsInList != -1)
-				myAppointmentsList.setSelectedIndex(appIsInList);
+				selectFromList();
 		}
 		
 	}
@@ -628,5 +605,35 @@ public class MyAppointmentsPanel extends JPanel {
 		for(int i=0; i<list.size(); i++){
 			appointmentsModel.addElement(list.get(i));
 		}
+	}
+	
+	private void selectFromList(){
+		ap = myAppointmentsList.getSelectedValue();
+		
+		titleField.setText(ap.getTitle());
+		dateDaySpinner.setValue(ap.getStart().getDayOfMonth());
+		dateMonthSpinner.setValue(ap.getStart().getMonthOfYear());
+		dateYearSpinner.setValue(ap.getStart().getYear());
+		startHourSpinner.setValue(ap.getStart().getHourOfDay());
+		startMinuteSpinner.setValue(ap.getStart().getMinuteOfHour());
+		endHourSpinner.setValue(ap.getEnd().getHourOfDay());
+		endMinuteSpinner.setValue(ap.getEnd().getMinuteOfHour());
+		locationField.setText(ap.getLocation());
+		boxModel.removeAllElements();
+		Room room = ap.getRoom();
+		boxModel.addElement(room);
+		roomComboBox.setSelectedItem(room);
+		descriptionArea.setText(ap.getDescription());
+		model.removeAllElements();
+		for(int i=0; i<ap.getParticipants().size(); i++){
+			model.addElement(ap.getParticipants().get(i));
+		}
+		
+		
+		if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
+			setAllFieldsEnabled(true);
+		else
+			setAlarmFieldsEnabled(true);
+		setButtonsEnabled(true);
 	}
 }
