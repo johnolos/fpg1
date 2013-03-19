@@ -28,6 +28,14 @@ public class SendObject implements Serializable {
 		this.keyword = null;
 		this.value = true;
 	}
+	
+	// Special constructor made to use with NOTIFCIATION accept/decline
+	public SendObject(RequestEnum type,String[] keyword, Object obj, boolean value) {
+		this.sendType = type;
+		this.keyword = keyword;
+		this.object = obj;
+		this.value = value;
+	}
 
 	public RequestEnum getSendType() {
 		return sendType;

@@ -24,7 +24,7 @@ import baseClasses.Notification;
 public class Client {
 	
 	private Socket connection;
-	private final static String SERVERIP = "78.91.5.165";
+	private final static String SERVERIP = "78.91.61.224";
 	private final static int SERVERPORT = 4004;
 	
 	private ObjectOutputStream objectOutput;
@@ -270,6 +270,10 @@ public class Client {
 	 * @return
 	 */
 	public boolean createAppointment(Appointment app) {
+		if(app.getRoom() == null) {
+			System.out.println("Cannot create appointment with null room.");
+			return false;
+		}
 		// Creates requestObject
 		SendObject reqObj = new SendObject(RequestEnum.S_APPOINTMENT, app);
 		//Sens object to server
@@ -304,9 +308,39 @@ public class Client {
 	}
 	
 	public boolean sendAccept(String user, Appointment app) {
-		return false;
+		String[] keyword = {user};
+		// Creates "answer" Object
+		SendObject ansObj = new SendObject(RequestEnum.ACCEPT, keyword, app, true);
+		// Sends answer to server
+		this.send(ansObj);
+		SendObject receivedObj = receive();
+		return (Boolean)receivedObj.getObject();
 	}
-
+	
+	public boolean sendDecline(String user, Appointment app) {
+		String[] keyword = {user};
+		// Creates "answer" Object
+		SendObject ansObj = new SendObject(RequestEnum.ACCEPT, keyword, app, false);
+		// Sends answer to server
+		this.send(ansObj);
+		SendObject receivedObj = receive();
+		return (Boolean)receivedObj.getObject();
+	}
+	
+	
+	public Boolean createPersonAppointment(Person person, Appointment app) {
+		String [] keyword = {person.getUsername()};
+		// Creates requestObject
+		SendObject reqObj = new SendObject(RequestEnum.S_PERSON_APPOINTMENT, keyword);
+		reqObj.setObject(app);
+		//Sends object to server
+		this.send(reqObj);
+		//Return object from server
+		SendObject receivedObj = receive();
+		//Return to GUI if the appointment is registered
+		return (Boolean)receivedObj.getObject();
+	}
+	
 	/**
 	 * Internal function to start client
 	 */
@@ -332,21 +366,8 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
+	
 	public static void main(String[] args) throws InterruptedException {
 		new Client().connect();
-	}
-
-	public Boolean createPersonAppointment(Person person, Appointment app) {
-		String [] keyword = {person.getUsername()};
-		// Creates requestObject
-		System.out.println(keyword[0]);
-		SendObject reqObj = new SendObject(RequestEnum.S_PERSON_APPOINTMENT, keyword);
-		reqObj.setObject(app);
-		//Sends object to server
-		this.send(reqObj);
-		//Return object from server
-		SendObject receivedObj = receive();
-		//Return to GUI if the appointment is registered
-		return (Boolean)receivedObj.getObject();
 	}
 }
