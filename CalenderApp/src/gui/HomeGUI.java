@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.JTable;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
@@ -785,13 +786,12 @@ public class HomeGUI extends JPanel {
 		buttonPanel.add(showColleaguesButton);
 		setLayout(groupLayout);
 		
-		
-		updateNotification();
-		//new NotificationUpdate(this).run();
+		new NotificationUpdate(this).run();
 
 	}
 	
 	private void updateNotification() {
+		System.out.println("I ran this");
 		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());
 		if(notifications == null){
 			return;
@@ -834,21 +834,21 @@ public class HomeGUI extends JPanel {
 		}
 	}
 	
-	class NotificationUpdate extends Thread {
+	class NotificationUpdate extends Thread implements ActionListener {
 		private HomeGUI gui;
+		Timer timer = new Timer(20000, this);
 		public NotificationUpdate(HomeGUI gui) {
 			this.gui = gui;
+			this.timer.setRepeats(true);
+			this.timer.setInitialDelay(0);
 		}
 		@Override
 		public void run() {
-			while(true) {
-				gui.updateNotification();
-				try {
-					Thread.sleep(20000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			timer.start();
+		}
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			gui.updateNotification();
 		}
 	}
 	
