@@ -125,8 +125,13 @@ public class HomeGUI extends JPanel {
 	private int dayStartOfWeek;
 	private int dayEndOfWeek;
 	private String startMonth;
+	
+	private String[] columnNames;
 
 	private ArrayList<Appointment> allMyAppointments;
+	
+	private DefaultTableModel tableModel;
+	private Object[][] initialTableContents;
 
 	public HomeGUI(Person user, Client client) {
 		
@@ -179,12 +184,12 @@ public class HomeGUI extends JPanel {
 		notificationLabel = new JLabel("Notifikasjoner");
 		notificationLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
-		headlineLabel = new JLabel("GRUPPE 1s KALENDERSYSTEM!!!");
-		headlineLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
+		headlineLabel = new JLabel("Angelei Kalendersystem");
+		headlineLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 25));
 		
 		weekLabel = new JLabel("Uke " + week);
 		
-		yearAndDateLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		yearAndDateLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
 
 		// ----------------------------------------------------------------//
 		// Buttons
@@ -221,7 +226,6 @@ public class HomeGUI extends JPanel {
 		// ----------------------------------------------------------------//
 
 		addStuffToPanels();
-		initTable();
 		createLayout();
 		setColors();
 		addListeners();
@@ -270,7 +274,6 @@ public class HomeGUI extends JPanel {
 		yearAndDateLabel.setText("" + dayStartOfWeek + ". " + startMonth + " - " + dayEndOfWeek + ". " + endMonth + " "  + year);
 		
 		
-		
 	}
 	
 	
@@ -292,6 +295,8 @@ public class HomeGUI extends JPanel {
 				}
 				
 				updateMonthString();
+//				updateColumnIdentifiers();
+				
 				}
 
 			});
@@ -305,8 +310,8 @@ public class HomeGUI extends JPanel {
 				int differenceYears = Integer.parseInt(skipToYearTextField.getText()) - (int)startOfWeek.getYear();
 				startOfWeek = startOfWeek.plusWeeks(52 * differenceYears);
 				endOfWeek = startOfWeek.plusDays(6);
-				System.out.println("" + startOfWeek + endOfWeek);
 				updateMonthString();
+//				updateColumnIdentifiers();
 			}
 		});
 		
@@ -336,6 +341,7 @@ public class HomeGUI extends JPanel {
 				endOfWeek = startOfWeek.plusDays(6);
 				
 				updateMonthString();
+//				updateColumnIdentifiers();
 			}
 		});
 		
@@ -353,6 +359,7 @@ public class HomeGUI extends JPanel {
 				endOfWeek = startOfWeek.plusDays(6);
 				
 				updateMonthString();
+//				updateColumnIdentifiers();
 				
 			}
 			
@@ -374,18 +381,43 @@ public class HomeGUI extends JPanel {
 	}
 	
 	public void addStuffToPanels(){
-		
-		// ----------------------------------------------------------------//
-		// AddStuffToPanels
-		// ----------------------------------------------------------------//
-
-		weekPanel.add(skipToWeekLabel);
-		weekPanel.add(skipToWeekTextField);
-		weekPanel.add(lastWeekButton);
-		weekPanel.add(weekLabel);
-		weekPanel.add(nextWeekButton);
-		weekPanel.add(skipToYearLabel);
-		weekPanel.add(skipToYearTextField);
+		GroupLayout gl_weekPanel = new GroupLayout(weekPanel);
+		gl_weekPanel.setHorizontalGroup(
+			gl_weekPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_weekPanel.createSequentialGroup()
+					.addGap(352)
+					.addComponent(skipToWeekLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(skipToYearLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(73)
+					.addComponent(lastWeekButton)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(weekLabel)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(nextWeekButton)
+					.addGap(583))
+		);
+		gl_weekPanel.setVerticalGroup(
+			gl_weekPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_weekPanel.createSequentialGroup()
+					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_weekPanel.createSequentialGroup()
+							.addGap(5)
+							.addGroup(gl_weekPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(skipToWeekLabel)
+								.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(skipToYearLabel)
+								.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(weekLabel)))
+						.addComponent(nextWeekButton)
+						.addComponent(lastWeekButton))
+					.addContainerGap(15, Short.MAX_VALUE))
+		);
+		weekPanel.setLayout(gl_weekPanel);
 
 		notificationPanel.add(logoutButton);
 
@@ -404,8 +436,6 @@ public class HomeGUI extends JPanel {
 		notificationPanel.setBackground(UIManager.getColor("Panel.background"));
 	}
 
-	public void initTable() {
-	}
 
 	public void createLayout() {
 		
@@ -417,18 +447,18 @@ public class HomeGUI extends JPanel {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(headlinePanel, GroupLayout.DEFAULT_SIZE, 1244, Short.MAX_VALUE)
+						.addComponent(headlinePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(notificationPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
 								.addComponent(buttonPanel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(18)
-									.addComponent(weekPanel, GroupLayout.DEFAULT_SIZE, 1106, Short.MAX_VALUE))
-								.addGroup(groupLayout.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 1118, Short.MAX_VALUE)))))
+									.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 1239, Short.MAX_VALUE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(18)
+									.addComponent(weekPanel, GroupLayout.DEFAULT_SIZE, 1227, Short.MAX_VALUE)))))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -443,8 +473,8 @@ public class HomeGUI extends JPanel {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(notificationPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(weekPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
+							.addComponent(weekPanel, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)))
 					.addGap(96))
 		);
@@ -477,37 +507,39 @@ public class HomeGUI extends JPanel {
 		
 		
 		calendarScrollPane.setViewportView(table);
-		DefaultTableModel tableModel = new DefaultTableModel(
-				new Object [][] {
-						{"00:00", "", "", "", "", "", "", ""},
-						{"01:00", "", "", "", "", "", "", ""},
-						{"02:00", "", "", "", "", "", "", ""},
-						{"03:00", "", "", "", "", "", "", ""},
-						{"04:00", "", "", "", "", "", "", ""},
-						{"05:00", "", "", "", "", "", "", ""},
-						{"06:00", "", "", "", "", "", "", ""},
-						{"07:00", "", "", "", "", "", "", ""},
-						{"08:00", "", "", "", "", "", "", ""},
-						{"09:00", "", "", "", "", "", "", ""},
-						{"10:00", "", "", "", "", "", "", ""},
-						{"11:00", "", "", "", "", "", "", ""},
-						{"12:00", "", "", "", "", "", "", ""},
-						{"13:00", "", "", "", "", "", "", ""},
-						{"14:00", "", "", "", "", "", "", ""},
-						{"15:00", "", "", "", "", "", "", ""},
-						{"16:00", "", "", "", "", "", "", ""},
-						{"17:00", "", "", "", "", "", "", ""},
-						{"18:00", "", "", "", "", "", "", ""},
-						{"19:00", "", "", "", "", "", "", ""},
-						{"20:00", "", "", "", "", "", "", ""},
-						{"21:00", "", "", "", "", "", "", ""},
-						{"22:00", "", "", "", "", "", "", ""},
-						{"23:00", "", "", "", "", "", "", ""}
-					},
-					new String[]  {
+		initialTableContents = new Object [][] {
+				{"00:00", "", "", "", "", "", "", ""},
+				{"01:00", "", "", "", "", "", "", ""},
+				{"02:00", "", "", "", "", "", "", ""},
+				{"03:00", "", "", "", "", "", "", ""},
+				{"04:00", "", "", "", "", "", "", ""},
+				{"05:00", "", "", "", "", "", "", ""},
+				{"06:00", "", "", "", "", "", "", ""},
+				{"07:00", "", "", "", "", "", "", ""},
+				{"08:00", "", "", "", "", "", "", ""},
+				{"09:00", "", "", "", "", "", "", ""},
+				{"10:00", "", "", "", "", "", "", ""},
+				{"11:00", "", "", "", "", "", "", ""},
+				{"12:00", "", "", "", "", "", "", ""},
+				{"13:00", "", "", "", "", "", "", ""},
+				{"14:00", "", "", "", "", "", "", ""},
+				{"15:00", "", "", "", "", "", "", ""},
+				{"16:00", "", "", "", "", "", "", ""},
+				{"17:00", "", "", "", "", "", "", ""},
+				{"18:00", "", "", "", "", "", "", ""},
+				{"19:00", "", "", "", "", "", "", ""},
+				{"20:00", "", "", "", "", "", "", ""},
+				{"21:00", "", "", "", "", "", "", ""},
+				{"22:00", "", "", "", "", "", "", ""},
+				{"23:00", "", "", "", "", "", "", ""}
+		};
+		tableModel = new DefaultTableModel(
+				initialTableContents,
+					columnNames = new String[]  {
 						"Tid","Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"});
 		table.setModel(tableModel);
 		calendarPanel.setLayout(gl_calendarPanel);
+		
 		
 		for(int i=1; i<table.getColumnCount();i++){
 			table.getColumnModel().getColumn(i).setCellRenderer(new TableRenderer());
@@ -564,9 +596,6 @@ public class HomeGUI extends JPanel {
 		
 		panel_1 = new JPanel();
 		panel_1.setBounds(31, 99, 106, 64);
-		
-
-		weekPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JScrollPane scrollPane = new JScrollPane();
 
@@ -655,9 +684,9 @@ public class HomeGUI extends JPanel {
 			gl_panel1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel1.createSequentialGroup()
 					.addComponent(headlineLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(336)
-					.addComponent(yearAndDateLabel)
-					.addGap(479))
+					.addGap(142)
+					.addComponent(yearAndDateLabel, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)
+					.addGap(643))
 		);
 		gl_panel1.setVerticalGroup(
 			gl_panel1.createParallelGroup(Alignment.LEADING)
@@ -719,7 +748,17 @@ public class HomeGUI extends JPanel {
 	}
 	
 	public static Client getClient(){
+
 		return client;
 	}
+	
+//	private void updateColumnIdentifiers() {
+//		columnNames = new String[]  {
+//				"Tid","Mandag"+ dayOfMonth+1, "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"};
+////		tableModel.setColumnIdentifiers(columnNames);
+//
+//		tableModel.setDataVector(initialTableContents, columnNames);
+//		table.repaint();
+//	}
 	
 }
