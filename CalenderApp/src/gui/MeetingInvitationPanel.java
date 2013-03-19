@@ -12,6 +12,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 
+import baseClasses.Notification;
+
 
 public class MeetingInvitationPanel extends JPanel implements ActionListener {
 	private JLabel lblMteinnkallingFranavn;
@@ -22,6 +24,8 @@ public class MeetingInvitationPanel extends JPanel implements ActionListener {
 	private JTextField startField;
 	private JTextField endField;
 	private JTextField locationField;
+	
+	private Notification notification;
 	
 	private JButton acceptButton;
 	private JButton declineButton;
@@ -164,13 +168,17 @@ public class MeetingInvitationPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if(e.getSource().equals(acceptButton)){
-			//Send over nett at du accepter
+			HomeGUI.getClient().sendAccept(HomeGUI.getCurrentUser().getUsername(),notification.getAppointment());
 		}
 		else if(e.getSource().equals(declineButton)){
-			//Send over nett at du decliner
+			HomeGUI.getClient().sendDecline(HomeGUI.getCurrentUser().getUsername(), notification.getAppointment());
 		}
 		HomeGUI.list.clearSelection();
 		HomeGUI.layeredPane.moveToBack(this);
 		
+	}
+
+	public void setNotification(Notification n) {
+		this.notification = n;
 	}
 }
