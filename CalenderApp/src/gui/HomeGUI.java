@@ -394,21 +394,19 @@ public class HomeGUI extends JPanel {
 	
 	public void updateDateLabels(){
 		
-		mondayLabel.setText("" + dayStartOfWeek + "." + startMonth);
+		mondayLabel.setText("" + startOfWeek.getDayOfMonth() + "." + startOfWeek.monthOfYear().getAsText());
 		
-		tuesdayLabel.setText("" + (dayStartOfWeek+1) + "." + startMonth);
+		tuesdayLabel.setText("" + (startOfWeek.plusDays(1).getDayOfMonth()) + "." + startOfWeek.plusDays(1).monthOfYear().getAsText());
 		
-		wednesdayLabel.setText("" + (dayStartOfWeek+2) + "." + startMonth);
+		wednesdayLabel.setText("" + (startOfWeek.plusDays(2).getDayOfMonth()) + "." + startOfWeek.plusDays(2).monthOfYear().getAsText());
 		
-		thursdayLabel.setText("" + (dayStartOfWeek+3) + "." + startMonth);
+		thursdayLabel.setText("" + (startOfWeek.plusDays(3).getDayOfMonth()) + "." + startOfWeek.plusDays(3).monthOfYear().getAsText());
 		
-		fridayLabel.setText("" + (dayStartOfWeek+4) + "." + startMonth);
+		fridayLabel.setText("" + (startOfWeek.plusDays(4).getDayOfMonth()) + "." + startOfWeek.plusDays(4).monthOfYear().getAsText());
 
-		saturdayLabel.setText("" + (dayStartOfWeek+5) + "." + startMonth);
+		saturdayLabel.setText("" + (startOfWeek.plusDays(5).getDayOfMonth()) + "." + startOfWeek.plusDays(5).monthOfYear().getAsText());
 
-		sundayLabel.setText("" + (dayStartOfWeek+6) + "." + startMonth);
-	
-		
+		sundayLabel.setText("" + (startOfWeek.plusDays(6).getDayOfMonth()) + "." + startOfWeek.plusDays(6).monthOfYear().getAsText());
 	}
 	
 	public void addStuffToPanels(){
@@ -416,26 +414,20 @@ public class HomeGUI extends JPanel {
 		
 		
 		mondayLabel = new JLabel("mondayLabel");
-		mondayLabel.setText("" + dayStartOfWeek + "." + startMonth);
 		
 		tuesdayLabel = new JLabel("tuesdayLabel");
-		tuesdayLabel.setText("" + (dayStartOfWeek+1) + "." + startMonth);
 		
 		wednesdayLabel = new JLabel("wednesdayLabel");
-		wednesdayLabel.setText("" + (dayStartOfWeek+2) + "." + startMonth);
 		
 		thursdayLabel = new JLabel("thursdayLabel");
-		thursdayLabel.setText("" + (dayStartOfWeek+3) + "." + startMonth);
 		
 		fridayLabel = new JLabel("fridayLabel");
-		fridayLabel.setText("" + (dayStartOfWeek+4) + "." + startMonth);
 
 		saturdayLabel = new JLabel("saturdayLabel");
-		saturdayLabel.setText("" + (dayStartOfWeek+5) + "." + startMonth);
 
 		sundayLabel = new JLabel("sundayLabel");
-		sundayLabel.setText("" + (dayStartOfWeek+6) + "." + startMonth);
-	
+		
+		updateDateLabels();
 
 		GroupLayout gl_weekPanel = new GroupLayout(weekPanel);
 		gl_weekPanel.setHorizontalGroup(
