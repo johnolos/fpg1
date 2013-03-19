@@ -42,6 +42,11 @@ public class Person implements Comparable, Serializable {
         	this.hasAgreed = agreed;
         }
         
+        /**
+         * Get hasAgreed with values: 
+         * 1=accept, 0=not answered, -1=declined
+         * @return int
+         */
         public int getAgreed(){
         	return hasAgreed;
         }
