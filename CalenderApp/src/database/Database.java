@@ -284,18 +284,19 @@ public class Database {
 	 */
 	public ArrayList<Person> getMembersOnAppointment(Appointment app){
 		ArrayList<Person> personList = new ArrayList<Person>();
-		String query = 	"SELECT username, email, firstName, lastName " +
-						"FROM person " +
-						"WHERE idPerson IN (" +
-							"SELECT idPerson FROM person, person_appointment " +
-							"WHERE idPerson = person_idPerson " +
-							"AND appointment_idAppointment = '"+ getAppointmentId(app) +"') "+
-						"ORDER BY lastName ASC";		
+		String query = 	"SELECT username, email, firstName, lastName, hasAgreed " +
+						"FROM person, person_appointment " +
+						"WHERE idPerson=person_idPerson " +
+						"AND appointment_idAppointment = '"+ getAppointmentId(app) +"' "+
+						"ORDER BY lastName ASC";
+		
 		ResultSet res = executeQuery(query);
 		
 		try{
 			while(res.next()){
-				personList.add( new Person(res.getString(1), res.getString(2), res.getString(3), res.getString(4)) );
+				Person person = new Person(res.getString(1), res.getString(2), res.getString(3), res.getString(4));
+				person.setAgreed(Integer.parseInt(res.getString(5)));
+				personList.add( person );
 			}
 			return personList;
 			
@@ -718,5 +719,4 @@ public class Database {
 		}
 		return null;
 	}
-	
 }
