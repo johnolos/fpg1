@@ -809,7 +809,6 @@ public class HomeGUI extends JPanel {
 		}
 		for(int i = 0; i < notifications.size(); i++) {
 			this.notificationModel.addElement(notifications.get(i));
-			System.out.println(notifications.get(i).getListMessage());
 		}
 	}
 
