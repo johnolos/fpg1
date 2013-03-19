@@ -131,7 +131,7 @@ public class Database {
 				roomList.add( new Room(Integer.parseInt(res.getString(1)), res.getString(2)) );
 			}
 			
-			if(!roomList.isEmpty())
+			if(roomList.isEmpty())
 				roomList.add(new Room(0, "Ingen rom"));
 			else if(!roomList.get(0).getName().equals("Ingen rom"))
 				roomList.add(new Room(0, "Ingen rom"));
