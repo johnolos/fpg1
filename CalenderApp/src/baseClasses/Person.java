@@ -12,6 +12,7 @@ public class Person implements Comparable, Serializable {
         private String email;
         private String firstName;
         private String lastname;
+        private int hasAgreed;
        
         public Person(String username, String email, String firstName, String lastName) {
                 this.username = username;
@@ -35,6 +36,14 @@ public class Person implements Comparable, Serializable {
  
         public String getUsername() {
                 return username;
+        }
+        
+        public void setAgreed(int agreed){
+        	this.hasAgreed = agreed;
+        }
+        
+        public int getAgreed(){
+        	return hasAgreed;
         }
  
         public String getEmail() {
