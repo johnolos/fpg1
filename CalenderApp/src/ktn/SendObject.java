@@ -54,4 +54,8 @@ public class SendObject implements Serializable {
 		this.object = object;
 		this.value = true;
 	}
+	
+	public boolean getBoolean() {
+		return this.value;
+	}
 }

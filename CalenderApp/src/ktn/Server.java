@@ -130,6 +130,7 @@ public class Server {
 		reType = obj.getSendType();
 		// This is the object that the server sends.
 		SendObject sObject;
+		Boolean bool;
 		if(obj.isRequest()){
 			switch(reType) {
 			case LOGIN:
@@ -169,8 +170,8 @@ public class Server {
 				return sObject;
 			case S_PERSON:
 				System.out.println("Registration for new user requested.");
-				Boolean bool2 = database.registerUser(keyword);
-				sObject = new SendObject(RequestEnum.BOOLEAN,bool2);
+				bool = database.registerUser(keyword);
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				System.out.println("Confirmation for reqistration sent.");
 				return sObject;
 			case ROOM:
@@ -194,25 +195,33 @@ public class Server {
 			switch (reType) {
 			case S_APPOINTMENT:
 				System.out.println("Requests for storing an appointment.");
-				Boolean bool3 = database.createAppointment((Appointment)obj.getObject());
-				sObject = new SendObject(RequestEnum.BOOLEAN,bool3);
+				bool = database.createAppointment((Appointment)obj.getObject());
+				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				createNotificationForAll((Appointment)obj.getObject(),false);
 				System.out.println("Confirmation sent and notifications created.");
 				return sObject;
 			case C_APPOINTMENT: // Received old and new appointment - ArrayList<Appointment> = {new,old}
 				System.out.println("Request for changing an appointment.");
 				ArrayList<Appointment> apps = (ArrayList<Appointment>)obj.getObject();
-				Boolean bool = database.changeAppointment(apps.get(0),apps.get(1));
+				bool = database.changeAppointment(apps.get(0),apps.get(1));
 				createNotificationForAll(apps.get(1),true);
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
 			case S_PERSON_APPOINTMENT:
-				
 				System.out.println("Request for inviting people");
-				Boolean bool4 = database.createPersonAppointment(keyword[0],(Appointment)obj.getObject());
+				bool = database.createPersonAppointment(keyword[0],(Appointment)obj.getObject());
 				System.out.println("::Notification created");
-				sObject = new SendObject(RequestEnum.BOOLEAN, bool4);
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
+				return sObject;
+			case ACCEPT:
+				System.out.println("Answer on a notifiction received.");
+				if(obj.getBoolean()){
+					bool = database.agreedAppointment(keyword[0], (Appointment)obj.getObject());
+				} else {
+					bool = database.deletePersonAppointment(keyword[0], (Appointment)obj.getObject());
+				}
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
 			default:
 				break;
