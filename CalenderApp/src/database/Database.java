@@ -43,8 +43,12 @@ public class Database {
 		}
 	}
 	
-	//Register a user in the database
-	public boolean registerUser(String[] keyword){
+	/**
+	 * Register a user in the database
+	 * @param keyword username, password, firstName, lastName, email, telephone
+	 * @return Boolean
+	 */
+	public Boolean registerUser(String[] keyword){
 		try {
 			String query = "" + 
 					"INSERT INTO person(username, password, firstName, lastName, email, telefon) " +
@@ -62,7 +66,11 @@ public class Database {
 		return true;
 	}
 	
-	//Confirms that a person with username and password exists
+	/**
+	 * Confirms that a person with username and password exists
+	 * @param keyword username, password
+	 * @return Person
+	 */
 	public Person login(String[] keyword){
 		try {
 			String query = 	"SELECT * " +
@@ -81,7 +89,11 @@ public class Database {
 		return null;
 	}
 	
-	//Find persons with search word
+	/**
+	 * Find persons with search word
+	 * @param keyword search word
+	 * @return ArrayList<Person>
+	 */
 	public ArrayList<Person> getPerson(String[] keyword){
 		ArrayList<Person> personList = new ArrayList<Person>();
 		try {
