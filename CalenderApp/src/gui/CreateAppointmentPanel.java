@@ -164,10 +164,12 @@ public class CreateAppointmentPanel extends JPanel {
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Appointment app = new Appointment(new DateTime((Integer) dateYearSpinner.getValue(), (Integer) dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)startHourSpinner.getValue(), (Integer)startMinuteSpinner.getValue()), new DateTime((Integer)dateYearSpinner.getValue(), (Integer)dateMonthSpinner.getValue(), (Integer)dateDaySpinner.getValue(), (Integer)endHourSpinner.getValue(), (Integer)endMinuteSpinner.getValue()), locationField.getText(), titleField.getText(), (Room) roomBox.getSelectedItem(), descriptionArea.getText(), HomeGUI.getCurrentUser().getUsername());
+				ArrayList<Person> selectedPeople = new ArrayList<Person>();
+				for(int i = 0; i < model.getSize(); i++) {
+					selectedPeople.add(model.get(i));
+				}
+				app.setParticipants(selectedPeople);
 				if(client.createAppointment(app)){
-					while(model.size()>0){
-						client.createPersonAppointment(model.remove(0),app);
-					}
 					//---------------------------------
 					ArrayList<Appointment> appList = new ArrayList<Appointment>();
 					ArrayList<Appointment> currentlyInWantedCell = null;
