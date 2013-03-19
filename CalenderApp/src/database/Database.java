@@ -104,9 +104,8 @@ public class Database {
 		return null;
 	}
 	
-	//Get a list for what room is free on date at time
 	/**
-	 * 
+	 * Get a list for what room is free on date at time
 	 * @param keyword date,startTime,endTime
 	 * @return ArrayList<Room>
 	 */
