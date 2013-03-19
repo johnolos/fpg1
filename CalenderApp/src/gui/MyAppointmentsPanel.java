@@ -515,8 +515,10 @@ public class MyAppointmentsPanel extends JPanel {
 					break;
 				}
 			}
-			if(appIsInList != -1)
+			if(appIsInList != -1){
+				myAppointmentsList.setSelectedIndex(appIsInList);
 				selectFromList();
+			}
 		}
 		
 	}

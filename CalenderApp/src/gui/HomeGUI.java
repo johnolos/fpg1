@@ -433,9 +433,9 @@ public class HomeGUI extends JPanel {
 		gl_weekPanel.setHorizontalGroup(
 			gl_weekPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_weekPanel.createSequentialGroup()
-					.addGap(157)
+					.addGap(150)
 					.addComponent(mondayLabel)
-					.addGap(68)
+					.addGap(75)
 					.addComponent(tuesdayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
 					.addGap(1)
 					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
@@ -462,20 +462,20 @@ public class HomeGUI extends JPanel {
 							.addComponent(thursdayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
 							.addGap(65)
 							.addComponent(fridayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-					.addGroup(gl_weekPanel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_weekPanel.createSequentialGroup()
+					.addPreferredGap(ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
+					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_weekPanel.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(nextWeekButton))
-						.addGroup(Alignment.LEADING, gl_weekPanel.createSequentialGroup()
+						.addGroup(gl_weekPanel.createSequentialGroup()
 							.addGap(35)
 							.addComponent(saturdayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
 							.addGap(81)
 							.addComponent(sundayLabel, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(237, Short.MAX_VALUE))
+					.addContainerGap(186, Short.MAX_VALUE))
 		);
 		gl_weekPanel.setVerticalGroup(
-			gl_weekPanel.createParallelGroup(Alignment.LEADING)
+			gl_weekPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_weekPanel.createSequentialGroup()
 					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_weekPanel.createSequentialGroup()
@@ -490,7 +490,9 @@ public class HomeGUI extends JPanel {
 						.addComponent(lastWeekButton))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_weekPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(tuesdayLabel)
+						.addGroup(gl_weekPanel.createParallelGroup(Alignment.BASELINE)
+							.addComponent(tuesdayLabel)
+							.addComponent(mondayLabel))
 						.addGroup(gl_weekPanel.createParallelGroup(Alignment.BASELINE)
 							.addComponent(wednesdayLabel)
 							.addComponent(thursdayLabel)
@@ -498,10 +500,6 @@ public class HomeGUI extends JPanel {
 							.addComponent(sundayLabel))
 						.addComponent(fridayLabel))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_weekPanel.createSequentialGroup()
-					.addContainerGap(31, Short.MAX_VALUE)
-					.addComponent(mondayLabel)
-					.addContainerGap())
 		);
 		weekPanel.setLayout(gl_weekPanel);
 
@@ -801,7 +799,6 @@ public class HomeGUI extends JPanel {
 		}
 		for(int i = 0; i < notifications.size(); i++) {
 			this.notificationModel.addElement(notifications.get(i));
-			System.out.println(notifications.get(i).getListMessage());
 		}
 	}
 
