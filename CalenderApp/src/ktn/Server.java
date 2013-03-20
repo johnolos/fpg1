@@ -279,7 +279,7 @@ public class Server {
 	
 	private void changeMembers(ArrayList<Person> newParticipants, ArrayList<Person> oldParticipants, Appointment app){
 		for(Person oldPerson : oldParticipants)
-			database.deleteAppointment(oldPerson.getUsername(), app);
+			database.deletePersonAppointment(oldPerson.getUsername(), app);
 		for(Person newPerson : newParticipants)
 			System.out.println(database.createPersonAppointment(newPerson.getUsername(), app));
 	}
