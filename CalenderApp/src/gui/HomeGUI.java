@@ -796,7 +796,7 @@ public class HomeGUI extends JPanel {
 	}
 	
 	private void updateNotification() {
-		System.out.println("I ran this");
+		System.out.println("fetchNotificaions");
 		this.notificationModel.removeAllElements();
 		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());
 		if(notifications == null){
