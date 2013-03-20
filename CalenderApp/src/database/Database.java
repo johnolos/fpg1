@@ -441,7 +441,7 @@ public class Database {
 	public ArrayList<Notification> getNotification(String user){
 		ArrayList<Notification> noteList = new ArrayList<Notification>();
 	
-		String query = "Select type, a.idAppointment, fromPerson, toPerson " +
+		String query = "Select type, a.idAppointment, fromPerson, idPerson " +
 						"FROM notification as n, appointment as a, person as p " +
 						"WHERE n.idAppointment = a.idAppointment  " +
 						"AND n.idPerson = '"+getPersonId(user)+"' " +
