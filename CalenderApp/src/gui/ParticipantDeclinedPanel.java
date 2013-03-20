@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 
 import ktn.Client;
 
+import baseClasses.Appointment;
 import baseClasses.Notification;
 
 
@@ -150,19 +151,22 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(changeButton)){
-			//Åpne endre avtale med den avtalen det gjelder
+			Appointment app = notification.getAppointment();
+        	//Skal åpne Mine Avtaler med denne avtalen valgt
+        	MyAppointmentsPanel myAppointmentPanel = new MyAppointmentsPanel(HomeGUI.getClient(), HomeGUI.getCurrentUser(), app);
 		}
 		else if(e.getSource().equals(removeParticipantButton)){
-//			HomeGUI.getClient().sendDeletePerson(participantField.getText(), app);
+			HomeGUI.getClient().sendDeletePerson(participantField.getText(), notification.getAppointment());
 		}
 		else if(e.getSource().equals(cancelButton)){
-//			client.deleteAppointment(notification.getAppointment());
+			HomeGUI.getClient().deleteAppointment(notification.getAppointment());
 		}
 		HomeGUI.list.clearSelection();
 		HomeGUI.layeredPane.moveToBack(this);
-		if(!(e.getSource().equals(btnX))){
-			//Fjern notifikasjonen fra lista i HomeGUI
-		}
+		HomeGUI.getNotificationUpdate().update();
 	}
-
+	
+	public void setNotification(Notification n){
+		this.notification = n;
+	}
 }
