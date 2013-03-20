@@ -363,6 +363,8 @@ public class Client extends Thread{
 		SendObject sendObject = new SendObject(RequestEnum.ALARM, new String[] {user}, app, true);
 		this.send(sendObject);
 		SendObject recievedObject = receive();
+		if(recievedObject.isRequest())
+			return null;
 		return (Alarm)recievedObject.getObject();
 	}
 	
