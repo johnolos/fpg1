@@ -190,7 +190,7 @@ public class ShowColleaguesPanel extends JPanel {
 //						}
 //					
 						HomeGUI.insertAppointmentsIntoTable();
-						System.out.println("SHOULDVE INSERTERD NOW");
+						frame.dispose();
 				}
 			}
 		});

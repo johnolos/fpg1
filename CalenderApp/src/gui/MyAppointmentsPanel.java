@@ -31,6 +31,7 @@ import org.joda.time.DateTime;
 
 import database.Database;
 
+import baseClasses.Alarm;
 import baseClasses.Appointment;
 import baseClasses.Person;
 import baseClasses.Room;
@@ -290,9 +291,11 @@ public class MyAppointmentsPanel extends JPanel {
 		alarmMinuteSpinner = new JSpinner();
 		alarmMinuteSpinner.setEnabled(false);
 		
-		removeAlarmButton = new JButton("Fjern alarm");
+		removeAlarmButton = new JButton("Lagre alarm");
 		removeAlarmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				DateTime time = new DateTime((int)alarmYearSpinner.getValue(), (int)alarmMonthSpinner.getValue(), (int)alarmDaySpinner.getValue(), (int)alarmHourSpinner.getValue(), (int)alarmMinuteSpinner.getValue()); //år, mnd, dag, time, minutt
+				client.addAlarm(HomeGUI.getCurrentUser().getUsername(), myAppointmentsList.getSelectedValue(), new Alarm(time));
 			}
 		});
 		removeAlarmButton.setEnabled(false);
