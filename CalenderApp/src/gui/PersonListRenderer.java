@@ -18,9 +18,15 @@ public class PersonListRenderer implements ListCellRenderer {
 		
 		Person p = (Person) arg1;
         JLabel label;
-
-        
         label = new JLabel(p.getLastname() + " " + p.getFirstName());
+        
+        if(p.getAgreed() == 1){
+        	label.setForeground(Color.GREEN);
+        }
+        else if(p.getAgreed() == -1){
+        	label.setForeground(Color.RED);
+        }
+        
         if (arg3) {
             label.setForeground(Color.BLUE);
         }

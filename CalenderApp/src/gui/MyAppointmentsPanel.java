@@ -506,6 +506,8 @@ public class MyAppointmentsPanel extends JPanel {
 		participantsList.setModel(model);
 		setLayout(groupLayout);
 		
+		
+		
 		restrictSpinners();
 		
 		int appIsInList = -1;
