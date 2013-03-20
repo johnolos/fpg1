@@ -640,6 +640,11 @@ public class MyAppointmentsPanel extends JPanel {
 		for(int i=0; i<ap.getParticipants().size(); i++){
 			model.addElement(ap.getParticipants().get(i));
 		}
+		if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
+			setAllFieldsEnabled(true);
+		else
+			setAlarmFieldsEnabled(true);
+		setButtonsEnabled(true);
 		
 		Alarm alarm = client.getAlarm(HomeGUI.getCurrentUser().getUsername(), ap);
 		if(alarm != null){
@@ -651,10 +656,5 @@ public class MyAppointmentsPanel extends JPanel {
 			alarmMinuteSpinner.setValue(time.getMinuteOfHour());
 		}
 		
-		if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
-			setAllFieldsEnabled(true);
-		else
-			setAlarmFieldsEnabled(true);
-		setButtonsEnabled(true);
 	}
 }
