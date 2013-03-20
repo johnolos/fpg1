@@ -24,7 +24,7 @@ import database.Database;
 
 public class Server {
 	
-	private final static String SERVERIP = "78.91.5.14";
+	private final static String SERVERIP = "78.91.37.35";
 
 	private final static int SERVERPORT = 4004;
 	private Database database;
@@ -229,7 +229,7 @@ public class Server {
 				bool = database.agreedAppointment(keyword[0], app, obj.getBoolean());
 				database.deleteNotification(new String[] {keyword[0],app.getAdmin()}, app);
 				if(!obj.getBoolean()){
-					database.createNotification(new String[] {"DECLINED",keyword[0],app.getAdmin()}, app);
+					database.createNotification(new String[] {"DECLINED",app.getAdmin(),keyword[0]}, app);
 				}
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
