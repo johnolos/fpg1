@@ -24,6 +24,7 @@ public enum RequestEnum {
 	D_APPOINTMENT,	// Used to delete APPOINTMENT to the server
 	S_ALARM, 		// Used to store ALARM to the server.
 	S_PERSON, 		// Used to store PERSON to the server.
-	D_PERSONAPPOINTMENT // Used to delete a PERSON_APPOINTMENT to the server
+	D_PERSONAPPOINTMENT, // Used to delete a PERSON_APPOINTMENT to the server
+	D_NOTIFICATION	// Used to delete NOTIFICATION to the server
 	
 }

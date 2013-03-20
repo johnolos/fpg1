@@ -441,9 +441,11 @@ public class Database {
 	public ArrayList<Notification> getNotification(String user){
 		ArrayList<Notification> noteList = new ArrayList<Notification>();
 	
-		String query = "Select type, a.idAppointment, fromPerson " +
-						"FROM notification as n, appointment as a " +
-						"WHERE n.idAppointment = a.idAppointment  AND n.idPerson = '"+getPersonId(user)+"'";
+		String query = "Select type, a.idAppointment, fromPerson, toPerson " +
+						"FROM notification as n, appointment as a, person as p " +
+						"WHERE n.idAppointment = a.idAppointment  " +
+						"AND n.idPerson = '"+getPersonId(user)+"' " +
+						"AND n.idPerson = p.idPerson";
 		ResultSet res = executeQuery(query);
 			
 		try{
@@ -451,6 +453,7 @@ public class Database {
 				Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
 				Notification note = new Notification(getEnum(res.getString(1)), app);
 				note.setDeclinedParticipant(res.getString(3));
+				note.setToPerson(res.getString(4));
 				noteList.add(note);
 			}
 			return noteList;

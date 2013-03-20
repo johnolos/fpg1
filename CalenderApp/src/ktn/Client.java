@@ -342,6 +342,13 @@ public class Client extends Thread{
 		return (Boolean)receivedObj.getObject();
 	}
 	
+	public boolean deleteNotification(Notification note){
+		SendObject sendObj = new SendObject(RequestEnum.D_NOTIFICATION, note);
+		this.send(sendObj);
+		SendObject recievedObj = receive();
+		return (Boolean)recievedObj.getObject();
+	}
+	
 	/**
 	 * Internal function to start client
 	 */

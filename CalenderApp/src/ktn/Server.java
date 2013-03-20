@@ -241,6 +241,10 @@ public class Server {
 				System.out.println("User "+ keyword[0] +" removed from appointment");
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
+			case D_NOTIFICATION:
+				System.out.println("Request to delete notification. ");
+				Notification note = (Notification)obj.getObject();
+				database.deleteNotification(new String[] {note.getToPerson(),note.getDeclinedParticipant()}, note.getAppointment());
 			default:
 				break;
 			}
