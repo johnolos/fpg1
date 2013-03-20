@@ -24,7 +24,11 @@ import database.Database;
 
 public class Server {
 	
+<<<<<<< HEAD
 	private final static String SERVERIP = "78.91.5.14";
+=======
+	private final static String SERVERIP = "78.91.61.224";
+>>>>>>> branch 'master' of git@github.com:johnolos/fpg1.git
 	private final static int SERVERPORT = 4004;
 	private Database database;
 

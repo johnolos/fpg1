@@ -31,9 +31,6 @@ public class TableRenderer extends DefaultTableCellRenderer implements TableCell
 		ArrayList<Appointment> arrayList = (ArrayList)arg1;
 			for(int i=0; i<arrayList.size(); i++){
 				model.addElement(arrayList.get(i));
-//				if(!(arrayList.get(i).getAdmin().equals(HomeGUI.getCurrentUser().getUsername()))){
-//					
-//				}
 			}
 		}
 		return list;
