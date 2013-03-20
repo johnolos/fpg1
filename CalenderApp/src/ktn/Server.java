@@ -100,7 +100,7 @@ public class Server {
 				System.out.println("Waiting for message from client");
 				
 				// While-loop to ensure continuation of reading in-coming messages
-				while (true) {
+				while (this.connection.isConnected()) {
 
 					try {
 						//Receive object from client
