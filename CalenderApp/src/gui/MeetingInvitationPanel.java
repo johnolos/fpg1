@@ -166,13 +166,17 @@ public class MeetingInvitationPanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Changed for the fucks
 
 		if(e.getSource().equals(acceptButton)){
 			HomeGUI.getClient().sendAccept(HomeGUI.getCurrentUser().getUsername(),notification.getAppointment());
+			HomeGUI.getNotificationUpdate().update();
 		}
 		else if(e.getSource().equals(declineButton)){
 			HomeGUI.getClient().sendDecline(HomeGUI.getCurrentUser().getUsername(), notification.getAppointment());
+			HomeGUI.getNotificationUpdate().update();
 		}
+		
 		HomeGUI.list.clearSelection();
 		HomeGUI.layeredPane.moveToBack(this);
 		
