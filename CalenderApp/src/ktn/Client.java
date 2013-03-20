@@ -307,6 +307,13 @@ public class Client extends Thread{
 		return bol.booleanValue();	
 	}
 	
+	public boolean deleteAppointment(Appointment app){
+		SendObject sendObj = new SendObject(RequestEnum.D_APPOINTMENT, app);
+		this.send(sendObj);
+		SendObject recievedObj = receive();
+		return (Boolean)recievedObj.getObject();
+	}
+	
 	public boolean sendAccept(String user, Appointment app) {
 		String[] keyword = {user};
 		// Creates "answer" Object
@@ -330,6 +337,7 @@ public class Client extends Thread{
 	public boolean sendDeletePerson(String user, Appointment app){
 		String[] keyword = {user};
 		SendObject ansObj = new SendObject(RequestEnum.D_PERSONAPPOINTMENT, keyword, app, true);
+		this.send(ansObj);
 		SendObject receivedObj = receive();
 		return (Boolean)receivedObj.getObject();
 	}
