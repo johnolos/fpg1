@@ -105,6 +105,8 @@ public class Client {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			send(obj);
 		}
 	}
 	
@@ -132,7 +134,10 @@ public class Client {
 	 */
 	public ArrayList<Notification> fetchNotifications(String username) {
 		String[] keyword = {username};
-		SendObject reqObj = new SendObject(RequestEnum.NOTIFICATION, keyword);
+		SendObject reqObj = null;
+		while(reqObj == null) {
+			reqObj = new SendObject(RequestEnum.NOTIFICATION, keyword);
+		}
 		this.send(reqObj);
 		SendObject obj = this.receive();
 		if(!checkObject(RequestEnum.NOTIFICATION,obj)) {
