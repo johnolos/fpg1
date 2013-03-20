@@ -450,8 +450,9 @@ public class Database {
 			while(res.next()){
 				if(res.getString(1) == "DECLINED"){
 					Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
-					app.setAdmin(res.getString(3));
-					noteList.add(new Notification(getEnum(res.getString(1)), app));
+					Notification note = new Notification(getEnum(res.getString(1)), app);
+					note.setDeclinedParticipant(res.getString(3));
+					noteList.add(note);
 				}
 				else{
 					Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
