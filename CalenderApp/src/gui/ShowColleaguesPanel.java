@@ -147,6 +147,7 @@ public class ShowColleaguesPanel extends JPanel {
 				public void actionPerformed(ActionEvent arg0) {
 					for(int l=0; l<shownListModel.getSize(); l++){
 						HomeGUI.showAllThese.add(shownListModel.get(l));
+						System.out.println("ADDED TO SHOWALLTHESE");
 //						ArrayList<Appointment> allMyAppointments = client.fetchAllAppointments(shownListModel.get(l).getUsername());
 //						int row;
 //						int column;
@@ -189,6 +190,7 @@ public class ShowColleaguesPanel extends JPanel {
 //						}
 //					
 						HomeGUI.insertAppointmentsIntoTable();
+						System.out.println("SHOULDVE INSERTERD NOW");
 				}
 			}
 		});

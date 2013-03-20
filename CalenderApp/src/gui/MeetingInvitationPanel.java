@@ -170,6 +170,7 @@ public class MeetingInvitationPanel extends JPanel implements ActionListener {
 		if(e.getSource().equals(acceptButton)){
 			HomeGUI.getClient().sendAccept(HomeGUI.getCurrentUser().getUsername(),notification.getAppointment());
 			HomeGUI.getNotificationUpdate().update();
+			HomeGUI.insertAppointmentsIntoTable();
 		}
 		else if(e.getSource().equals(declineButton)){
 			HomeGUI.getClient().sendDecline(HomeGUI.getCurrentUser().getUsername(), notification.getAppointment());
