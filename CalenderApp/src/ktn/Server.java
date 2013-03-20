@@ -216,6 +216,9 @@ public class Server {
 				Appointment app = (Appointment)obj.getObject();
 				bool = database.agreedAppointment(keyword[0], app, obj.getBoolean());
 				database.deleteNotification(new String[] {keyword[0],app.getAdmin()}, app);
+				if(!obj.getBoolean()){
+					database.createNotification(new String[] {"DECLINED",keyword[0],app.getAdmin()}, app);
+				}
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
 			default:
