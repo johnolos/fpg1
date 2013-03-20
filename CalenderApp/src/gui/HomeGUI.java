@@ -848,7 +848,7 @@ public class HomeGUI extends JPanel {
 	
 	class NotificationUpdate extends Thread implements ActionListener {
 		private HomeGUI gui;
-		Timer timer = new Timer(20000, this);
+		Timer timer = new Timer(30000, this);
 		public NotificationUpdate(HomeGUI gui) {
 			this.gui = gui;
 			this.timer.setRepeats(true);
