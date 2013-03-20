@@ -11,6 +11,8 @@ public class Notification implements Serializable {
 	private NotificationEnum type;
 	private String listMessage;
 	
+	private String toPerson;
+	
 	//Fields for all 3 boxes (and the only fields for OKBOX)
 	private String description;
 	private String title;
@@ -120,5 +122,13 @@ public class Notification implements Serializable {
 	
 	public void setDeclinedParticipant(String username){
 		this.declinedParticipant = username;
+	}
+	
+	public void setToPerson(String person){
+		this.toPerson = person;
+	}
+	
+	public String getToPerson(){
+		return this.toPerson;
 	}
 }

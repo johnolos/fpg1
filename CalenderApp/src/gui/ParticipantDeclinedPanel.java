@@ -153,12 +153,15 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 			Appointment app = notification.getAppointment();
         	//Skal åpne Mine Avtaler med denne avtalen valgt
         	MyAppointmentsPanel myAppointmentPanel = new MyAppointmentsPanel(HomeGUI.getClient(), HomeGUI.getCurrentUser(), app);
+			client.deleteNotification(notification);
 		}
 		else if(e.getSource().equals(removeParticipantButton)){
 			HomeGUI.getClient().sendDeletePerson(participantField.getText(), notification.getAppointment());
+			client.deleteNotification(notification);
 		}
 		else if(e.getSource().equals(cancelButton)){
 			HomeGUI.getClient().deleteAppointment(notification.getAppointment());
+			client.deleteNotification(notification);
 		}
 		HomeGUI.list.clearSelection();
 		HomeGUI.layeredPane.moveToBack(this);
