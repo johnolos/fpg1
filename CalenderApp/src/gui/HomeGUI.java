@@ -141,17 +141,23 @@ public class HomeGUI extends JPanel {
 	private JLabel saturdayLabel;
 	private JLabel sundayLabel;
 	
+	static ArrayList<Person> showAllThese;
+	
+	boolean firstTimeUpdate = true;
+	
 	private static NotificationUpdate notUpdate;
 
 	public HomeGUI(Person user, Client client) {
 		
+		showAllThese = new ArrayList<Person>();
+		this.currentUser = user;
+		this.client = client;
+		allMyAppointments = client.fetchAllAppointments(currentUser.getUsername());
+		showAllThese.add(getCurrentUser());
 		
 		yearAndDateLabel = new JLabel("");
 		createDateTime();
 		
-		this.currentUser = user;
-		this.client = client;
-		allMyAppointments = client.fetchAllAppointments(currentUser.getUsername());
 		// ----------------------------------------------------------------//
 		// Panels
 		// ----------------------------------------------------------------//
@@ -284,8 +290,10 @@ public class HomeGUI extends JPanel {
 		year = endOfWeek.getYear();
 		yearAndDateLabel.setText("" + dayStartOfWeek + ". " + startMonth + " - " + dayEndOfWeek + ". " + endMonth + " "  + year);
 		
-		insertAppointmentsIntoTable();
-		
+		if(firstTimeUpdate)
+			firstTimeUpdate = false;
+		else
+			insertAppointmentsIntoTable();
 	}
 	
 	
@@ -885,40 +893,43 @@ public class HomeGUI extends JPanel {
 		int row;
 		int column;
 		Appointment app;
-		if(allMyAppointments != null){
-			for(int i=0; i<allMyAppointments.size(); i++){
-				app = allMyAppointments.get(i);
-				if(app.getStart().isBefore(endOfWeek) && app.getStart().isAfter(startOfWeek)){
-					column = app.getStart().getDayOfWeek();
-					row = app.getStart().getHourOfDay();
-					/*
-					 * Sjekk gjennom lista med avtaler (allMyAppointments)
-					 * Hvis avtalens start-dato er mellom startDay og endDay:
-					 * Break hvis start-dato er forbi endDay
-					 * column = appointment.getDayOfWeek()
-					 * row = start-time
-					 * table.setValueAt(row, column);
-					 * */
-					ArrayList<Appointment> appList = new ArrayList<Appointment>();
-					ArrayList<Appointment> currentlyInWantedCell = null;
-					Object listBeforeConverted = table.getValueAt(row, column);
-					if(listBeforeConverted != null) {
-						if(listBeforeConverted instanceof ArrayList){
-							currentlyInWantedCell = (ArrayList)listBeforeConverted;
-					
-						for(int j=0; j<currentlyInWantedCell.size(); j++){
-							if(app.getStart().getWeekOfWeekyear() == currentlyInWantedCell.get(j).getStart().getWeekOfWeekyear())
-								appList.add(currentlyInWantedCell.get(j));
-							else
-								currentlyInWantedCell.clear();
+		for(int a=0; a<showAllThese.size(); a++){
+			allMyAppointments = client.fetchAllAppointments(showAllThese.get(a).getUsername());
+			if(allMyAppointments != null){
+				for(int i=0; i<allMyAppointments.size(); i++){
+					app = allMyAppointments.get(i);
+					if(app.getStart().isBefore(endOfWeek) && app.getStart().isAfter(startOfWeek)){
+						column = app.getStart().getDayOfWeek();
+						row = app.getStart().getHourOfDay();
+						/*
+						 * Sjekk gjennom lista med avtaler (allMyAppointments)
+						 * Hvis avtalens start-dato er mellom startDay og endDay:
+						 * Break hvis start-dato er forbi endDay
+						 * column = appointment.getDayOfWeek()
+						 * row = start-time
+						 * table.setValueAt(row, column);
+						 * */
+						ArrayList<Appointment> appList = new ArrayList<Appointment>();
+						ArrayList<Appointment> currentlyInWantedCell = null;
+						Object listBeforeConverted = table.getValueAt(row, column);
+						if(listBeforeConverted != null) {
+							if(listBeforeConverted instanceof ArrayList){
+								currentlyInWantedCell = (ArrayList)listBeforeConverted;
+						
+							for(int j=0; j<currentlyInWantedCell.size(); j++){
+								if(app.getStart().getWeekOfWeekyear() == currentlyInWantedCell.get(j).getStart().getWeekOfWeekyear())
+									appList.add(currentlyInWantedCell.get(j));
+								else
+									currentlyInWantedCell.clear();
+							}
+							}
 						}
-						}
+						appList.add(app); //Denne legger den til i lista...
+						table.setValueAt(appList, row, column);
 					}
-					appList.add(app); //Denne legger den til i lista...
-					table.setValueAt(appList, row, column);
+					else if(app.getStart().isAfter(endOfWeek))
+						break;
 				}
-				else if(app.getStart().isAfter(endOfWeek))
-					break;
 			}
 		}
 	}
@@ -934,4 +945,5 @@ public class HomeGUI extends JPanel {
 	public static NotificationUpdate getNotificationUpdate() {
 		return notUpdate;
 	}
+	
 }
