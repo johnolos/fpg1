@@ -272,14 +272,26 @@ public class Server {
 	
 	private void changeMembers(ArrayList<Person> newParticipants, ArrayList<Person> oldParticipants, Appointment app){
 		if(newParticipants.size() > oldParticipants.size()){
-			for(Person person : newParticipants)
-				if(!oldParticipants.contains(person))
-					database.createPersonAppointment(person.getUsername(), app);
+			for(Person newPerson : newParticipants){
+				boolean bool = false;
+				for(Person oldPerson : oldParticipants)
+					if(newPerson.getUsername() == oldPerson.getUsername())
+						bool = true;
+				if(!bool)
+					database.createPersonAppointment(newPerson.getUsername(), app);
+			}
 		}
 		else if(newParticipants.size() < oldParticipants.size()){
-			for(Person person : oldParticipants)
-				if(!newParticipants.contains(person))
-					database.deletePersonAppointment(person.getUsername(), app);
+			for(Person oldPerson : oldParticipants){
+				boolean bool = false;
+				for(Person newPerson : newParticipants)
+					if(newPerson.getUsername() == oldPerson.getUsername())
+						bool = true;
+				if(!bool){
+					database.deleteNotification(new String[] {oldPerson.getUsername(),app.getAdmin()}, app);
+					database.deletePersonAppointment(oldPerson.getUsername(), app);
+				}
+			}
 		}
 	}
 	
