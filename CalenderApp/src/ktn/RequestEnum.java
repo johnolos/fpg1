@@ -23,7 +23,5 @@ public enum RequestEnum {
 	C_APPOINTMENT,	// Used to change APPOINTMENT which is already stored on the server.
 	S_ALARM, 		// Used to store ALARM to the server.
 	S_PERSON, 		// Used to store PERSON to the server.
-	S_PERSON_APPOINTMENT; // Used to store PERSON_APPOINTMENT to the server		
-	
 	
 }
