@@ -216,6 +216,12 @@ public class Server {
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
+			case D_APPOINTMENT: 
+				System.out.println("Request to delete appointment");
+				app = (Appointment)obj.getObject();
+				bool = database.deleteAppointment(app.getAdmin(), app);
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
+				return sObject;
 			case ACCEPT:
 				System.out.println("Answer on a notifiction received.");
 				app = (Appointment)obj.getObject();
