@@ -90,6 +90,7 @@ public class HomeGUI extends JPanel {
 	private JLabel skipToWeekLabel;
 	private JLabel weekLabel;
 	private JLabel yearAndDateLabel;
+	private JLabel skipToDateLabel;
 
 	private JTextField skipToWeekTextField;
 
@@ -146,8 +147,11 @@ public class HomeGUI extends JPanel {
 	boolean firstTimeUpdate = true;
 	
 	private static NotificationUpdate notUpdate;
+	private JTextField skipToDateTextField;
 
 	public HomeGUI(Person user, Client client) {
+	
+		
 		
 		showAllThese = new ArrayList<Person>();
 		this.currentUser = user;
@@ -184,8 +188,8 @@ public class HomeGUI extends JPanel {
 		// Images and Icons
 		// ----------------------------------------------------------------//
 
-		forrigeUke = new ImageIcon("images/arrow_previous.png");
-		nesteUke = new ImageIcon("images/arrow_next.png");
+		forrigeUke = new ImageIcon("images/arrow_previous_new.png");
+		nesteUke = new ImageIcon("images/arrow_next_new.png");
 		starFighterIcon = new ImageIcon("images/starfighter.png");
 		starfighterLabel = new JLabel(starFighterIcon);
 		starfighterLabel.setText("starfighter");
@@ -206,6 +210,8 @@ public class HomeGUI extends JPanel {
 		weekLabel = new JLabel("Uke " + week);
 		
 		yearAndDateLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
+		
+		skipToDateLabel = new JLabel("Hopp til dato:");
 
 		// ----------------------------------------------------------------//
 		// Buttons
@@ -234,6 +240,10 @@ public class HomeGUI extends JPanel {
 		skipToYearTextField = new JTextField();
 		skipToYearTextField.setColumns(3);
 		skipToYearTextField.setDocument(new JTextFieldLimit(4));
+		
+		skipToDateTextField = new JTextField();
+		skipToDateTextField.setDocument(new JTextFieldLimit(5));
+		
 		
 
 
@@ -299,6 +309,27 @@ public class HomeGUI extends JPanel {
 	
 	
 	public void addListeners(){
+		
+		skipToDateTextField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(skipToDateTextField.getText() == "") {
+					return;
+				}
+				
+				String[] splitString = skipToDateTextField.getText().split("\\.");
+				int dayEntered = Integer.parseInt(splitString[0]);
+				int monthEntered = Integer.parseInt(splitString[1]);
+				DateTime toDate = new DateTime(startOfWeek.getYear(),monthEntered, dayEntered, 0, 0, 0);
+				int daysBetween = toDate.getDayOfYear() - startOfWeek.getDayOfYear();
+				startOfWeek = startOfWeek.plusDays(daysBetween);
+				int toStartOfWeek = 1 - startOfWeek.getDayOfWeek();
+				startOfWeek = startOfWeek.plusDays(toStartOfWeek);
+				endOfWeek = startOfWeek.plusDays(6);
+				updateMonthString();
+				updateDateLabels();
+//				updateColumnIdentifiers();
+			}
+		});
 		
 		skipToWeekTextField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
@@ -449,22 +480,26 @@ public class HomeGUI extends JPanel {
 		GroupLayout gl_weekPanel = new GroupLayout(weekPanel);
 		gl_weekPanel.setHorizontalGroup(
 			gl_weekPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_weekPanel.createSequentialGroup()
+				.addGroup(Alignment.LEADING, gl_weekPanel.createSequentialGroup()
 					.addContainerGap()
+					.addComponent(skipToDateLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(skipToDateTextField, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(skipToYearLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(skipToWeekLabel)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(10)
-					.addComponent(skipToYearLabel)
-					.addGap(10)
-					.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 460, Short.MAX_VALUE)
+					.addGap(67)
 					.addComponent(lastWeekButton)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(18)
 					.addComponent(weekLabel)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(18)
 					.addComponent(nextWeekButton)
-					.addGap(340))
+					.addContainerGap(592, Short.MAX_VALUE))
 		);
 		gl_weekPanel.setVerticalGroup(
 			gl_weekPanel.createParallelGroup(Alignment.LEADING)
@@ -473,11 +508,13 @@ public class HomeGUI extends JPanel {
 						.addGroup(gl_weekPanel.createSequentialGroup()
 							.addGap(5)
 							.addGroup(gl_weekPanel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(weekLabel)
-								.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(skipToDateLabel)
 								.addComponent(skipToYearLabel)
+								.addComponent(skipToDateTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(skipToYearTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(skipToWeekLabel)
 								.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(skipToWeekLabel)))
+								.addComponent(weekLabel)))
 						.addComponent(lastWeekButton)
 						.addComponent(nextWeekButton))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -569,7 +606,7 @@ public class HomeGUI extends JPanel {
 		);
 		
 		calendarPanel = new JPanel();
-		calendarPanel.setBounds(0, 0, 1106, 599);
+		calendarPanel.setBounds(0, 0, 1126, 599);
 		layeredPane.add(calendarPanel);
 		
 		JScrollPane calendarScrollPane = new JScrollPane();
@@ -577,13 +614,11 @@ public class HomeGUI extends JPanel {
 		GroupLayout gl_calendarPanel = new GroupLayout(calendarPanel);
 		gl_calendarPanel.setHorizontalGroup(
 			gl_calendarPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_calendarPanel.createSequentialGroup()
-					.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
-					.addContainerGap())
+				.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 1126, Short.MAX_VALUE)
 		);
 		gl_calendarPanel.setVerticalGroup(
 			gl_calendarPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_calendarPanel.createSequentialGroup()
+				.addGroup(Alignment.LEADING, gl_calendarPanel.createSequentialGroup()
 					.addComponent(calendarScrollPane, GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
 					.addContainerGap())
 		);
@@ -773,13 +808,13 @@ public class HomeGUI extends JPanel {
 
 		GroupLayout gl_panel1 = new GroupLayout(headlinePanel);
 		gl_panel1.setHorizontalGroup(
-			gl_panel1.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel1.createSequentialGroup()
+			gl_panel1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel1.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(headlineLabel, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(yearAndDateLabel, GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
-					.addContainerGap())
+					.addGap(67)
+					.addComponent(yearAndDateLabel, GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
+					.addGap(42))
 		);
 		gl_panel1.setVerticalGroup(
 			gl_panel1.createParallelGroup(Alignment.LEADING)
@@ -941,5 +976,4 @@ public class HomeGUI extends JPanel {
 	public static NotificationUpdate getNotificationUpdate() {
 		return notUpdate;
 	}
-	
 }
