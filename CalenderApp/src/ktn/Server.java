@@ -134,6 +134,7 @@ public class Server {
 		// This is the object that the server sends.
 		SendObject sObject;
 		Boolean bool;
+		Appointment app;
 		if(obj.isRequest()){
 			switch(reType) {
 			case LOGIN:
@@ -198,7 +199,10 @@ public class Server {
 			switch (reType) {
 			case S_APPOINTMENT:
 				System.out.println("Requests for storing an appointment.");
-				bool = database.createAppointment((Appointment)obj.getObject());
+				app = (Appointment)obj.getObject();
+				bool = database.createAppointment(app);
+				database.createPersonAppointment(app.getAdmin(), app);
+				database.agreedAppointment(app.getAdmin(), app, true);
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				createNotificationForAll((Appointment)obj.getObject(),false);
 				System.out.println("Confirmation sent and notifications created.");
@@ -213,7 +217,7 @@ public class Server {
 				return sObject;
 			case ACCEPT:
 				System.out.println("Answer on a notifiction received.");
-				Appointment app = (Appointment)obj.getObject();
+				app = (Appointment)obj.getObject();
 				bool = database.agreedAppointment(keyword[0], app, obj.getBoolean());
 				database.deleteNotification(new String[] {keyword[0],app.getAdmin()}, app);
 				if(!obj.getBoolean()){
@@ -223,9 +227,9 @@ public class Server {
 				return sObject;
 			case D_PERSONAPPOINTMENT:
 				System.out.println("Answer on a notification recieved. ");
-				Appointment appointment = (Appointment)obj.getObject();
-				database.deletePersonAppointment(keyword[0], appointment);
-				bool = database.deleteNotification(new String[] {appointment.getAdmin(),keyword[0]}, appointment);
+				app = (Appointment)obj.getObject();
+				database.deletePersonAppointment(keyword[0], app);
+				bool = database.deleteNotification(new String[] {app.getAdmin(),keyword[0]}, app);
 				System.out.println("User "+ keyword[0] +" removed from appointment");
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
