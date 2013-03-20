@@ -166,6 +166,11 @@ public class MyAppointmentsPanel extends JPanel {
 				Appointment newAppointment = new Appointment(new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)startHourSpinner.getValue(),(int)startMinuteSpinner.getValue()),
 						new DateTime((int)dateYearSpinner.getValue(), (int)dateMonthSpinner.getValue(), (int)dateDaySpinner.getValue(),(int)endHourSpinner.getValue(),(int)endMinuteSpinner.getValue()), 
 						locationField.getText(), titleField.getText(), (Room)roomComboBox.getSelectedItem(), descriptionArea.getText(),myAppointmentsList.getSelectedValue().getAdmin());
+				ArrayList<Person> participants = new ArrayList<Person>();
+				for(int i=0; i<model.size(); i++){
+					participants.add(model.get(i));
+				}
+				newAppointment.setParticipants(participants);
 				boolean change = client.changeAppointment(myAppointmentsList.getSelectedValue(), newAppointment);
 				ArrayList<Appointment> appointmentsListFromDb;
 				if(change) {
