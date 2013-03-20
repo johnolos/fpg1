@@ -224,6 +224,7 @@ public class Client extends Thread{
 	 * @return
 	 */
 	public ArrayList<Person> fetchPersons(String searchWord) {
+		System.out.println("Gui did this.");
 		String[] keyword = {searchWord};
 		SendObject reqObj = new SendObject(RequestEnum.PERSON, keyword);
 		this.send(reqObj);

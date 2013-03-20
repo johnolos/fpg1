@@ -100,9 +100,8 @@ public class Server {
 				System.out.println("Waiting for message from client");
 				
 				// While-loop to ensure continuation of reading in-coming messages
-				int i = 10;
-				while (i>0) {
-					i--;
+				while (true) {
+
 					try {
 						//Receive object from client
 						SendObject obj =(SendObject) this.objectIn.readObject();
