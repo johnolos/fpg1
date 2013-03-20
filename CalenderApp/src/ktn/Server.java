@@ -244,7 +244,10 @@ public class Server {
 			case D_NOTIFICATION:
 				System.out.println("Request to delete notification. ");
 				Notification note = (Notification)obj.getObject();
-				database.deleteNotification(new String[] {note.getToPerson(),note.getDeclinedParticipant()}, note.getAppointment());
+				bool = database.deleteNotification(new String[] {note.getToPerson(),note.getDeclinedParticipant()}, note.getAppointment());
+				System.out.println("Notification deleted");
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
+				return sObject;
 			default:
 				break;
 			}
