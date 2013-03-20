@@ -23,6 +23,7 @@ import javax.swing.UIManager;
 
 import ktn.Client;
 
+import baseClasses.Appointment;
 import baseClasses.Person;
 
 public class ShowColleaguesPanel extends JPanel {
@@ -41,8 +42,8 @@ public class ShowColleaguesPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public ShowColleaguesPanel(Client client) {
-		this.client = client;
+	public ShowColleaguesPanel(Client clientz) {
+		this.client = clientz;
 
 		frame = new JFrame();
 		frame.setTitle("Vis kollegaer");
@@ -140,7 +141,56 @@ public class ShowColleaguesPanel extends JPanel {
 		JScrollPane scrollPane_1 = new JScrollPane();
 
 		JButton saveButton = new JButton("Lagre");
-
+		saveButton.addActionListener(new ActionListener(){
+			
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					for(int l=0; l<shownListModel.getSize(); l++){
+						ArrayList<Appointment> allMyAppointments = client.fetchAllAppointments(shownListModel.get(l).getUsername());
+						int row;
+						int column;
+						Appointment app;
+						if(allMyAppointments != null){
+							for(int i=0; i<allMyAppointments.size(); i++){
+								app = allMyAppointments.get(i);
+								if(app.getStart().isBefore(HomeGUI.getEndOfWeek()) && app.getStart().isAfter(HomeGUI.getStartOfWeek())){
+									column = app.getStart().getDayOfWeek();
+									row = app.getStart().getHourOfDay();
+									/*
+									 * Sjekk gjennom lista med avtaler (allMyAppointments)
+									 * Hvis avtalens start-dato er mellom startDay og endDay:
+									 * Break hvis start-dato er forbi endDay
+									 * column = appointment.getDayOfWeek()
+									 * row = start-time
+									 * table.setValueAt(row, column);
+									 * */
+									ArrayList<Appointment> appList = new ArrayList<Appointment>();
+									ArrayList<Appointment> currentlyInWantedCell = null;
+									Object listBeforeConverted = HomeGUI.table.getValueAt(row, column);
+									if(listBeforeConverted != null) {
+										if(listBeforeConverted instanceof ArrayList){
+											currentlyInWantedCell = (ArrayList)listBeforeConverted;
+									
+										for(int j=0; j<currentlyInWantedCell.size(); j++){
+											if(app.getStart().getWeekOfWeekyear() == currentlyInWantedCell.get(j).getStart().getWeekOfWeekyear())
+												appList.add(currentlyInWantedCell.get(j));
+											else
+												currentlyInWantedCell.clear();
+										}
+										}
+									}
+									appList.add(app); //Denne legger den til i lista...
+									HomeGUI.table.setValueAt(appList, row, column);
+								}
+								else if(app.getStart().isAfter(HomeGUI.getEndOfWeek()))
+									break;
+							}
+						}
+					
+				}
+			}
+		});
+		
 		JButton cancelButton = new JButton("Avbryt");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

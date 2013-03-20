@@ -237,7 +237,8 @@ public class HomeGUI extends JPanel {
 		createLayout();
 		setColors();
 		addListeners();
-
+		
+		insertAppointmentsIntoTable();
 
 	}
 	
