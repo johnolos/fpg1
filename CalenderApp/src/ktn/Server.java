@@ -191,6 +191,12 @@ public class Server {
 				System.out.println("Notifications sent.");
 				sObject = new SendObject(RequestEnum.NOTIFICATION, not);
 				return sObject;
+			case ALARM:
+				System.out.println("Request for Alarm");
+				Alarm alarm = database.getAlarmOnAppointment(keyword[0], (Appointment)obj.getObject());
+				System.out.println("Alarm sent. ");
+				sObject = new SendObject(RequestEnum.ALARM, alarm);
+				return sObject;
 			default:
 				break;
 			}
