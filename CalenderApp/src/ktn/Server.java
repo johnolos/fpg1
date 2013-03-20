@@ -226,7 +226,7 @@ public class Server {
 				return sObject;
 			case S_ALARM: 
 				System.out.println("Request to store an alarm");
-				ArrayList<Object> object = new ArrayList<Object>();
+				ArrayList<Object> object = (ArrayList<Object>) obj.getObject();
 				bool = database.addAlarm(keyword[0], (Appointment)object.get(0), (Alarm)object.get(1));
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
