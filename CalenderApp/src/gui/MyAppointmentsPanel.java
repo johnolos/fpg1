@@ -218,7 +218,7 @@ public class MyAppointmentsPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(client.sendDecline(HomeGUI.getCurrentUser().getUsername(), myAppointmentsList.getSelectedValue())){
+				if(client.deleteAppointment(myAppointmentsList.getSelectedValue())){
 					appointmentsModel.removeAllElements();
 					updateAppointmentList();
 					HomeGUI.insertAppointmentsIntoTable();

@@ -34,9 +34,8 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	/**
 	 * Create the panel.
 	 */
-	public ParticipantDeclinedPanel(Client clientz, Notification noti) {
+	public ParticipantDeclinedPanel(Client clientz) {
 		
-		this.notification = noti;
 		this.client = clientz;
 		lblDeltagerAvsltt = new JLabel("Deltager avsl\u00E5tt");
 		lblDeltagerAvsltt.setFont(new Font("Tahoma", Font.PLAIN, 17));
