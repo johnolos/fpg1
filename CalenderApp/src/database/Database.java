@@ -448,16 +448,10 @@ public class Database {
 			
 		try{
 			while(res.next()){
-				if(res.getString(1) == "DECLINED"){
-					Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
-					Notification note = new Notification(getEnum(res.getString(1)), app);
-					note.setDeclinedParticipant(res.getString(3));
-					noteList.add(note);
-				}
-				else{
-					Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
-					noteList.add(new Notification(getEnum(res.getString(1)), app));
-				}
+				Appointment app = getAppointment(Integer.parseInt(res.getString(2)));
+				Notification note = new Notification(getEnum(res.getString(1)), app);
+				note.setDeclinedParticipant(res.getString(3));
+				noteList.add(note);
 			}
 			return noteList;
 		}
