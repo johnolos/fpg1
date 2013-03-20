@@ -210,7 +210,8 @@ public class Server {
 				System.out.println("Request for changing an appointment.");
 				ArrayList<Appointment> apps = (ArrayList<Appointment>)obj.getObject();
 				bool = database.changeAppointment(apps.get(0),apps.get(1));
-				changeMembers(apps.get(0).getParticipants(), apps.get(1).getParticipants(), apps.get(0));
+				//NOT WORKING - changeMembers
+				//changeMembers(apps.get(0).getParticipants(), apps.get(1).getParticipants(), apps.get(0));
 				createNotificationForAll(apps.get(1),true);
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
@@ -273,10 +274,8 @@ public class Server {
 	private void changeMembers(ArrayList<Person> newParticipants, ArrayList<Person> oldParticipants, Appointment app){
 		for(Person person : oldParticipants)
 			database.deleteAppointment(person.getUsername(), app);
-		for(Person person : newParticipants){
+		for(Person person : newParticipants)
 			database.createPersonAppointment(person.getUsername(), app);
-		}
-			
 	}
 	
 
