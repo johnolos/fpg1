@@ -221,6 +221,14 @@ public class Server {
 				}
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
+			case D_PERSONAPPOINTMENT:
+				System.out.println("Answer on a notification recieved. ");
+				Appointment appointment = (Appointment)obj.getObject();
+				database.deletePersonAppointment(keyword[0], appointment);
+				bool = database.deleteNotification(new String[] {appointment.getAdmin(),keyword[0]}, appointment);
+				System.out.println("User "+ keyword[0] +" removed from appointment");
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
+				return sObject;
 			default:
 				break;
 			}
