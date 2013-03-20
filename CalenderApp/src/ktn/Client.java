@@ -327,6 +327,13 @@ public class Client extends Thread{
 		return (Boolean)receivedObj.getObject();
 	}
 	
+	public boolean sendDeletePerson(String user, Appointment app){
+		String[] keyword = {user};
+		SendObject ansObj = new SendObject(RequestEnum.D_PERSONAPPOINTMENT, keyword, app, true);
+		SendObject receivedObj = receive();
+		return (Boolean)receivedObj.getObject();
+	}
+	
 	/**
 	 * Internal function to start client
 	 */
