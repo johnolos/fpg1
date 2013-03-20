@@ -212,6 +212,8 @@ public class Server {
 				bool = database.changeAppointment(apps.get(0),apps.get(1));
 				changeMembers(apps.get(0).getParticipants(), apps.get(1).getParticipants(), apps.get(0));
 				createNotificationForAll(apps.get(0),true);
+				database.agreedAppointment(apps.get(0).getAdmin(), apps.get(0), true);
+				database.deleteNotification(new String[] {apps.get(0).getAdmin(),apps.get(0).getAdmin()}, apps.get(0));
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
 				return sObject;
@@ -280,7 +282,7 @@ public class Server {
 		for(Person oldPerson : oldParticipants)
 			database.deletePersonAppointment(oldPerson.getUsername(), app);
 		for(Person newPerson : newParticipants)
-			System.out.println(database.createPersonAppointment(newPerson.getUsername(), app));
+			database.createPersonAppointment(newPerson.getUsername(), app);
 	}
 	
 
