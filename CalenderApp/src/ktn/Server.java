@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import baseClasses.Alarm;
 import baseClasses.Appointment;
 import baseClasses.Notification;
 import baseClasses.Person;
@@ -221,6 +222,12 @@ public class Server {
 				System.out.println("Request to delete appointment");
 				app = (Appointment)obj.getObject();
 				bool = database.deleteAppointment(app.getAdmin(), app);
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
+				return sObject;
+			case S_ALARM: 
+				System.out.println("Request to store an alarm");
+				ArrayList<Object> object = new ArrayList<Object>();
+				bool = database.addAlarm(keyword[0], (Appointment)object.get(0), (Alarm)object.get(1));
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
 			case ACCEPT:

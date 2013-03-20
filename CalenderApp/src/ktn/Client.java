@@ -349,6 +349,16 @@ public class Client extends Thread{
 		return (Boolean)recievedObj.getObject();
 	}
 	
+	public boolean addAlarm(String user, Appointment app, Alarm alarm){
+		ArrayList<Object> obj = new ArrayList<Object>(); 
+		obj.add(app);
+		obj.add(alarm);
+		SendObject sendObj = new SendObject(RequestEnum.S_ALARM, new String[] {user}, obj, true);
+		this.send(sendObj);
+		SendObject recievedObj = receive();
+		return (Boolean)recievedObj.getObject();
+	}
+	
 	/**
 	 * Internal function to start client
 	 */
