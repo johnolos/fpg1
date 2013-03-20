@@ -150,6 +150,7 @@ public class Database {
 						"FROM appointment a, person_appointment pha, person p " +
 						"WHERE a.idAppointment = pha.appointment_idAppointment " +
 						"AND pha.person_idPerson=p.idPerson AND p.username='"+ keyword[0] +"' " +
+						"AND hasAgreed = '1' " +
 						"ORDER BY a.date ASC";
 			
 		return getAppointmentQuery(query);
@@ -167,6 +168,7 @@ public class Database {
 						"AND pa.person_idPerson = p.idPerson " +
 						"AND p.username = '"+ keyword[0] +"' " +
 						"AND date = '"+ keyword[1] +"' " +
+						"AND hasAgreed = '1' " +
 						"ORDER BY a.date ASC";
 				
 		return getAppointmentQuery(query);			
