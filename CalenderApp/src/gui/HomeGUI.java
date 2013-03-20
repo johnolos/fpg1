@@ -792,11 +792,16 @@ public class HomeGUI extends JPanel {
 	
 	private void updateNotification() {
 		System.out.println("I ran this");
+		this.notificationModel.removeAllElements();
 		ArrayList<Notification> notifications = client.fetchNotifications(currentUser.getUsername());
 		if(notifications == null){
+			this.list.setModel(notificationModel); // Leste på stackoverflow at dette skulle gjøres
+			this.list.repaint(); // Vet ikke om denne gjør noe.
 			return;
 		}
 		if(notifications.isEmpty()){
+			this.list.setModel(notificationModel); // Leste på stackoverflow at dette skulle gjøres
+			this.list.repaint(); // Vet ikke om denne gjør noe.
 			return;
 		}
 		this.notificationModel.removeAllElements();
