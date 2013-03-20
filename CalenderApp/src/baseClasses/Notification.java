@@ -42,17 +42,16 @@ public class Notification implements Serializable {
 		
 		switch(type) {
 		case OKBOX:
-			listMessage = "okbox";
+			listMessage = "Ny melding";
 			description = appointment.getDescription();
 			title = appointment.getTitle();
 			admin = appointment.getAdmin();
 			
 			break;
 		case DECLINED:
-			listMessage = "Avlyst";
+			listMessage = "Deltager avslått";
 			title = appointment.getTitle();
 			meetingName = appointment.getTitle();
-			declinedParticipant = appointment.getAdmin();
 			timeOfMeeting = appointment.getStart().toString();
 			break;
 		case INVITATION:
