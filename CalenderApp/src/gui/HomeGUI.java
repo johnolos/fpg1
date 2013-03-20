@@ -223,11 +223,11 @@ public class HomeGUI extends JPanel {
 		nextWeekButton = new JButton();
 		nextWeekButton.setIcon(nesteUke);
 
-		logoutButton = new JButton("Logg ut");
-		showColleaguesButton = new JButton("  Vis Kollegaer  ");
-		myCalendarButton = new JButton("  Min Kalender  ");
-		myAppointmentsButton = new JButton("  Mine Avtaler  ");
-		createAppointmentButton = new JButton("Opprett Avtale");
+		logoutButton = new JButton("        Logg ut       ");
+		showColleaguesButton = new JButton("    Vis Kollegaer   ");
+		myCalendarButton = new JButton("   Min Kalender    ");
+		myAppointmentsButton = new JButton("    Mine Avtaler     ");
+		createAppointmentButton = new JButton("  Opprett Avtale   ");
 
 		// ----------------------------------------------------------------//
 		// TextFields
@@ -479,8 +479,8 @@ public class HomeGUI extends JPanel {
 
 		GroupLayout gl_weekPanel = new GroupLayout(weekPanel);
 		gl_weekPanel.setHorizontalGroup(
-			gl_weekPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_weekPanel.createSequentialGroup()
+			gl_weekPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_weekPanel.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(skipToDateLabel)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -493,13 +493,13 @@ public class HomeGUI extends JPanel {
 					.addComponent(skipToWeekLabel)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(67)
+					.addGap(76)
 					.addComponent(lastWeekButton)
 					.addGap(18)
 					.addComponent(weekLabel)
 					.addGap(18)
 					.addComponent(nextWeekButton)
-					.addContainerGap(592, Short.MAX_VALUE))
+					.addContainerGap(583, Short.MAX_VALUE))
 		);
 		gl_weekPanel.setVerticalGroup(
 			gl_weekPanel.createParallelGroup(Alignment.LEADING)
@@ -515,8 +515,8 @@ public class HomeGUI extends JPanel {
 								.addComponent(skipToWeekLabel)
 								.addComponent(skipToWeekTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(weekLabel)))
-						.addComponent(lastWeekButton)
-						.addComponent(nextWeekButton))
+						.addComponent(nextWeekButton)
+						.addComponent(lastWeekButton))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		weekPanel.setLayout(gl_weekPanel);
@@ -724,7 +724,7 @@ public class HomeGUI extends JPanel {
 
 		GroupLayout gl_notificationPanel = new GroupLayout(notificationPanel);
 		gl_notificationPanel.setHorizontalGroup(
-			gl_notificationPanel.createParallelGroup(Alignment.TRAILING)
+			gl_notificationPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_notificationPanel.createSequentialGroup()
 					.addGroup(gl_notificationPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_notificationPanel.createSequentialGroup()
@@ -732,16 +732,15 @@ public class HomeGUI extends JPanel {
 							.addComponent(notificationLabel))
 						.addGroup(gl_notificationPanel.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)))
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)))
 					.addContainerGap())
-				.addGroup(Alignment.LEADING, gl_notificationPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(starfighterLabel, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-					.addGap(8))
 				.addGroup(gl_notificationPanel.createSequentialGroup()
-					.addGap(28)
+					.addContainerGap()
 					.addComponent(logoutButton)
-					.addContainerGap(25, Short.MAX_VALUE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_notificationPanel.createSequentialGroup()
+					.addComponent(starfighterLabel, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+					.addGap(8))
 		);
 		gl_notificationPanel.setVerticalGroup(
 			gl_notificationPanel.createParallelGroup(Alignment.LEADING)

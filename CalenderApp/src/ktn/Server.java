@@ -25,7 +25,7 @@ import database.Database;
 
 public class Server {
 	
-	private final static String SERVERIP = "78.91.5.14";
+	private final static String SERVERIP = "192.168.1.16";
 
 	private final static int SERVERPORT = 4004;
 	private Database database;
