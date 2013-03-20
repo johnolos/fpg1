@@ -140,6 +140,8 @@ public class HomeGUI extends JPanel {
 	private JLabel fridayLabel;
 	private JLabel saturdayLabel;
 	private JLabel sundayLabel;
+	
+	private static NotificationUpdate notUpdate;
 
 	public HomeGUI(Person user, Client client) {
 		
@@ -787,8 +789,10 @@ public class HomeGUI extends JPanel {
 		buttonPanel.add(showColleaguesButton);
 		setLayout(groupLayout);
 		
-		new NotificationUpdate(this).run();
-
+		
+		// Notication update
+		notUpdate = new NotificationUpdate(this);
+		notUpdate.run();
 	}
 	
 	private void updateNotification() {
@@ -858,6 +862,11 @@ public class HomeGUI extends JPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			gui.updateNotification();
 		}
+		
+		public void update() {
+			gui.updateNotification();
+		}
+		
 	}
 	
 	public static Client getClient(){
@@ -920,5 +929,9 @@ public class HomeGUI extends JPanel {
 	
 	public static DateTime getEndOfWeek(){
 		return endOfWeek;
+	}
+	
+	public static NotificationUpdate getNotificationUpdate() {
+		return notUpdate;
 	}
 }
