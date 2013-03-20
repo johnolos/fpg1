@@ -118,4 +118,7 @@ public class Notification implements Serializable {
 		return appointment;
 	}
 	
+	public void setDeclinedParticipant(String username){
+		this.declinedParticipant = username;
+	}
 }
