@@ -22,7 +22,7 @@ public class Client extends Thread{
 	
 	private Socket connection;
 
-	private final static String SERVERIP = "78.91.5.14";
+	private final static String SERVERIP = "78.91.37.35";
 
 	private final static int SERVERPORT = 4004;
 	

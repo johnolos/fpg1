@@ -24,7 +24,7 @@ import database.Database;
 
 public class Server {
 	
-	private final static String SERVERIP = "78.91.5.14";
+	private final static String SERVERIP = "78.91.37.35";
 
 	private final static int SERVERPORT = 4004;
 	private Database database;
@@ -271,28 +271,12 @@ public class Server {
 	}
 	
 	private void changeMembers(ArrayList<Person> newParticipants, ArrayList<Person> oldParticipants, Appointment app){
-		if(newParticipants.size() > oldParticipants.size()){
-			for(Person newPerson : newParticipants){
-				boolean bool = false;
-				for(Person oldPerson : oldParticipants)
-					if(newPerson.getUsername() == oldPerson.getUsername())
-						bool = true;
-				if(!bool)
-					database.createPersonAppointment(newPerson.getUsername(), app);
-			}
+		for(Person person : oldParticipants)
+			database.deleteAppointment(person.getUsername(), app);
+		for(Person person : newParticipants){
+			database.createPersonAppointment(person.getUsername(), app);
 		}
-		else if(newParticipants.size() < oldParticipants.size()){
-			for(Person oldPerson : oldParticipants){
-				boolean bool = false;
-				for(Person newPerson : newParticipants)
-					if(newPerson.getUsername() == oldPerson.getUsername())
-						bool = true;
-				if(!bool){
-					database.deleteNotification(new String[] {oldPerson.getUsername(),app.getAdmin()}, app);
-					database.deletePersonAppointment(oldPerson.getUsername(), app);
-				}
-			}
-		}
+			
 	}
 	
 
