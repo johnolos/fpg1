@@ -294,7 +294,7 @@ public class MyAppointmentsPanel extends JPanel {
 		removeAlarmButton = new JButton("Lagre alarm");
 		removeAlarmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				DateTime time = new DateTime((int)alarmYearSpinner.getValue(), (int)alarmMonthSpinner.getValue(), (int)alarmDaySpinner.getValue(), (int)alarmHourSpinner.getValue(), (int)alarmMinuteSpinner.getValue()); //år, mnd, dag, time, minutt
+				DateTime time = new DateTime((int)alarmYearSpinner.getValue(), (int)alarmMonthSpinner.getValue(), (int)alarmDaySpinner.getValue(), (int)alarmHourSpinner.getValue(), (int)alarmMinuteSpinner.getValue()); //ï¿½r, mnd, dag, time, minutt
 				client.addAlarm(HomeGUI.getCurrentUser().getUsername(), myAppointmentsList.getSelectedValue(), new Alarm(time));
 			}
 		});
@@ -641,6 +641,15 @@ public class MyAppointmentsPanel extends JPanel {
 			model.addElement(ap.getParticipants().get(i));
 		}
 		
+		Alarm alarm = client.getAlarm(HomeGUI.getCurrentUser().getUsername(), ap);
+		if(alarm != null){
+			DateTime time = alarm.getAlarm();
+			alarmYearSpinner.setValue(time.getYear());
+			alarmMonthSpinner.setValue(time.getMonthOfYear());
+			alarmDaySpinner.setValue(time.getDayOfMonth());
+			alarmHourSpinner.setValue(time.getHourOfDay());
+			alarmMinuteSpinner.setValue(time.getMinuteOfHour());
+		}
 		
 		if(HomeGUI.getCurrentUser().getUsername().equals(ap.getAdmin()))
 			setAllFieldsEnabled(true);
