@@ -187,7 +187,7 @@ public class Database {
 	/**
 	 * Delete given appointment from database
 	 * @param username
-	 * @param appointment
+	 * @param app
 	 */
 	public Boolean deleteAppointment(String user, Appointment app){
 		String query = 	"DELETE FROM appointment " +
@@ -199,7 +199,7 @@ public class Database {
 	
 	/**
 	 * Create an appointment
-	 * @param appointment
+	 * @param app
 	 * @return Boolean
 	 */
 	public Boolean createAppointment(Appointment app){
@@ -304,7 +304,7 @@ public class Database {
 	/**
 	 * Delete a user from an appointment
 	 * @param user
-	 * @param appointment
+	 * @param app
 	 * @return Boolean
 	 */
 	public Boolean deletePersonAppointment(String user, Appointment app){
@@ -318,7 +318,7 @@ public class Database {
 	/**
 	 * Add alarm with user and appointment
 	 * @param user
-	 * @param appointment
+	 * @param app
 	 * @param alarm
 	 * @return Boolean
 	 */
@@ -334,7 +334,7 @@ public class Database {
 	/**
 	 * Changes alarm with user and appointment
 	 * @param user
-	 * @param appointment
+	 * @param app
 	 * @param alarm
 	 * @return Boolean
 	 */
@@ -366,7 +366,7 @@ public class Database {
 	/**
 	 * Get alarm on an appointment
 	 * @param user
-	 * @param appointment
+	 * @param app
 	 * @return Alarm
 	 */
 	public Alarm getAlarmOnAppointment(String user,Appointment app){
@@ -423,7 +423,7 @@ public class Database {
 	/**
 	 * Create a Notification to a person with appointment and type
 	 * @param keyword type, toUser, fromUser
-	 * @param appointment
+	 * @param app
 	 * @return Boolean
 	 */
 	public Boolean createNotification(String[] keyword, Appointment app){
