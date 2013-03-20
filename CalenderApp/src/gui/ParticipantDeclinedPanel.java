@@ -11,6 +11,11 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 
+import ktn.Client;
+
+import baseClasses.Appointment;
+import baseClasses.Notification;
+
 
 public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	JLabel lblDeltagerAvsltt;
@@ -19,6 +24,8 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	private JTextField timeOfMeetingField;
 	private JTextField participantField;
 
+	Client client;
+	Notification notification;
 	
 	JButton btnX;
 	JButton changeButton;
@@ -27,8 +34,9 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	/**
 	 * Create the panel.
 	 */
-	public ParticipantDeclinedPanel() {
+	public ParticipantDeclinedPanel(Client clientz) {
 		
+		this.client = clientz;
 		lblDeltagerAvsltt = new JLabel("Deltager avsl\u00E5tt");
 		lblDeltagerAvsltt.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
@@ -142,16 +150,22 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(changeButton)){
-			//Åpne endre avtale med den avtalen det gjelder
+			Appointment app = notification.getAppointment();
+        	//Skal åpne Mine Avtaler med denne avtalen valgt
+        	MyAppointmentsPanel myAppointmentPanel = new MyAppointmentsPanel(HomeGUI.getClient(), HomeGUI.getCurrentUser(), app);
 		}
 		else if(e.getSource().equals(removeParticipantButton)){
-//			HomeGUI.getClient().sendDeletePerson(participantField.getText(), app);
+			HomeGUI.getClient().sendDeletePerson(participantField.getText(), notification.getAppointment());
 		}
 		else if(e.getSource().equals(cancelButton)){
-			//Send over nett at du avlyser møtet
+			HomeGUI.getClient().deleteAppointment(notification.getAppointment());
 		}
 		HomeGUI.list.clearSelection();
 		HomeGUI.layeredPane.moveToBack(this);
+		HomeGUI.getNotificationUpdate().update();
 	}
-
+	
+	public void setNotification(Notification n){
+		this.notification = n;
+	}
 }

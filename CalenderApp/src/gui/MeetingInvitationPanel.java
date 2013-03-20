@@ -179,7 +179,6 @@ public class MeetingInvitationPanel extends JPanel implements ActionListener {
 		
 		HomeGUI.list.clearSelection();
 		HomeGUI.layeredPane.moveToBack(this);
-		
 	}
 
 	public void setNotification(Notification n) {

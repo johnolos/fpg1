@@ -672,7 +672,7 @@ public class HomeGUI extends JPanel {
 		meetingInvitationPanel.setBounds(0, 111, 348, 379);
 		layeredPane.add(meetingInvitationPanel);
 		
-		participantDeclinedPanel = new ParticipantDeclinedPanel();
+		participantDeclinedPanel = new ParticipantDeclinedPanel(client);
 		participantDeclinedPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		participantDeclinedPanel.setBounds(0, 111, 399, 262);
 		layeredPane.add(participantDeclinedPanel);
@@ -757,6 +757,7 @@ public class HomeGUI extends JPanel {
 						participantDeclinedPanel.setDeclinedMeeting(n.getMeetingName());
 						participantDeclinedPanel.setTimeOfMeeting(n.getTimeOfMeeting());
 						participantDeclinedPanel.setParticipant(n.getDeclinedParticipant());
+						participantDeclinedPanel.setNotification(n);
 						layeredPane.moveToFront(participantDeclinedPanel);
 						layeredPane.moveToBack(meetingInvitationPanel);
 						layeredPane.moveToBack(okNotificationBox);
