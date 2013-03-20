@@ -49,12 +49,15 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 		
 		declinedMeetingField = new JTextField();
 		declinedMeetingField.setColumns(10);
+		declinedMeetingField.setEnabled(false);
 		
 		timeOfMeetingField = new JTextField();
 		timeOfMeetingField.setColumns(10);
+		timeOfMeetingField.setEnabled(false);
 		
 		participantField = new JTextField();
 		participantField.setColumns(10);
+		participantField.setEnabled(false);
 		
 		btnX = new JButton("X");
 		btnX.addActionListener(this);
@@ -142,7 +145,7 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 			//Åpne endre avtale med den avtalen det gjelder
 		}
 		else if(e.getSource().equals(removeParticipantButton)){
-			//Send over nett at du fjerner deltageren
+//			HomeGUI.getClient().sendDeletePerson(participantField.getText(), app);
 		}
 		else if(e.getSource().equals(cancelButton)){
 			//Send over nett at du avlyser møtet

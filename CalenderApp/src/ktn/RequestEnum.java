@@ -21,6 +21,7 @@ public enum RequestEnum {
 	BOOLEAN, 		// Used to reply TRUE/FALSE from the server
 	S_APPOINTMENT, 	// Used to store APPOINTMENT to the server.
 	C_APPOINTMENT,	// Used to change APPOINTMENT which is already stored on the server.
+	D_APPOINTMENT,	// Used to delete APPOINTMENT to the server
 	S_ALARM, 		// Used to store ALARM to the server.
 	S_PERSON, 		// Used to store PERSON to the server.
 	D_PERSONAPPOINTMENT // Used to delete a PERSON_APPOINTMENT to the server

@@ -24,7 +24,7 @@ import database.Database;
 
 public class Server {
 	
-	private final static String SERVERIP = "78.91.61.224";
+	private final static String SERVERIP = "78.91.37.35";
 
 	private final static int SERVERPORT = 4004;
 	private Database database;
@@ -210,9 +210,16 @@ public class Server {
 				System.out.println("Request for changing an appointment.");
 				ArrayList<Appointment> apps = (ArrayList<Appointment>)obj.getObject();
 				bool = database.changeAppointment(apps.get(0),apps.get(1));
-				createNotificationForAll(apps.get(1),true);
+				changeMembers(apps.get(0).getParticipants(), apps.get(1).getParticipants(), apps.get(0));
+				createNotificationForAll(apps.get(0),true);
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
+				return sObject;
+			case D_APPOINTMENT: 
+				System.out.println("Request to delete appointment");
+				app = (Appointment)obj.getObject();
+				bool = database.deleteAppointment(app.getAdmin(), app);
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
 			case ACCEPT:
 				System.out.println("Answer on a notifiction received.");
@@ -267,6 +274,13 @@ public class Server {
 				database.createNotification(keyword, appointment);
 			}
 		}
+	}
+	
+	private void changeMembers(ArrayList<Person> newParticipants, ArrayList<Person> oldParticipants, Appointment app){
+		for(Person oldPerson : oldParticipants)
+			database.deletePersonAppointment(oldPerson.getUsername(), app);
+		for(Person newPerson : newParticipants)
+			System.out.println(database.createPersonAppointment(newPerson.getUsername(), app));
 	}
 	
 

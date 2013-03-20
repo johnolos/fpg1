@@ -22,7 +22,7 @@ public class Client extends Thread{
 	
 	private Socket connection;
 
-	private final static String SERVERIP = "78.91.61.224";
+	private final static String SERVERIP = "78.91.37.35";
 
 	private final static int SERVERPORT = 4004;
 	
@@ -307,6 +307,13 @@ public class Client extends Thread{
 		return bol.booleanValue();	
 	}
 	
+	public boolean deleteAppointment(Appointment app){
+		SendObject sendObj = new SendObject(RequestEnum.D_APPOINTMENT, app);
+		this.send(sendObj);
+		SendObject recievedObj = receive();
+		return (Boolean)recievedObj.getObject();
+	}
+	
 	public boolean sendAccept(String user, Appointment app) {
 		String[] keyword = {user};
 		// Creates "answer" Object
@@ -322,6 +329,14 @@ public class Client extends Thread{
 		// Creates "answer" Object
 		SendObject ansObj = new SendObject(RequestEnum.ACCEPT, keyword, app, false);
 		// Sends answer to server
+		this.send(ansObj);
+		SendObject receivedObj = receive();
+		return (Boolean)receivedObj.getObject();
+	}
+	
+	public boolean sendDeletePerson(String user, Appointment app){
+		String[] keyword = {user};
+		SendObject ansObj = new SendObject(RequestEnum.D_PERSONAPPOINTMENT, keyword, app, true);
 		this.send(ansObj);
 		SendObject receivedObj = receive();
 		return (Boolean)receivedObj.getObject();

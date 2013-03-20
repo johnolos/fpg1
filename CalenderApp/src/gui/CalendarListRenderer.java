@@ -35,8 +35,8 @@ public class CalendarListRenderer implements ListCellRenderer {
 		        else
 		        	startHourText = ""+startHour;
 		        String user = "";
-		        if(!(ap.getAdmin().equals(HomeGUI.getCurrentUser().getUsername())))
-		        	user = ap.getAdmin();
+//		        if(!(ap.getAdmin().equals(HomeGUI.getCurrentUser().getUsername())))
+//		        	user = ap.getAdmin();
 		        label = new JLabel(user + ap.getTitle());
 		        if (arg3) {
 		            label.setForeground(Color.BLUE);
