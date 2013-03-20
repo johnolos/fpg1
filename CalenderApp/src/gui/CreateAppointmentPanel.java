@@ -55,7 +55,7 @@ public class CreateAppointmentPanel extends JPanel {
 	DefaultComboBoxModel<Room> boxModel;
 	
 	JList<Person> list;
-	static DefaultListModel<Person> model = new DefaultListModel<Person>();;
+	static DefaultListModel<Person> model;
 	JTextPane descriptionArea;
 	
 	JSpinner dateDaySpinner;
@@ -69,6 +69,8 @@ public class CreateAppointmentPanel extends JPanel {
 	private Client client;
 	
 	CreateAppointmentPanel(final Client client){
+		
+		model = new DefaultListModel<Person>();
 		
 		this.client = client;
 		

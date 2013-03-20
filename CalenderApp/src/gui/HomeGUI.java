@@ -672,7 +672,7 @@ public class HomeGUI extends JPanel {
 		meetingInvitationPanel.setBounds(0, 111, 348, 379);
 		layeredPane.add(meetingInvitationPanel);
 		
-		participantDeclinedPanel = new ParticipantDeclinedPanel();
+		participantDeclinedPanel = new ParticipantDeclinedPanel(client, new Notification(null));
 		participantDeclinedPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		participantDeclinedPanel.setBounds(0, 111, 399, 262);
 		layeredPane.add(participantDeclinedPanel);

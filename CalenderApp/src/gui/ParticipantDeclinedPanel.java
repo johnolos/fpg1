@@ -11,6 +11,10 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 
+import ktn.Client;
+
+import baseClasses.Notification;
+
 
 public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	JLabel lblDeltagerAvsltt;
@@ -19,6 +23,8 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	private JTextField timeOfMeetingField;
 	private JTextField participantField;
 
+	Client client;
+	Notification notification;
 	
 	JButton btnX;
 	JButton changeButton;
@@ -27,8 +33,10 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 	/**
 	 * Create the panel.
 	 */
-	public ParticipantDeclinedPanel() {
+	public ParticipantDeclinedPanel(Client clientz, Notification noti) {
 		
+		this.notification = noti;
+		this.client = clientz;
 		lblDeltagerAvsltt = new JLabel("Deltager avsl\u00E5tt");
 		lblDeltagerAvsltt.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
@@ -148,10 +156,13 @@ public class ParticipantDeclinedPanel extends JPanel implements ActionListener {
 //			HomeGUI.getClient().sendDeletePerson(participantField.getText(), app);
 		}
 		else if(e.getSource().equals(cancelButton)){
-			//Send over nett at du avlyser møtet
+//			client.deleteAppointment(notification.getAppointment());
 		}
 		HomeGUI.list.clearSelection();
 		HomeGUI.layeredPane.moveToBack(this);
+		if(!(e.getSource().equals(btnX))){
+			//Fjern notifikasjonen fra lista i HomeGUI
+		}
 	}
 
 }
