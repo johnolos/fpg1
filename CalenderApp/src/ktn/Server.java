@@ -210,6 +210,7 @@ public class Server {
 				System.out.println("Request for changing an appointment.");
 				ArrayList<Appointment> apps = (ArrayList<Appointment>)obj.getObject();
 				bool = database.changeAppointment(apps.get(0),apps.get(1));
+				changeMembers(apps.get(0).getParticipants(), apps.get(1).getParticipants(), apps.get(0));
 				createNotificationForAll(apps.get(1),true);
 				System.out.println("Old appointment changed and notification created.");
 				sObject = new SendObject(RequestEnum.BOOLEAN,bool);
@@ -266,6 +267,19 @@ public class Server {
 				database.createPersonAppointment(person.getUsername(), appointment);
 				database.createNotification(keyword, appointment);
 			}
+		}
+	}
+	
+	private void changeMembers(ArrayList<Person> newParticipants, ArrayList<Person> oldParticipants, Appointment app){
+		if(newParticipants.size() > oldParticipants.size()){
+			for(Person person : newParticipants)
+				if(!oldParticipants.contains(person))
+					database.createPersonAppointment(person.getUsername(), app);
+		}
+		else if(newParticipants.size() < oldParticipants.size()){
+			for(Person person : oldParticipants)
+				if(!newParticipants.contains(person))
+					database.deletePersonAppointment(person.getUsername(), app);
 		}
 	}
 	
