@@ -24,7 +24,7 @@ import database.Database;
 
 public class Server {
 	
-	private final static String SERVERIP = "78.91.5.14";
+	private final static String SERVERIP = "78.91.61.224";
 
 	private final static int SERVERPORT = 4004;
 	private Database database;
@@ -219,6 +219,14 @@ public class Server {
 				if(!obj.getBoolean()){
 					database.createNotification(new String[] {"DECLINED",keyword[0],app.getAdmin()}, app);
 				}
+				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
+				return sObject;
+			case D_PERSONAPPOINTMENT:
+				System.out.println("Answer on a notification recieved. ");
+				Appointment appointment = (Appointment)obj.getObject();
+				database.deletePersonAppointment(keyword[0], appointment);
+				bool = database.deleteNotification(new String[] {appointment.getAdmin(),keyword[0]}, appointment);
+				System.out.println("User "+ keyword[0] +" removed from appointment");
 				sObject = new SendObject(RequestEnum.BOOLEAN, bool);
 				return sObject;
 			default:
