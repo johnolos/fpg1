@@ -645,16 +645,17 @@ public class MyAppointmentsPanel extends JPanel {
 		else
 			setAlarmFieldsEnabled(true);
 		setButtonsEnabled(true);
-		
-		Alarm alarm = client.getAlarm(HomeGUI.getCurrentUser().getUsername(), ap);
-		if(alarm != null){
-			DateTime time = alarm.getAlarm();
-			alarmYearSpinner.setValue(time.getYear());
-			alarmMonthSpinner.setValue(time.getMonthOfYear());
-			alarmDaySpinner.setValue(time.getDayOfMonth());
-			alarmHourSpinner.setValue(time.getHourOfDay());
-			alarmMinuteSpinner.setValue(time.getMinuteOfHour());
-		}
+
+//		NOT WORKING
+//		Alarm alarm = client.getAlarm(HomeGUI.getCurrentUser().getUsername(), ap);
+//		if(alarm != null){
+//			DateTime time = alarm.getAlarm();
+//			alarmYearSpinner.setValue(time.getYear());
+//			alarmMonthSpinner.setValue(time.getMonthOfYear());
+//			alarmDaySpinner.setValue(time.getDayOfMonth());
+//			alarmHourSpinner.setValue(time.getHourOfDay());
+//			alarmMinuteSpinner.setValue(time.getMinuteOfHour());
+//		}
 		
 	}
 }
