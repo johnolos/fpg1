@@ -154,7 +154,7 @@ public class MyAppointmentsPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				EditParticipantsPanel editParticipanstPanel = new EditParticipantsPanel(frame, model, HomeGUI.getClient());
+				EditParticipantsPanel editParticipanstPanel = new EditParticipantsPanel(frame, model, HomeGUI.getClient(), "my");
 			}
 			
 		});

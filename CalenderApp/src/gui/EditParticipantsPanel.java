@@ -48,12 +48,16 @@ public class EditParticipantsPanel extends JPanel {
 	
 	private JFrame frame;
 	
+	private String utgangspunktsPanel;
+	
 	/**
 	 * Create the panel.
 	 */
-	public EditParticipantsPanel(JFrame utgangspunkt, DefaultListModel<Person> utgangspunktModel, final Client client) {
+	public EditParticipantsPanel(JFrame utgangspunkt, DefaultListModel<Person> utgangspunktModel, final Client client, String utgangspunktsP) {
 		
 		this.client = client;
+		
+		this.utgangspunktsPanel = utgangspunktsP;
 		
 		frame = new JFrame();
 		frame.setTitle("Endre deltagere");
@@ -104,8 +108,10 @@ public class EditParticipantsPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				CreateAppointmentPanel.model.removeAllElements();
-				MyAppointmentsPanel.model.removeAllElements();
+				if(utgangspunktsPanel.equals("create"))
+					CreateAppointmentPanel.model.removeAllElements();
+				else if(utgangspunktsPanel.equals("my"))
+					MyAppointmentsPanel.model.removeAllElements();
 				for(int i=0; i<chosenListModel.getSize(); i++){
 					CreateAppointmentPanel.model.addElement(chosenListModel.get(i));
 					MyAppointmentsPanel.model.addElement(chosenListModel.get(i));

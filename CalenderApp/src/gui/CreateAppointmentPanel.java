@@ -144,7 +144,7 @@ public class CreateAppointmentPanel extends JPanel {
 		editParticipantsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			
-				EditParticipantsPanel editParticipantsPanel = new EditParticipantsPanel(frmOpprettAvtale, model, client);
+				EditParticipantsPanel editParticipantsPanel = new EditParticipantsPanel(frmOpprettAvtale, model, client, "create");
 			
 			}
 		});
@@ -160,7 +160,7 @@ public class CreateAppointmentPanel extends JPanel {
 		
 		/*
 		 * Denne fungerer med unntak av Room, som er satt til roomID = 1,
-		 * da den ikke kan være satt til null.
+		 * da den ikke kan vï¿½re satt til null.
 		 */
 		JButton saveButton = new JButton("Lagre");
 		saveButton.addActionListener(new ActionListener() {
@@ -368,9 +368,9 @@ public class CreateAppointmentPanel extends JPanel {
 		
 	}
 	private void setModelContent(){
-		ArrayList<Person> persons = client.fetchPersons("H");//Må gjøre noe her!
-		// HER OGSÅ! DETTE FORKLARER IKKE HVA SOM MÅ GJØRES.
-		// I tilfellet noen andre må gjøre arbeidet.
+		ArrayList<Person> persons = client.fetchPersons("H");//Mï¿½ gjï¿½re noe her!
+		// HER OGSï¿½! DETTE FORKLARER IKKE HVA SOM Mï¿½ GJï¿½RES.
+		// I tilfellet noen andre mï¿½ gjï¿½re arbeidet.
 		while(persons.size()>0){
 			this.model.addElement(persons.remove(0));
 		}
