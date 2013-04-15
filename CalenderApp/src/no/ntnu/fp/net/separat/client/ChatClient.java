@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 import no.ntnu.fp.net.admin.Log;
 import no.ntnu.fp.net.admin.Settings;
 import no.ntnu.fp.net.co.Connection;
-import no.ntnu.fp.net.co.ConnectionImpl;
+import no.ntnu.fp.net.co.ConnectionImpl2;
 import no.ntnu.fp.net.co.SimpleConnection;
 
 /**
@@ -48,7 +48,7 @@ public class ChatClient {
         if (SIMPLE_CONNECTION) {
             connection = new SimpleConnection(thisPort);
         } else {
-            connection = new ConnectionImpl(thisPort);
+            connection = new ConnectionImpl2(thisPort);
         }
         //	  this.username = JOptionPane.showInputDialog(gui,"Skriv inn
         // navn:");
